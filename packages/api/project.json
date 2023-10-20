@@ -1,58 +1,40 @@
 {
-  "name": "frontend",
+  "name": "api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/frontend",
+  "sourceRoot": "packages/api/src",
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/next:build",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/packages/frontend"
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/packages/api",
+        "main": "packages/api/src/main.ts",
+        "tsConfig": "packages/api/tsconfig.app.json",
+        "assets": ["packages/api/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "packages/api/webpack.config.js"
       },
       "configurations": {
-        "development": {
-          "outputPath": "packages/frontend"
-        },
+        "development": {},
         "production": {}
       }
     },
     "serve": {
-      "executor": "@nx/next:server",
+      "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "frontend:build",
-        "dev": true
+        "buildTarget": "api:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "frontend:build:development",
-          "dev": true
+          "buildTarget": "api:build:development"
         },
         "production": {
-          "buildTarget": "frontend:build:production",
-          "dev": false
-        }
-      }
-    },
-    "export": {
-      "executor": "@nx/next:export",
-      "options": {
-        "buildTarget": "frontend:build:production"
-      }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "packages/frontend/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
+          "buildTarget": "api:build:production"
         }
       }
     },
@@ -60,7 +42,21 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/frontend/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["packages/api/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/api/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   },

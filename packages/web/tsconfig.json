@@ -23,8 +23,8 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "../../packages/frontend/.next/types/**/*.ts",
-    "../../dist/packages/frontend/.next/types/**/*.ts",
+    "../../packages/web/.next/types/**/*.ts",
+    "../../dist/packages/web/.next/types/**/*.ts",
     "next-env.d.ts"
   ],
   "exclude": [
