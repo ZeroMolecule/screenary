@@ -6,6 +6,7 @@ export const metadata: Metadata = {
     default: 'Screenary',
   },
   description: 'All your screens and apps in one place.',
+  metadataBase: new URL(process.env.WEB_URL as string),
   openGraph: {
     title: 'Screenary',
     description: 'All your screens and apps in one place.',
