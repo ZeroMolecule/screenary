@@ -4,7 +4,7 @@
   "description": "All your screens and apps in one place.",
   "start_url": "http://localhost:4200/",
   "scope": "/",
-  "display": "browser",
+  "display": "standalone",
   "theme_color": "#FBFAF9",
   "background_color": "#17140BE5",
   "icons": [
