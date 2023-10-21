@@ -1,30 +1,35 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
 
-type Props = {
-  children: ReactNode;
-  params: { locale: string };
-};
+type Params = { locale: string };
+type Props = { children: ReactNode; params: Params };
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | Screenary',
-    default: 'Screenary',
-  },
-  description: 'All your screens and apps in one place.',
-  metadataBase: new URL(process.env.WEB_URL as string),
-  openGraph: {
-    title: 'Screenary',
-    description: 'All your screens and apps in one place.',
-    images: [{ url: 'opengraph-image.png' }],
-    locale: 'en_US',
-    type: 'website',
-  },
-  manifest: 'manifest.json',
-};
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const t = await getTranslator(locale, 'metadata');
+  return {
+    title: {
+      template: t('template'),
+      default: t('title'),
+    },
+    description: t('description'),
+    metadataBase: new URL(process.env.WEB_URL as string),
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      images: [{ url: 'opengraph-image.png' }],
+      locale,
+      type: 'website',
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
