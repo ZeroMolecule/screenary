@@ -4,6 +4,7 @@ import { FC, ReactNode } from 'react';
 import '@mantine/core/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { colors } from './colors';
+import { typography } from './typography';
 
 type Props = {
   children: ReactNode;
@@ -11,6 +12,7 @@ type Props = {
 
 const theme = createTheme({
   ...colors,
+  ...typography,
 });
 
 export const ThemeProvider: FC<Props> = ({ children }) => {
