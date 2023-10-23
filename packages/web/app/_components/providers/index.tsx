@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
+import { ThemeProvider } from './theme';
 
 type Props = {
   locale: string;
@@ -10,7 +11,7 @@ type Props = {
 export const Providers: FC<Props> = ({ locale, messages, children }) => {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
+      <ThemeProvider>{children}</ThemeProvider>
     </NextIntlClientProvider>
   );
 };
