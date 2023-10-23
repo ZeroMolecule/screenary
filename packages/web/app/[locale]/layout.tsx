@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
+import { ColorSchemeScript } from '@mantine/core';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };
@@ -44,6 +45,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        <ColorSchemeScript />
+      </head>
       <body>
         <Providers locale={locale} messages={messages}>
           {children}
