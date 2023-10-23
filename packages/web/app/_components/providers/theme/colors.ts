@@ -1,0 +1,75 @@
+import { MantineTheme, MantineColorsTuple } from '@mantine/core';
+
+type ColorsType = { colors: Record<string, MantineColorsTuple> } & Pick<
+  MantineTheme,
+  'primaryColor' | 'primaryShade' | 'white' | 'black'
+>;
+
+export const colors: ColorsType = {
+  colors: {
+    primary: [
+      '#F9FBFA',
+      '#EDF2F0',
+      '#DCE5E0',
+      '#C4D4CB',
+      '#95B1A2',
+      '#95B1A2',
+      '#7B9D8B',
+      '#648774',
+      '#506D5D',
+      '#3D5247',
+    ],
+    neutral: [
+      '#FBFAF9',
+      '#F6F5F3',
+      '#EBE9E5',
+      '#DCD5C7',
+      '#B0A99C',
+      '#80796B',
+      '#635B4B',
+      '#524A38',
+      '#37301F',
+      '#272011',
+    ],
+    success: [
+      '#F6FDF2',
+      '#E9FCDE',
+      '#D1F7BB',
+      '#ACEF85',
+      '#80DE4A',
+      '#5DC421',
+      '#49A216',
+      '#3C7F15',
+      '#336416',
+      '#2B5214',
+    ],
+    warning: [
+      '#FFFBEB',
+      '#FEF3C7',
+      '#FDE68A',
+      '#FCD34D',
+      '#FBBF24',
+      '#F59E0B',
+      '#D97706',
+      '#B45309',
+      '#92400E',
+      '#78350F',
+    ],
+    destructive: [
+      '#FAEBEB',
+      '#F5D6D6',
+      '#EBADAD',
+      '#E08585',
+      '#D65C5C',
+      '#CC3333',
+      '#A32929',
+      '#7A1F1F',
+      '#521414',
+      '#290A0A',
+    ],
+  },
+  primaryColor: 'primary',
+  primaryShade: 5,
+  white: '#ffffff',
+  black: '#000000',
+};

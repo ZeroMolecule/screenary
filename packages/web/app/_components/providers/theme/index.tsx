@@ -1,11 +1,22 @@
+'use client';
+
 import { FC, ReactNode } from 'react';
 import '@mantine/core/styles.css';
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider, createTheme } from '@mantine/core';
+import { colors } from './colors';
 
 type Props = {
   children: ReactNode;
 };
 
+const theme = createTheme({
+  ...colors,
+});
+
 export const ThemeProvider: FC<Props> = ({ children }) => {
-  return <MantineProvider>{children}</MantineProvider>;
+  return (
+    <MantineProvider theme={theme} defaultColorScheme="light">
+      {children}
+    </MantineProvider>
+  );
 };
