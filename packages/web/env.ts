@@ -5,13 +5,9 @@ const envSchema = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   WEB_URL: z.string().min(1),
+  TEST: z.string(),
 });
 
-const envParsed = envSchema.safeParse(process.env);
-if (!envParsed.success) {
-  console.error(envParsed.error.issues);
-  throw new Error('There is an error with the environment variables');
-  process.exit(1);
-}
+const envParsed = envSchema.parse(process.env);
 
-export const ENV = envParsed.data;
+export const ENV = envParsed;
