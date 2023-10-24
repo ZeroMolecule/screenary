@@ -5,6 +5,7 @@ import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
 import { ColorSchemeScript } from '@mantine/core';
+import { MsClarity } from '../_components/ms-clarity';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };
@@ -47,6 +48,7 @@ export default async function RootLayout({
     <html lang={locale}>
       <head>
         <ColorSchemeScript />
+        <MsClarity />
       </head>
       <body>
         <Providers locale={locale} messages={messages}>
