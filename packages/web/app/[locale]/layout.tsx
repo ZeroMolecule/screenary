@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
+import { ENV } from '@/env';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };
@@ -20,13 +21,20 @@ export async function generateMetadata({
       default: t('title'),
     },
     description: t('description'),
-    metadataBase: new URL(process.env.WEB_URL as string),
+    metadataBase: new URL(ENV.WEB_URL),
+    manifest: 'manifest.json',
     openGraph: {
       title: t('title'),
       description: t('description'),
-      images: [{ url: 'opengraph-image.png' }],
+      images: [{ url: 'cover-image.png' }],
       locale,
       type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title: t('title'),
+      description: t('description'),
+      images: [{ url: 'cover-image.png' }],
     },
   };
 }
