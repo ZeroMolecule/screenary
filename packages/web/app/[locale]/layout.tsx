@@ -43,19 +43,14 @@ export default async function RootLayout({
   children,
   params: { locale },
 }: Props) {
-  const isValidLocale = LOCALES.some((curr) => curr === locale);
-  if (!isValidLocale) {
+  if (!LOCALES.includes(locale)) {
     return notFound();
   }
-
-  const messages = (await import(`@/messages/${locale}.json`)).default;
 
   return (
     <html lang={locale}>
       <body>
-        <Providers locale={locale} messages={messages}>
-          {children}
-        </Providers>
+        <Providers locale={locale}>{children}</Providers>
       </body>
     </html>
   );

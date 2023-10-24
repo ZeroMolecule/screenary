@@ -1,6 +1,6 @@
 const path = require('path');
 const { composePlugins, withNx } = require('@nx/next');
-const withNextIntl = require('next-intl/plugin')('./i18n.ts');
+const withNextIntl = require('next-intl/plugin')();
 const withPWAInit = require('next-pwa');
 const isDev = process.env.NODE_ENV !== 'production';
 
