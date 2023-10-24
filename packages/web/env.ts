@@ -5,9 +5,6 @@ const envSchema = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   WEB_URL: z.string().min(1),
-  TEST: z.string(),
 });
 
-const envParsed = envSchema.parse(process.env);
-
-export const ENV = envParsed;
+export const ENV = envSchema.parse(process.env);
