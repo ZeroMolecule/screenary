@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ENV } from '../env';
 
 export const metadata: Metadata = {
   title: {
@@ -6,7 +7,7 @@ export const metadata: Metadata = {
     default: 'Screenary',
   },
   description: 'All your screens and apps in one place.',
-  metadataBase: new URL(process.env.WEB_URL as string),
+  metadataBase: new URL(ENV.WEB_URL),
   manifest: 'manifest.json',
   openGraph: {
     title: 'Screenary',
