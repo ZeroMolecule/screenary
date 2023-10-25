@@ -5,24 +5,24 @@ const withPWAInit = require('next-pwa');
 const { withSentryConfig } = require('@sentry/nextjs');
 const isDev = process.env.NODE_ENV !== 'production';
 
-const withPWA = withPWAInit({
-  disable: isDev,
-  dest: 'public',
-  // exclude: [
-  //   ({ asset }) => {
-  //     if (
-  //       asset.name.startsWith('server/') ||
-  //       asset.name.match(
-  //         /^((app-|^)build-manifest\.json|react-loadable-manifest\.json)$/
-  //       ) ||
-  //       (isDev && !asset.name.startsWith('static/runtime/'))
-  //     ) {
-  //       return true;
-  //     }
-  //     return false;
-  //   },
-  // ],
-});
+// const withPWA = withPWAInit({
+//   disable: isDev,
+//   dest: 'public',
+//   exclude: [
+//     ({ asset }) => {
+//       if (
+//         asset.name.startsWith('server/') ||
+//         asset.name.match(
+//           /^((app-|^)build-manifest\.json|react-loadable-manifest\.json)$/
+//         ) ||
+//         (isDev && !asset.name.startsWith('static/runtime/'))
+//       ) {
+//         return true;
+//       }
+//       return false;
+//     },
+//   ],
+// });
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -65,6 +65,6 @@ const sentryWebpackPluginOptions = {
 const withSentry = (config) =>
   withSentryConfig(config, sentryWebpackPluginOptions);
 
-const plugins = [withNx, withPWA, withNextIntl, withSentry];
+const plugins = [withNx, withNextIntl, withSentry];
 
 module.exports = composePlugins(...plugins)(nextConfig);

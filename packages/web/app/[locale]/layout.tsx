@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation';
 import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
-import { ENV } from '@/env';
 import { ColorSchemeScript } from '@mantine/core';
+import { ENV } from '@/env.server';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };
