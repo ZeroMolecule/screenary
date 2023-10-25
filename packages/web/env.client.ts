@@ -1,5 +1,3 @@
-import 'client-only';
-
 import { envBaseSchema } from './env';
 
 const envClientSchema = envBaseSchema.extend({});
