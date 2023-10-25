@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
+import { ENV } from '@/env';
 import { ColorSchemeScript } from '@mantine/core';
 
 type Params = { locale: string };
@@ -21,13 +22,20 @@ export async function generateMetadata({
       default: t('title'),
     },
     description: t('description'),
-    metadataBase: new URL(process.env.WEB_URL as string),
+    metadataBase: new URL(ENV.WEB_URL),
+    manifest: 'manifest.json',
     openGraph: {
       title: t('title'),
       description: t('description'),
-      images: [{ url: 'opengraph-image.png' }],
+      images: [{ url: 'cover-image.png' }],
       locale,
       type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title: t('title'),
+      description: t('description'),
+      images: [{ url: 'cover-image.png' }],
     },
   };
 }
@@ -36,12 +44,9 @@ export default async function RootLayout({
   children,
   params: { locale },
 }: Props) {
-  const isValidLocale = LOCALES.some((curr) => curr === locale);
-  if (!isValidLocale) {
+  if (!LOCALES.includes(locale)) {
     return notFound();
   }
-
-  const messages = (await import(`@/messages/${locale}.json`)).default;
 
   return (
     <html lang={locale}>
@@ -49,9 +54,7 @@ export default async function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <Providers locale={locale} messages={messages}>
-          {children}
-        </Providers>
+        <Providers locale={locale}>{children}</Providers>
       </body>
     </html>
   );
