@@ -1,5 +1,6 @@
 const path = require('path');
 const { composePlugins, withNx } = require('@nx/next');
+const withNextIntl = require('next-intl/plugin')();
 const withPWAInit = require('next-pwa');
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -50,6 +51,6 @@ const nextConfig = {
   },
 };
 
-const plugins = [withNx, withPWA];
+const plugins = [withNx, withPWA, withNextIntl];
 
 module.exports = composePlugins(...plugins)(nextConfig);
