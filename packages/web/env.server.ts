@@ -7,7 +7,6 @@ const envServerSchema = envBaseSchema.extend({
   SENTRY_AUTH_TOKEN: z.string().min(1),
   SENTRY_ORG: z.string().min(1),
   SENTRY_WEB_PROJECT: z.string().min(1),
-  SENTRY_API_PROJECT: z.string().min(1),
 });
 
 export const ENV = envServerSchema.parse(process.env);
