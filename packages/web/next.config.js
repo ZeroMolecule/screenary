@@ -31,22 +31,27 @@ const nextConfig = {
     svgr: false,
   },
   webpack(config) {
-    const registerJs = path.join(
-      path.dirname(require.resolve('next-pwa')),
-      'register.js'
-    );
-    const entry = config.entry;
-    config.entry = () =>
-      entry().then((entries) => {
-        if (entries['main-app'] && !entries['main-app'].includes(registerJs)) {
-          if (Array.isArray(entries['main-app'])) {
-            entries['main-app'].unshift(registerJs);
-          } else if (typeof entries['main-app'] === 'string') {
-            entries['main-app'] = [registerJs, entries['main-app']];
+    if (!isDev) {
+      const registerJs = path.join(
+        path.dirname(require.resolve('next-pwa')),
+        'register.js'
+      );
+      const entry = config.entry;
+      config.entry = () =>
+        entry().then((entries) => {
+          if (
+            entries['main-app'] &&
+            !entries['main-app'].includes(registerJs)
+          ) {
+            if (Array.isArray(entries['main-app'])) {
+              entries['main-app'].unshift(registerJs);
+            } else if (typeof entries['main-app'] === 'string') {
+              entries['main-app'] = [registerJs, entries['main-app']];
+            }
           }
-        }
-        return entries;
-      });
+          return entries;
+        });
+    }
     return config;
   },
 };
