@@ -1,0 +1,9 @@
+.screensaver {
+  display: flex;
+  justify-content: center;
+  padding: rem(60);
+  background-color: #17140be5;
+  border-radius: var(--mantine-radius-xl);
+  box-shadow: 0px 40px 35px -20px #00000033;
+  backdrop-filter: blur(30px);
+}

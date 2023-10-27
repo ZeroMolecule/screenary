@@ -2,6 +2,7 @@
 
 import { FC, ReactNode } from 'react';
 import '@mantine/core/styles.css';
+import '@/styles/index.css';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { colors } from './colors';
 import { typography } from './typography';

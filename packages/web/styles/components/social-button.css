@@ -1,0 +1,24 @@
+.social-button {
+  font-weight: 500;
+  border-radius: rem(6);
+
+  &--apple {
+    color: var(--mantine-color-white);
+    background-color: var(--mantine-color-black);
+  }
+
+  &--google {
+    color: #020203;
+    background-color: var(--mantine-color-white);
+    border: 0.87px solid #c7c6c6;
+  }
+
+  &--facebook {
+    color: var(--mantine-color-white);
+    background-color: #3975ea;
+  }
+
+  &__inner {
+    gap: var(--mantine-spacing-md);
+  }
+}
