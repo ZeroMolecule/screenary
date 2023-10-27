@@ -27,7 +27,7 @@ export async function generateMetadata({
     openGraph: {
       title: t('title'),
       description: t('description'),
-      images: [{ url: 'cover-image.png' }],
+      images: [{ url: 'images/cover-image.png' }],
       locale,
       type: 'website',
     },
@@ -35,7 +35,7 @@ export async function generateMetadata({
       card: 'summary',
       title: t('title'),
       description: t('description'),
-      images: [{ url: 'cover-image.png' }],
+      images: [{ url: 'images/cover-image.png' }],
     },
   };
 }
