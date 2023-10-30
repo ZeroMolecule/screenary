@@ -7,10 +7,6 @@ const baseFont = Inter({ subsets: ['latin'] });
 const baseFontSize = 16;
 
 const baseHeadingFontWeight = '500';
-export const displayHeading = {
-  hDisplayLarge: { fontSize: rem(52), lineHeight: rem(56) },
-  hDisplaySmall: { fontSize: rem(44), lineHeight: rem(48) },
-};
 
 type TypographyProps = Pick<
   MantineTheme,

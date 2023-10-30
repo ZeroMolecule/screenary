@@ -1,11 +1,13 @@
-import { Text } from '@mantine/core';
-import { Title } from '../_components/base/title';
+import { useTranslations } from 'next-intl';
+import { Text, Title } from '@mantine/core';
 
 export default function HomePage() {
   return (
     <div>
-      <Title size="hDisplayLarge">Screenary Title</Title>
-      <Text size="xs">Screenary Description</Text>
+      <Title order={2} size="h4">
+        {t('title')}
+      </Title>
+      <Text size="xs">{t('description')}</Text>
     </div>
   );
 }
