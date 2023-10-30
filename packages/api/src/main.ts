@@ -12,7 +12,7 @@ async function bootstrap() {
     dsn: process.env.SENTRY_DSN,
     environment: 'production',
     enabled: process.env.NODE_ENV === 'production',
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0,
   });
 
   const port = process.env.PORT || 3000;
