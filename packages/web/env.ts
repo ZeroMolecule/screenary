@@ -5,6 +5,7 @@ const envSchema = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   WEB_URL: z.string().min(1),
+  CLARITY_ID: z.string().min(1),
 });
 
 export const ENV = envSchema.parse(process.env);
