@@ -6,7 +6,7 @@ Sentry.init({
   environment: 'production',
   enabled: ENV.NODE_ENV === 'production',
   integrations: [new Sentry.Replay()],
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 });
