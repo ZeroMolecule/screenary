@@ -1,13 +1,14 @@
 import { useTranslations } from 'next-intl';
-import { Text } from '@mantine/core';
-import { Title } from '../_components/base/title';
+import { Text, Title } from '@mantine/core';
 
 export default function HomePage() {
   const t = useTranslations('metadata');
 
   return (
     <div>
-      <Title size="hDisplayLarge">{t('title')}</Title>
+      <Title order={2} size="h4">
+        {t('title')}
+      </Title>
       <Text size="xs">{t('description')}</Text>
     </div>
   );
