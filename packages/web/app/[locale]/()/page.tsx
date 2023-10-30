@@ -5,8 +5,7 @@ import { Button, Stack, Text, Title } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
 
 export default function HomePage() {
-  const session = useSession();
-  console.log('client', session);
+  const { data } = useSession();
 
   return (
     <Screensaver>
@@ -18,8 +17,8 @@ export default function HomePage() {
           </Text>
         </Stack>
         <Stack>
-          <Title fz={54} c="primary.1">
-            Welcome back, Someone!
+          <Title fz={54} c="primary.1" ta="center">
+            Welcome back, {data?.user?.name}!
           </Title>
         </Stack>
         <Stack>

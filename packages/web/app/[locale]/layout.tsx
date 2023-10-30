@@ -51,7 +51,6 @@ export default async function RootLayout({
   }
 
   const session = await getServerSession(authOptions);
-  console.log({ session });
 
   return (
     <html lang={locale}>
@@ -59,7 +58,9 @@ export default async function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <Providers locale={locale}>{children}</Providers>
+        <Providers locale={locale} session={session}>
+          {children}
+        </Providers>
       </body>
     </html>
   );

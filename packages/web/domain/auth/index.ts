@@ -1,4 +1,4 @@
-import { AuthOptions } from 'next-auth';
+import type { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 export const authOptions: AuthOptions = {
@@ -11,5 +11,9 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: 1 * 24 * 60 * 60, // 1 day session storage
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
