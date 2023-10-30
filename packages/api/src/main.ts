@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
+import { version } from '../../../package.json';
 import * as Sentry from '@sentry/node';
 
 async function bootstrap() {
@@ -12,6 +13,7 @@ async function bootstrap() {
     dsn: process.env.SENTRY_API_DSN,
     environment: 'production',
     enabled: process.env.NODE_ENV === 'production',
+    release: version,
     tracesSampleRate: 0,
   });
 
