@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
 import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
 import { ENV } from '@/env';
 import { ColorSchemeScript } from '@mantine/core';
+import { authOptions } from '@/domain/auth';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };
@@ -47,6 +49,9 @@ export default async function RootLayout({
   if (!LOCALES.includes(locale)) {
     return notFound();
   }
+
+  const session = await getServerSession(authOptions);
+  console.log({ session });
 
   return (
     <html lang={locale}>

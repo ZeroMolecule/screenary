@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import { Button, Stack, Text, Title } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
-import { paths } from '@/navigation/paths';
 
 export default function HomePage() {
-  const router = useRouter();
+  const session = useSession();
+  console.log('client', session);
 
   return (
     <Screensaver>
@@ -23,7 +23,7 @@ export default function HomePage() {
           </Title>
         </Stack>
         <Stack>
-          <Button size="xl" onClick={() => router.push(paths.login())}>
+          <Button size="xl" onClick={() => signOut()}>
             Log Out
           </Button>
         </Stack>

@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { ThemeProvider } from './theme';
+import { SessionProvider } from './session';
 
 type Props = {
   locale: string;
@@ -12,7 +13,9 @@ export const Providers: FC<Props> = ({ locale, children }) => {
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <SessionProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </SessionProvider>
     </NextIntlClientProvider>
   );
 };

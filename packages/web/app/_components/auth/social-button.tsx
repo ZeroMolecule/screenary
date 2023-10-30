@@ -2,14 +2,13 @@
 
 import { FC } from 'react';
 import { useTranslations } from 'next-intl';
+import { signIn } from 'next-auth/react';
 import { Button } from '@mantine/core';
 import { capitalize } from 'lodash';
-import { AppleIcon } from '../icons/apple-icon';
 import classnames from 'classnames';
+import { AppleIcon } from '../icons/apple-icon';
 import { FacebookIcon } from '../icons/facebook-icon';
 import { GoogleIcon } from '../icons/google-icon';
-import { useRouter } from 'next/navigation';
-import { paths } from '@/navigation/paths';
 
 type Provider = 'apple' | 'google' | 'facebook';
 
@@ -18,7 +17,7 @@ type Props = {
 };
 
 export const SocialButton: FC<Props> = (props) => {
-  const { provider, router, label, icon } = useSocialButton(props);
+  const { provider, label, icon } = useSocialButton(props);
 
   return (
     <Button
@@ -26,7 +25,7 @@ export const SocialButton: FC<Props> = (props) => {
       leftSection={icon}
       className={classnames('social-button', `social-button--${provider}`)}
       classNames={{ inner: 'social-button__inner' }}
-      onClick={() => router.push(paths.home())}
+      onClick={() => signIn(provider)}
     >
       {label}
     </Button>
@@ -35,7 +34,6 @@ export const SocialButton: FC<Props> = (props) => {
 
 function useSocialButton({ provider }: Props) {
   const t = useTranslations('auth');
-  const router = useRouter();
 
   const label = t.rich('socialAction', { provider: capitalize(provider) });
 
@@ -50,5 +48,5 @@ function useSocialButton({ provider }: Props) {
     }
   };
 
-  return { provider, router, label, icon: generateIcon() };
+  return { provider, label, icon: generateIcon() };
 }
