@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/nextjs';
 import { ENV } from './env.client';
 
 Sentry.init({
-  dsn: ENV.NEXT_PUBLIC_SENTRY_DSN,
+  dsn: ENV.NEXT_PUBLIC_SENTRY_WEB_DSN,
   environment: 'production',
   enabled: ENV.NODE_ENV === 'production',
   integrations: [new Sentry.Replay()],

@@ -9,7 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
 
   Sentry.init({
-    dsn: process.env.SENTRY_DSN,
+    dsn: process.env.SENTRY_API_DSN,
     environment: 'production',
     enabled: process.env.NODE_ENV === 'production',
     tracesSampleRate: 0,
