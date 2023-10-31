@@ -26,5 +26,22 @@ export const authOptions: AuthOptions = {
     strategy: 'jwt',
     maxAge: 1 * 24 * 60 * 60, // 1 day session storage
   },
+  callbacks: {
+    signIn: (params) => {
+      console.log('---------- SIGN IN ----------');
+      console.log(params);
+      return true;
+    },
+    jwt: (params) => {
+      console.log('---------- JWT ----------');
+      console.log(params);
+      return params.token;
+    },
+    session: (params) => {
+      console.log('---------- SESSION ----------');
+      console.log(params);
+      return params.session;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
