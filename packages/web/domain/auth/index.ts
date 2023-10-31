@@ -2,6 +2,7 @@ import type { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import AppleProvider from 'next-auth/providers/apple';
+import { ENV } from '@/env.server';
 
 export const authOptions: AuthOptions = {
   pages: {
@@ -9,16 +10,16 @@ export const authOptions: AuthOptions = {
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: ENV.GOOGLE_CLIENT_ID,
+      clientSecret: ENV.GOOGLE_CLIENT_SECRET,
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID as string,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+      clientId: ENV.FACEBOOK_CLIENT_ID,
+      clientSecret: ENV.FACEBOOK_CLIENT_SECRET,
     }),
     AppleProvider({
-      clientId: process.env.APPLE_CLIENT_ID as string,
-      clientSecret: process.env.APPLE_CLIENT_SECRET as string,
+      clientId: ENV.APPLE_CLIENT_ID,
+      clientSecret: ENV.APPLE_CLIENT_SECRET,
     }),
   ],
   session: {
