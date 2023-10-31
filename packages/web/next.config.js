@@ -2,7 +2,8 @@ const path = require('path');
 const { composePlugins, withNx } = require('@nx/next');
 const withNextIntl = require('next-intl/plugin')();
 const withPWAInit = require('next-pwa');
-const isDev = process.env.NODE_ENV !== 'production';
+const { withSentryConfig } = require('@sentry/nextjs');
+const isDev = process.env.NODE_ENV === 'development';
 
 const withPWA = withPWAInit({
   disable: isDev,
@@ -30,6 +31,10 @@ const nextConfig = {
   nx: {
     svgr: false,
   },
+  sentry: {
+    hideSourceMaps: true,
+    widenClientFileUpload: true,
+  },
   webpack(config) {
     const registerJs = path.join(
       path.dirname(require.resolve('next-pwa')),
@@ -51,6 +56,15 @@ const nextConfig = {
   },
 };
 
-const plugins = [withNx, withPWA, withNextIntl];
+const sentryWebpackPluginOptions = {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_WEB_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: true,
+};
+const withSentry = (config) =>
+  withSentryConfig(config, sentryWebpackPluginOptions);
+
+const plugins = [withNx, withPWA, withNextIntl, withSentry];
 
 module.exports = composePlugins(...plugins)(nextConfig);
