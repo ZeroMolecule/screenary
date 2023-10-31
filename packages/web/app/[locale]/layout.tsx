@@ -5,9 +5,10 @@ import { notFound } from 'next/navigation';
 import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
-import { ENV } from '@/env';
 import { ColorSchemeScript } from '@mantine/core';
 import { authOptions } from '@/domain/auth';
+import { MsClarity } from '../_components/ms-clarity';
+import { ENV } from '@/env.server';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };
@@ -56,6 +57,7 @@ export default async function RootLayout({
     <html lang={locale}>
       <head>
         <ColorSchemeScript />
+        <MsClarity />
       </head>
       <body>
         <Providers locale={locale} session={session}>

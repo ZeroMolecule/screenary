@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
-const envSchema = z.object({
+export const envBaseSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
-  WEB_URL: z.string().min(1),
+  NEXT_PUBLIC_API_BASE_URL: z.string().min(1),
+  NEXT_PUBLIC_REMOTE_API_BASE_URL: z.string().min(1),
+  NEXT_PUBLIC_SENTRY_WEB_DSN: z.string().min(1),
+  SENTRY_RELEASE: z.string().nullish(),
 });
-
-export const ENV = envSchema.parse(process.env);
