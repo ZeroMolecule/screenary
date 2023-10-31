@@ -28,11 +28,7 @@ export class ZodValidationPipe<T extends ZodType> implements PipeTransform {
       return result.data;
     }
 
-    let error: ZodError;
-    if (result.success === false) {
-      error = result.error;
-    }
-    const errors = ZodValidationPipe.getDErrors(error);
+    const errors = ZodValidationPipe.getDErrors(result.error);
 
     throw new BadRequestException({
       statusCode: HttpStatus.BAD_REQUEST,
@@ -51,11 +47,7 @@ export class ZodValidationPipe<T extends ZodType> implements PipeTransform {
       return result.data.data;
     }
 
-    let error: ZodError;
-    if (result.success === false) {
-      error = result.error;
-    }
-    const errors = ZodValidationPipe.getDErrors(error);
+    const errors = ZodValidationPipe.getDErrors(result.error);
 
     throw new BadRequestException({
       statusCode: HttpStatus.BAD_REQUEST,
