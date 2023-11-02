@@ -1,3 +1,11 @@
 {
-  "cSpell.words": ["nextjs", "NEXTAUTH", "opengraph", "Screenary", "svgr"]
+  "cSpell.words": [
+    "nestjs",
+    "NEXTAUTH",
+    "nextjs",
+    "opengraph",
+    "Screenary",
+    "svgr",
+    "tabler"
+  ]
 }

@@ -3,9 +3,12 @@
 import { signOut, useSession } from 'next-auth/react';
 import { Button, Stack, Text, Title } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
+import { useDisclosure } from '@mantine/hooks';
+import { ProfileModal } from '@/app/_components/modals/profile-modal';
 
 export default function HomePage() {
   const { data } = useSession();
+  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <Screensaver>
@@ -22,11 +25,13 @@ export default function HomePage() {
           </Title>
         </Stack>
         <Stack>
+          <Button onClick={open}>Edit Profile</Button>
           <Button size="xl" onClick={() => signOut()}>
             Log Out
           </Button>
         </Stack>
       </Stack>
+      <ProfileModal opened={opened} onClose={close} />
     </Screensaver>
   );
 }
