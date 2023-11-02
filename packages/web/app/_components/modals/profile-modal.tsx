@@ -12,7 +12,9 @@ import { FormTextInput } from '../base/form/text-input';
 type Props = {
   opened: boolean;
   onClose: () => void;
+  onSubmit: (values: ProfileFormValues) => Promise<void>;
   user?: Partial<User>;
+  isLoading?: boolean;
 };
 
 export const ProfileModal: FC<Props> = (props) => {
@@ -22,6 +24,7 @@ export const ProfileModal: FC<Props> = (props) => {
     user,
     showDelete,
     profileForm,
+    isLoading,
     setShowDelete,
     handleClose,
     onSubmit,
@@ -119,7 +122,12 @@ export const ProfileModal: FC<Props> = (props) => {
                 <Button bg="neutral.7" fw={500} onClick={handleClose}>
                   {t('cancelAction')}
                 </Button>
-                <Button type="submit" bg="primary.7" fw={500}>
+                <Button
+                  type="submit"
+                  bg="primary.7"
+                  fw={500}
+                  loading={isLoading}
+                >
                   {t('saveAction')}
                 </Button>
               </Group>
@@ -131,7 +139,13 @@ export const ProfileModal: FC<Props> = (props) => {
   );
 };
 
-function useProfileModal({ opened, onClose, user }: Props) {
+function useProfileModal({
+  opened,
+  onClose,
+  onSubmit,
+  user,
+  isLoading,
+}: Props) {
   const t = useTranslations('modal.profile');
   const [showDelete, setShowDelete] = useState(false);
 
@@ -140,6 +154,7 @@ function useProfileModal({ opened, onClose, user }: Props) {
     defaultValues: {
       name: user?.name ?? '',
       email: user?.email ?? '',
+      image: user?.image ?? '',
     },
   });
 
@@ -150,24 +165,22 @@ function useProfileModal({ opened, onClose, user }: Props) {
     }, 200);
   };
 
-  const handleSubmit = async (values: ProfileFormValues) => {
-    console.log(values);
-  };
-
   return {
     t,
     opened,
     user,
     showDelete,
     profileForm,
+    isLoading,
     setShowDelete,
     handleClose,
-    onSubmit: profileForm.handleSubmit(handleSubmit),
+    onSubmit: profileForm.handleSubmit(onSubmit),
   };
 }
 
-type ProfileFormValues = z.infer<typeof profileSchema>;
+export type ProfileFormValues = z.infer<typeof profileSchema>;
 const profileSchema = z.object({
   name: z.string().min(1),
   email: z.string().email().min(1),
+  image: z.string().min(1),
 });

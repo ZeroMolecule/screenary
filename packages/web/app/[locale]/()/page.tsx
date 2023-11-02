@@ -4,11 +4,15 @@ import { signOut, useSession } from 'next-auth/react';
 import { Button, Stack, Text, Title } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
 import { useDisclosure } from '@mantine/hooks';
-import { ProfileModal } from '@/app/_components/modals/profile-modal';
+import {
+  ProfileFormValues,
+  ProfileModal,
+} from '@/app/_components/modals/profile-modal';
+import { useMutation } from '@tanstack/react-query';
+import { editProfileMutation } from '@/domain/mutations/edit-profile-mutation';
 
 export default function HomePage() {
-  const { data } = useSession();
-  const [opened, { open, close }] = useDisclosure(false);
+  const { data, opened, open, close, isPending, handleSubmit } = useHomePage();
 
   return (
     <Screensaver>
@@ -31,7 +35,28 @@ export default function HomePage() {
           </Button>
         </Stack>
       </Stack>
-      <ProfileModal opened={opened} onClose={close} user={data?.user} />
+      <ProfileModal
+        opened={opened}
+        onClose={close}
+        onSubmit={handleSubmit}
+        user={data?.user}
+        isLoading={isPending}
+      />
     </Screensaver>
   );
+}
+
+function useHomePage() {
+  const { data } = useSession();
+  const [opened, { open, close }] = useDisclosure(false);
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: editProfileMutation.fnc,
+  });
+
+  const handleSubmit = async (values: ProfileFormValues) => {
+    console.log(values);
+  };
+
+  return { data, opened, open, close, isPending, handleSubmit };
 }
