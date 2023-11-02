@@ -6,6 +6,7 @@
     "description": "All your screens and apps in one place."
   },
   "auth": {
+    "logoAlt": "Screenary logo",
     "socialAction": "Continue with {provider}"
   }
 }

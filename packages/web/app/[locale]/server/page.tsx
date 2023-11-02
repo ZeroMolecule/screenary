@@ -1,7 +1,11 @@
-export default function ServerPage() {
-  fetch('https://jsonplaceholder.typicode.com/todos/1').then((response) => {
-    throw new Error('server error thrown 01');
-  });
+import { remoteApi } from '@/domain/remote';
+import { getRemoteData } from '@/domain/remote/response/data';
+
+export default async function ServerPage() {
+  const data = await remoteApi
+    .get('http://localhost:3000/api/users/me')
+    .then(getRemoteData);
+  console.log({ data });
 
   return (
     <div>

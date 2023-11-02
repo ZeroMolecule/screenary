@@ -1,15 +1,21 @@
 'use client';
 
-export default function ClientPage() {
+import { remoteApi } from '@/domain/remote';
+import { getRemoteData } from '@/domain/remote/response/data';
+
+export default async function ClientPage() {
   return (
     <div>
       <h1>Client Page</h1>
       <button
-        onClick={() => {
-          throw new Error('client error thrown 01');
+        onClick={async () => {
+          const data = await remoteApi
+            .get('http://localhost:3000/api/users/me')
+            .then(getRemoteData);
+          console.log(data);
         }}
       >
-        click me to throw client error
+        click me to test client fetch
       </button>
     </div>
   );
