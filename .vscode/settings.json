@@ -6,6 +6,7 @@
     "opengraph",
     "Screenary",
     "svgr",
-    "tabler"
+    "tabler",
+    "tanstack"
   ]
 }

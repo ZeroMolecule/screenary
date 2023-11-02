@@ -4,6 +4,7 @@ import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { ThemeProvider } from './theme';
 import { SessionProvider } from './session';
 import { getCurrentTimezone } from '@/utils/datetime';
+import { QueryClientProvider } from './query-client';
 
 type Props = {
   locale: string;
@@ -21,7 +22,9 @@ export const Providers: FC<Props> = ({ locale, session, children }) => {
       timeZone={getCurrentTimezone()}
     >
       <SessionProvider session={session}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <QueryClientProvider>{children}</QueryClientProvider>
+        </ThemeProvider>
       </SessionProvider>
     </NextIntlClientProvider>
   );
