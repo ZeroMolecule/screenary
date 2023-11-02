@@ -31,7 +31,7 @@ export default function HomePage() {
           </Button>
         </Stack>
       </Stack>
-      <ProfileModal opened={opened} onClose={close} />
+      <ProfileModal opened={opened} onClose={close} user={data?.user} />
     </Screensaver>
   );
 }

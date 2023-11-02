@@ -31,6 +31,9 @@ const nextConfig = {
   nx: {
     svgr: false,
   },
+  images: {
+    remotePatterns: [{ hostname: 'lh3.googleusercontent.com' }],
+  },
   sentry: {
     hideSourceMaps: true,
     widenClientFileUpload: true,

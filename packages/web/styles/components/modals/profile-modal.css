@@ -1,6 +1,7 @@
 .profile-modal {
   &__avatar-img {
     border-radius: 100%;
+    outline: 0.5px solid var(--mantine-color-neutral-3, #dcd5c7);
   }
 
   &__upload-img-btn {
