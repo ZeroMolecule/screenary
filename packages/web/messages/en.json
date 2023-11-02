@@ -5,6 +5,25 @@
     "template": "%s | Screenary",
     "description": "All your screens and apps in one place."
   },
+  "modal": {
+    "profile": {
+      "accountSettings": "Account Settings",
+      "deleteTitle": "Delete Profile",
+      "deleteDescription": "Are you sure you want to delete your profile?",
+      "deleteIconAlt": "Delete icon",
+      "profileImgAlt": "{user} profile photo",
+      "maxResolution": "Max resolution 1000x1000px",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "user@email.com",
+      "uploadImageAction": "Upload Image",
+      "deleteProfileAction": "Delete a profile",
+      "cancelAction": "Cancel",
+      "saveAction": "Save",
+      "deleteAction": "Delete"
+    }
+  },
   "auth": {
     "logoAlt": "Screenary logo",
     "socialAction": "Continue with {provider}"

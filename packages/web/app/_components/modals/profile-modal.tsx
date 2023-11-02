@@ -11,6 +11,7 @@ import {
   Title,
 } from '@mantine/core';
 import { IconTrash, IconUpload } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   opened: boolean;
@@ -18,7 +19,7 @@ type Props = {
 };
 
 export const ProfileModal: FC<Props> = (props) => {
-  const { opened, showDelete, setShowDelete, handleClose } =
+  const { t, opened, showDelete, setShowDelete, handleClose } =
     useProfileModal(props);
 
   const deleteModalBody = (
@@ -27,20 +28,20 @@ export const ProfileModal: FC<Props> = (props) => {
         src="/images/trash-icon.svg"
         width={130}
         height={130}
-        alt="Delete icon"
+        alt={t('deleteIconAlt')}
       />
       <Title size="h3" ta="center">
-        Delete Profile
+        {t('deleteTitle')}
       </Title>
       <Text size="lg" c="neutral.5" ta="center" maw={275}>
-        Are you sure you want to delete your profile?
+        {t('deleteDescription')}
       </Text>
       <Group w="75%" gap="xs" grow>
         <Button bg="neutral.7" fw={500} onClick={() => setShowDelete(false)}>
-          Cancel
+          {t('cancelAction')}
         </Button>
         <Button bg="primary.7" fw={500}>
-          Delete
+          {t('deleteAction')}
         </Button>
       </Group>
     </Stack>
@@ -57,13 +58,13 @@ export const ProfileModal: FC<Props> = (props) => {
         deleteModalBody
       ) : (
         <Stack gap="lg">
-          <Title size="h3">Account Settings</Title>
+          <Title size="h3">{t('accountSettings')}</Title>
           <Group gap="lg">
             <Image
               src="/images/cover-image.png"
               width={64}
               height={64}
-              alt="Avatar"
+              alt={t('profileImgAlt', { user: 'TODO:' })}
               className="profile-modal__avatar-img"
             />
             <Stack gap={4} align="flex-start">
@@ -75,15 +76,21 @@ export const ProfileModal: FC<Props> = (props) => {
                 rightSection={<IconUpload size={20} />}
                 className="profile-modal__upload-img-btn"
               >
-                Upload Image
+                {t('uploadImageAction')}
               </Button>
               <Text size="xs" c="neutral.5">
-                Max resolution 1000x1000px
+                {t('maxResolution')}
               </Text>
             </Stack>
           </Group>
-          <TextInput label="Name" placeholder="Enter your name" />
-          <TextInput label="Email" placeholder="user@email.com" />
+          <TextInput
+            label={t('nameLabel')}
+            placeholder={t('namePlaceholder')}
+          />
+          <TextInput
+            label={t('emailLabel')}
+            placeholder={t('emailPlaceholder')}
+          />
           <Box>
             <Button
               variant="subtle"
@@ -95,15 +102,15 @@ export const ProfileModal: FC<Props> = (props) => {
               leftSection={<IconTrash size={16} />}
               onClick={() => setShowDelete(true)}
             >
-              Delete a profile
+              {t('deleteProfileAction')}
             </Button>
           </Box>
           <Group grow gap="xs">
             <Button bg="neutral.7" fw={500} onClick={handleClose}>
-              Cancel
+              {t('cancelAction')}
             </Button>
             <Button bg="primary.7" fw={500}>
-              Save
+              {t('saveAction')}
             </Button>
           </Group>
         </Stack>
@@ -113,6 +120,7 @@ export const ProfileModal: FC<Props> = (props) => {
 };
 
 function useProfileModal({ opened, onClose }: Props) {
+  const t = useTranslations('modal.profile');
   const [showDelete, setShowDelete] = useState(false);
 
   const handleClose = async () => {
@@ -122,5 +130,5 @@ function useProfileModal({ opened, onClose }: Props) {
     }, 200);
   };
 
-  return { opened, showDelete, setShowDelete, handleClose };
+  return { t, opened, showDelete, setShowDelete, handleClose };
 }
