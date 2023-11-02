@@ -71,7 +71,7 @@ export const ProfileModal: FC<Props> = (props) => {
                   src={user?.image ?? '/images/avatar-placeholder.svg'}
                   width={64}
                   height={64}
-                  alt={t('profileImgAlt', { user: 'TODO:' })}
+                  alt={t('profileImgAlt', { user: user?.name })}
                   className="profile-modal__avatar-img"
                 />
                 <Stack gap={4} align="flex-start">
