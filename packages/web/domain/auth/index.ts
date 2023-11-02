@@ -4,10 +4,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import AppleProvider from 'next-auth/providers/apple';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
 import { ENV } from '@/env.server';
-
-const prisma = new PrismaClient();
+import { prisma } from '../db/prisma-client';
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
