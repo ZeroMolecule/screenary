@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { ENV } from '@/env.server';
 import Script from 'next/script';
-import { ENV } from '@/env';
+import { FC } from 'react';
 
 const code = `
   (function(c,l,a,r,i,t,y){
