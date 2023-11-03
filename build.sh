@@ -4,5 +4,4 @@ then
 elif [ $PACKAGE="web" ] 
 then
     nx run web:build:production
-else
 fi
