@@ -3,6 +3,8 @@ import { envBaseSchema } from './env';
 
 const envServerSchema = envBaseSchema.extend({
   WEB_URL: z.string().min(1),
+  DATABASE_URL: z.string().min(1),
+  SHADOW_DATABASE_URL: z.string().min(1),
   CLARITY_ID: z.string().min(1),
   SENTRY_AUTH_TOKEN: z.string().min(1),
   SENTRY_ORG: z.string().min(1),
