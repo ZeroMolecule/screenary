@@ -9,7 +9,7 @@ import {
   ProfileModal,
 } from '@/app/_components/modals/profile-modal';
 import { useMutation } from '@tanstack/react-query';
-import { editProfileMutation } from '@/domain/mutations/edit-profile-mutation';
+import { editMeMutation } from '@/domain/mutations/edit-me-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 
 export default function HomePage() {
@@ -53,7 +53,7 @@ function useHomePage() {
   const onSuccess = useNotificationSuccess('saved');
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: editProfileMutation.fnc,
+    mutationFn: editMeMutation.fnc,
     onSuccess: async (_, userSession) => {
       await update(userSession);
       onSuccess();
