@@ -13,6 +13,8 @@ import { editMeMutation } from '@/domain/mutations/edit-me-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
 
+// TODO: placeholder page for testing user session, profile editing & deleting
+
 export default function HomePage() {
   const { data, opened, open, close, isLoading, handleSubmit, handleDelete } =
     useHomePage();
@@ -79,7 +81,7 @@ function useHomePage() {
   };
 
   const handleDelete = async () => {
-    deleteMe();
+    await deleteMe();
   };
 
   return {
