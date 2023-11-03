@@ -2,7 +2,9 @@
   "name": "@screenary/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "sh ./build.sh"
+  },
   "private": true,
   "dependencies": {
     "@mantine/core": "^7.1.5",
