@@ -7,7 +7,7 @@ import { getCurrentTimezone } from '@/utils/datetime';
 
 type Props = {
   locale: string;
-  session?: Session | undefined | null;
+  session: Session | null;
   children: ReactNode;
 };
 
