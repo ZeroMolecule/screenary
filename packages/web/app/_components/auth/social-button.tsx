@@ -22,6 +22,8 @@ export const SocialButton: FC<Props> = (props) => {
   return (
     <Button
       justify="flex-start"
+      fw={500}
+      radius={6}
       leftSection={icon}
       className={classnames('social-button', `social-button--${provider}`)}
       classNames={{ inner: 'social-button__inner' }}
