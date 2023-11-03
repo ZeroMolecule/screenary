@@ -1,7 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Put } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
 import { PrismaService } from '../shared/services/prisma.service';
+import { MeUpdateDto, meUpdateSchema } from './dtos/me-update.dto';
+import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -10,5 +12,16 @@ export class UsersController {
   @Get('me')
   async me(@AuthUser() user: User) {
     return this.prismaService.user.findFirst({ where: { id: user.id } });
+  }
+
+  @Put('me')
+  async updateMe(
+    @AuthUser() user: User,
+    @Body(new ZodValidationPipe(meUpdateSchema)) body: MeUpdateDto
+  ) {
+    return this.prismaService.user.update({
+      where: { id: user.id },
+      data: body,
+    });
   }
 }

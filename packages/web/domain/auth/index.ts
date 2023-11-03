@@ -31,10 +31,20 @@ export const authOptions: AuthOptions = {
     maxAge: 1 * 24 * 60 * 60, // 1 day session storage,
   },
   callbacks: {
-    session: async ({ session }) => {
-      const token = cookies().get('next-auth.session-token')?.value;
+    jwt: async ({ token, trigger, session }) => {
+      if (trigger === 'update') {
+        token = { ...token, ...session };
+      }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      const cookieToken = cookies().get('next-auth.session-token')?.value;
+      if (cookieToken) {
+        session.token = cookieToken;
+      }
       if (token) {
-        session.token = token;
+        const { name, email, picture } = token;
+        session.user = { name, email, image: picture };
       }
       return session;
     },

@@ -48,18 +48,20 @@ export default function HomePage() {
 }
 
 function useHomePage() {
-  const { data } = useSession();
+  const { data, update } = useSession();
   const [opened, { open, close }] = useDisclosure(false);
   const onSuccess = useNotificationSuccess('saved');
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: editProfileMutation.fnc,
-    onSuccess,
+    onSuccess: async (_, userSession) => {
+      onSuccess();
+      await update(userSession);
+    },
   });
 
   const handleSubmit = async (values: ProfileFormValues) => {
-    const response = await mutateAsync(values);
-    console.log({ response });
+    await mutateAsync(values);
   };
 
   return { data, opened, open, close, isPending, handleSubmit };
