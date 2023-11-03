@@ -13,6 +13,7 @@ type Props = {
   opened: boolean;
   onClose: () => void;
   onSubmit: (values: ProfileFormValues) => Promise<void>;
+  onDelete: () => Promise<void>;
   user?: Partial<User>;
   isLoading?: boolean;
 };
@@ -28,6 +29,7 @@ export const ProfileModal: FC<Props> = (props) => {
     setShowDelete,
     handleClose,
     onSubmit,
+    onDelete,
   } = useProfileModal(props);
 
   const deleteModalBody = (
@@ -48,7 +50,7 @@ export const ProfileModal: FC<Props> = (props) => {
         <Button bg="neutral.7" fw={500} onClick={() => setShowDelete(false)}>
           {t('cancelAction')}
         </Button>
-        <Button bg="primary.7" fw={500}>
+        <Button bg="primary.7" fw={500} onClick={onDelete} loading={isLoading}>
           {t('deleteAction')}
         </Button>
       </Group>
@@ -143,6 +145,7 @@ function useProfileModal({
   opened,
   onClose,
   onSubmit,
+  onDelete,
   user,
   isLoading,
 }: Props) {
@@ -175,6 +178,7 @@ function useProfileModal({
     setShowDelete,
     handleClose,
     onSubmit: profileForm.handleSubmit(onSubmit),
+    onDelete,
   };
 }
 

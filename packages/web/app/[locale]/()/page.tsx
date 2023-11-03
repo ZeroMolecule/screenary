@@ -11,9 +11,11 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { editMeMutation } from '@/domain/mutations/edit-me-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
+import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
 
 export default function HomePage() {
-  const { data, opened, open, close, isPending, handleSubmit } = useHomePage();
+  const { data, opened, open, close, isLoading, handleSubmit, handleDelete } =
+    useHomePage();
 
   return (
     <Screensaver>
@@ -40,8 +42,9 @@ export default function HomePage() {
         opened={opened}
         onClose={close}
         onSubmit={handleSubmit}
+        onDelete={handleDelete}
         user={data?.user}
-        isLoading={isPending}
+        isLoading={isLoading}
       />
     </Screensaver>
   );
@@ -50,20 +53,42 @@ export default function HomePage() {
 function useHomePage() {
   const { data, update } = useSession();
   const [opened, { open, close }] = useDisclosure(false);
-  const onSuccess = useNotificationSuccess('saved');
+  const onEdit = useNotificationSuccess('saved');
+  const onDelete = useNotificationSuccess('deleted');
 
-  const { mutateAsync, isPending } = useMutation({
+  const { mutateAsync: editMe, isPending: isEditing } = useMutation({
     mutationFn: editMeMutation.fnc,
     onSuccess: async (_, userSession) => {
       await update(userSession);
-      onSuccess();
+      onEdit();
+      close();
+    },
+  });
+
+  const { mutateAsync: deleteMe, isPending: isDeleting } = useMutation({
+    mutationFn: deleteMeMutation.fnc,
+    onSuccess: async () => {
+      await signOut();
+      onDelete();
       close();
     },
   });
 
   const handleSubmit = async (values: ProfileFormValues) => {
-    await mutateAsync(values);
+    await editMe(values);
   };
 
-  return { data, opened, open, close, isPending, handleSubmit };
+  const handleDelete = async () => {
+    deleteMe();
+  };
+
+  return {
+    data,
+    opened,
+    open,
+    close,
+    isLoading: isEditing || isDeleting,
+    handleSubmit,
+    handleDelete,
+  };
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Put } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
 import { PrismaService } from '../shared/services/prisma.service';
@@ -22,6 +22,13 @@ export class UsersController {
     return this.prismaService.user.update({
       where: { id: user.id },
       data: body,
+    });
+  }
+
+  @Delete('me')
+  async deleteMe(@AuthUser() user: User) {
+    return await this.prismaService.user.delete({
+      where: { id: user.id },
     });
   }
 }
