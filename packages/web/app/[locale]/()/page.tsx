@@ -55,8 +55,9 @@ function useHomePage() {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: editProfileMutation.fnc,
     onSuccess: async (_, userSession) => {
-      onSuccess();
       await update(userSession);
+      onSuccess();
+      close();
     },
   });
 
