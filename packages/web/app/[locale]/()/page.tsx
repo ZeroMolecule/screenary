@@ -10,6 +10,7 @@ import {
 } from '@/app/_components/modals/profile-modal';
 import { useMutation } from '@tanstack/react-query';
 import { editProfileMutation } from '@/domain/mutations/edit-profile-mutation';
+import { useNotificationSuccess } from '@/hooks/use-notification-success';
 
 export default function HomePage() {
   const { data, opened, open, close, isPending, handleSubmit } = useHomePage();
@@ -49,13 +50,16 @@ export default function HomePage() {
 function useHomePage() {
   const { data } = useSession();
   const [opened, { open, close }] = useDisclosure(false);
+  const onSuccess = useNotificationSuccess('saved');
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: editProfileMutation.fnc,
+    onSuccess,
   });
 
   const handleSubmit = async (values: ProfileFormValues) => {
-    console.log(values);
+    const response = await mutateAsync(values);
+    console.log({ response });
   };
 
   return { data, opened, open, close, isPending, handleSubmit };
