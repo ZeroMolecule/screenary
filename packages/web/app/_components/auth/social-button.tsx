@@ -34,7 +34,6 @@ export const SocialButton: FC<Props> = (props) => {
       radius={6}
       leftSection={buttonStyles.icon}
       className={classnames({ 'social-button--google': provider === 'google' })}
-      classNames={{ inner: 'social-button__inner' }}
       onClick={() => signIn(provider)}
     >
       {label}
