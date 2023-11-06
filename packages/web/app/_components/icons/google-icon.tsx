@@ -1,9 +1,17 @@
-import { FC } from 'react';
-import { IconSvg, SvgProps } from './icon-svg';
+import { FC, SVGProps } from 'react';
 
-export const GoogleIcon: FC<SvgProps> = (props) => {
+export type Props = SVGProps<SVGSVGElement>;
+
+export const GoogleIcon: FC<Props> = (props) => {
   return (
-    <IconSvg width="15" height="16" viewBox="0 0 15 16" {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="15"
+      height="16"
+      viewBox="0 0 15 16"
+      fill="none"
+      {...props}
+    >
       <path
         d="M14.5 8.27157C14.5 7.68877 14.4482 7.26139 14.3446 6.80811H7.63599V9.46306H11.5731C11.4954 10.1236 11.068 11.1078 10.1096 11.7813L10.0967 11.872L12.2206 13.5167L12.3631 13.5297C13.723 12.2864 14.5 10.4473 14.5 8.27157Z"
         fill="#4877BB"
@@ -20,6 +28,6 @@ export const GoogleIcon: FC<SvgProps> = (props) => {
         d="M7.63607 3.73879C8.98298 3.73879 9.8766 4.32159 10.3946 4.80077L12.415 2.83222C11.1717 1.67958 9.56577 0.980225 7.63607 0.980225C4.83865 0.980225 2.42976 2.58615 1.25122 4.91733L3.5565 6.71752C4.1393 4.98209 5.74522 3.73879 7.63607 3.73879Z"
         fill="#E73830"
       />
-    </IconSvg>
+    </svg>
   );
 };
