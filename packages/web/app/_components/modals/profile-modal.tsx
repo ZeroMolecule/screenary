@@ -1,13 +1,22 @@
 import { FC, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Box, Button, Group, Modal, Stack, Text, Title } from '@mantine/core';
+import {
+  Box,
+  Button as MantineButton,
+  Group,
+  Modal,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import { IconTrash, IconUpload } from '@tabler/icons-react';
 import { User } from '@prisma/client';
 import { FormProvider, useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormTextInput } from '../base/form/text-input';
+import { Button } from '../base/button';
 
 type Props = {
   opened: boolean;
@@ -15,7 +24,6 @@ type Props = {
   onSubmit: SubmitHandler<ProfileFormValues>;
   onDelete: () => Promise<void>;
   user?: Partial<User>;
-  isLoading?: boolean;
 };
 
 export const ProfileModal: FC<Props> = (props) => {
@@ -47,10 +55,14 @@ export const ProfileModal: FC<Props> = (props) => {
         {t('deleteDescription')}
       </Text>
       <Group w="75%" gap="xs" grow>
-        <Button bg="neutral.7" fw={500} onClick={() => setShowDelete(false)}>
+        <MantineButton
+          bg="neutral.7"
+          fw={500}
+          onClick={() => setShowDelete(false)}
+        >
           {t('cancelAction')}
-        </Button>
-        <Button bg="primary.7" fw={500} onClick={onDelete} loading={isLoading}>
+        </MantineButton>
+        <Button bg="primary.7" fw={500} onClick={onDelete}>
           {t('deleteAction')}
         </Button>
       </Group>
@@ -80,7 +92,7 @@ export const ProfileModal: FC<Props> = (props) => {
                   className="profile-modal__avatar-img"
                 />
                 <Stack gap={4} align="flex-start">
-                  <Button
+                  <MantineButton
                     variant="outline"
                     size="sm"
                     c="neutral.7"
@@ -89,7 +101,7 @@ export const ProfileModal: FC<Props> = (props) => {
                     className="profile-modal__upload-img-btn"
                   >
                     {t('uploadImageAction')}
-                  </Button>
+                  </MantineButton>
                   <Text size="xs" c="neutral.5">
                     {t('maxResolution')}
                   </Text>
@@ -107,7 +119,7 @@ export const ProfileModal: FC<Props> = (props) => {
                 placeholder={t('emailPlaceholder')}
               />
               <Box>
-                <Button
+                <MantineButton
                   variant="subtle"
                   size="xs"
                   px={4}
@@ -118,20 +130,20 @@ export const ProfileModal: FC<Props> = (props) => {
                   onClick={() => setShowDelete(true)}
                 >
                   {t('deleteProfileAction')}
-                </Button>
+                </MantineButton>
               </Box>
               <Group grow gap="xs">
-                <Button bg="neutral.7" fw={500} onClick={handleClose}>
+                <MantineButton bg="neutral.7" fw={500} onClick={handleClose}>
                   {t('cancelAction')}
-                </Button>
-                <Button
+                </MantineButton>
+                <MantineButton
                   type="submit"
                   bg="primary.7"
                   fw={500}
                   loading={isLoading}
                 >
                   {t('saveAction')}
-                </Button>
+                </MantineButton>
               </Group>
             </Stack>
           </form>
@@ -141,14 +153,7 @@ export const ProfileModal: FC<Props> = (props) => {
   );
 };
 
-function useProfileModal({
-  opened,
-  onClose,
-  onSubmit,
-  onDelete,
-  user,
-  isLoading,
-}: Props) {
+function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
   const t = useTranslations('modal.profile');
   const [showDelete, setShowDelete] = useState(false);
 
@@ -160,6 +165,10 @@ function useProfileModal({
       image: user?.image ?? '',
     },
   });
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = profileForm;
 
   const handleClose = async () => {
     onClose();
@@ -174,10 +183,10 @@ function useProfileModal({
     user,
     showDelete,
     profileForm,
-    isLoading,
+    isLoading: isSubmitting,
     setShowDelete,
     handleClose,
-    onSubmit: profileForm.handleSubmit(onSubmit),
+    onSubmit: handleSubmit(onSubmit),
     onDelete,
   };
 }

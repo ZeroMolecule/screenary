@@ -16,7 +16,7 @@ import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
 // TODO: placeholder page for testing user session, profile editing & deleting
 
 export default function HomePage() {
-  const { data, opened, open, close, isLoading, handleSubmit, handleDelete } =
+  const { data, opened, open, close, handleSubmit, handleDelete } =
     useHomePage();
 
   return (
@@ -46,7 +46,6 @@ export default function HomePage() {
         onSubmit={handleSubmit}
         onDelete={handleDelete}
         user={data?.user}
-        isLoading={isLoading}
       />
     </Screensaver>
   );
@@ -58,7 +57,7 @@ function useHomePage() {
   const onEdit = useNotificationSuccess('saved');
   const onDelete = useNotificationSuccess('deleted');
 
-  const { mutateAsync: editMe, isPending: isEditing } = useMutation({
+  const { mutateAsync: editMe } = useMutation({
     mutationFn: editMeMutation.fnc,
     onSuccess: async (_, userSession) => {
       await update(userSession);
@@ -67,7 +66,7 @@ function useHomePage() {
     },
   });
 
-  const { mutateAsync: deleteMe, isPending: isDeleting } = useMutation({
+  const { mutateAsync: deleteMe } = useMutation({
     mutationFn: deleteMeMutation.fnc,
     onSuccess: async () => {
       await signOut();
@@ -89,7 +88,6 @@ function useHomePage() {
     opened,
     open,
     close,
-    isLoading: isEditing || isDeleting,
     handleSubmit,
     handleDelete,
   };
