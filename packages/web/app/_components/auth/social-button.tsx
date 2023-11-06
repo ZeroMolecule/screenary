@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import { AppleIcon } from '../icons/apple-icon';
 import { FacebookIcon } from '../icons/facebook-icon';
 import { GoogleIcon } from '../icons/google-icon';
+import { paths } from '@/navigation/paths';
 
 type ButtonStyles = {
   icon: ReactElement;
@@ -34,7 +35,7 @@ export const SocialButton: FC<Props> = (props) => {
       radius={6}
       leftSection={buttonStyles.icon}
       className={classnames({ 'social-button--google': provider === 'google' })}
-      onClick={() => signIn(provider)}
+      onClick={() => signIn(provider, { callbackUrl: paths.home() })}
     >
       {label}
     </Button>
