@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import { isAxiosError } from 'axios';
 import { notifications } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
+import { useNotificationSuccess } from '@/hooks/use-notification-success';
 
 type Props = {
   children: ReactNode;
@@ -28,12 +29,14 @@ export const QueryClientProvider: FC<Props> = ({ children }) => {
 
 function useQueryClientProvider() {
   const t = useTranslations('notification');
+  const onSuccess = useNotificationSuccess('saved');
 
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           mutations: {
+            onSuccess,
             onError: (error) => {
               let message;
               if (isAxiosError(error)) {
