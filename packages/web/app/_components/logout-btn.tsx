@@ -8,7 +8,7 @@ export const LogoutButton: FC = () => {
   return (
     <Button
       size="xl"
-      onClick={() => {
+      onClick={async () => {
         signOut();
       }}
     >
