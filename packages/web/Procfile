@@ -1,0 +1,1 @@
+web: npx nx run web:serve --configuration=production
