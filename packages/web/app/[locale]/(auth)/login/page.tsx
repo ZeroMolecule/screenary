@@ -3,13 +3,13 @@ import { Card, Stack } from '@mantine/core';
 import { SocialButton } from '@/app/_components/auth/social-button';
 import { useTranslations } from 'next-intl';
 import logoWhite from '@/public/images/logo-white.png';
-import { AuthPage } from '@/app/_components/protectors/auth-page';
+import { PublicOnlyPage } from '@/app/_components/protectors/public-only-page';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
 
   return (
-    <AuthPage>
+    <PublicOnlyPage>
       <Stack align="center" my="auto">
         <Image
           src={logoWhite}
@@ -26,6 +26,6 @@ export default function LoginPage() {
           </Stack>
         </Card>
       </Stack>
-    </AuthPage>
+    </PublicOnlyPage>
   );
 }

@@ -8,10 +8,10 @@ type Props = {
   children: ReactNode;
 };
 
-export const PublicPage: FC<Props> = async ({ children }) => {
+export const PublicOnlyPage: FC<Props> = async ({ children }) => {
   const session = await getServerSession(authOptions);
-  if (!session) {
-    redirect(paths.login());
+  if (session) {
+    redirect(paths.home());
   }
 
   return <>{children}</>;
