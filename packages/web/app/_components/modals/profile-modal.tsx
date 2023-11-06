@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Box, Button, Group, Modal, Stack, Text, Title } from '@mantine/core';
 import { IconTrash, IconUpload } from '@tabler/icons-react';
 import { User } from '@prisma/client';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormTextInput } from '../base/form/text-input';
@@ -12,7 +12,7 @@ import { FormTextInput } from '../base/form/text-input';
 type Props = {
   opened: boolean;
   onClose: () => void;
-  onSubmit: (values: ProfileFormValues) => Promise<void>;
+  onSubmit: SubmitHandler<ProfileFormValues>;
   onDelete: () => Promise<void>;
   user?: Partial<User>;
   isLoading?: boolean;
