@@ -1,18 +1,6 @@
 .social-button {
-  &--apple {
-    color: var(--mantine-color-white);
-    background-color: var(--mantine-color-black);
-  }
-
   &--google {
-    color: var(--mantine-google-icon-color);
-    background-color: var(--mantine-color-white);
     border: 0.87px solid var(--mantine-google-icon-border-color);
-  }
-
-  &--facebook {
-    color: var(--mantine-color-white);
-    background-color: var(--mantine-facebook-icon-background-color);
   }
 
   &__inner {
