@@ -1,23 +1,23 @@
-import { FC, useState } from 'react';
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
 import {
   Box,
-  Button as MantineButton,
   Group,
+  Button as MantineButton,
   Modal,
   Stack,
   Text,
   Title,
 } from '@mantine/core';
-import { IconTrash, IconUpload } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { FC, useState } from 'react';
 
-import { FormProvider, useForm, SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormTextInput } from '../base/form/text-input';
-import { Button } from '../base/button';
 import { DefaultSession } from 'next-auth';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '../base/button';
+import { FormTextInput } from '../base/form/text-input';
 
 type Props = {
   opened: boolean;
@@ -92,21 +92,6 @@ export const ProfileModal: FC<Props> = (props) => {
                   alt={t('profileImgAlt', { user: user?.name })}
                   className="profile-modal__avatar-img"
                 />
-                <Stack gap={4} align="flex-start">
-                  <MantineButton
-                    variant="outline"
-                    size="sm"
-                    c="neutral.7"
-                    fw={500}
-                    rightSection={<IconUpload size={20} />}
-                    className="profile-modal__upload-img-btn"
-                  >
-                    {t('uploadImageAction')}
-                  </MantineButton>
-                  <Text size="xs" c="neutral.5">
-                    {t('maxResolution')}
-                  </Text>
-                </Stack>
               </Group>
               <FormTextInput
                 name="name"
