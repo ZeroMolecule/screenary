@@ -1,15 +1,14 @@
 import { getServerSession } from 'next-auth';
-import { Stack, Text, Title } from '@mantine/core';
+import { Box, Stack, Text, Title } from '@mantine/core';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { authOptions } from '@/domain/auth';
-import { Screensaver } from '@/app/_components/screensaver';
 import { LogoutButton } from '@/app/_components/logout-btn';
 
 async function HomePage() {
   const session = await getServerSession(authOptions);
 
   return (
-    <Screensaver>
+    <Box h="100%" style={{ border: '2px solid green' }}>
       <Stack justify="space-around" align="center">
         <Stack gap={0}>
           <Title c="white">Screenary</Title>
@@ -26,7 +25,7 @@ async function HomePage() {
           <LogoutButton />
         </Stack>
       </Stack>
-    </Screensaver>
+    </Box>
   );
 }
 

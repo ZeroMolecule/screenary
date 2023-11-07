@@ -8,5 +8,14 @@
   "auth": {
     "logoAlt": "Screenary logo",
     "socialAction": "Continue with {provider}"
+  },
+  "header": {
+    "logoAlt": "Screenary logo",
+    "navigation": {
+      "home": "Home",
+      "todo": "To Do",
+      "inbox": "Inbox",
+      "calendar": "Calendar"
+    }
   }
 }
