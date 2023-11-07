@@ -8,7 +8,7 @@ import { QueryClientProvider } from './query-client';
 
 type Props = {
   locale: string;
-  session?: Session | undefined | null;
+  session: Session | null;
   children: ReactNode;
 };
 

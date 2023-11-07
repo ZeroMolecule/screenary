@@ -1,0 +1,23 @@
+diff --git a/node_modules/@nx/next/src/executors/server/server.impl.js b/node_modules/@nx/next/src/executors/server/server.impl.js
+index bda0623..54ee663 100644
+--- a/node_modules/@nx/next/src/executors/server/server.impl.js
++++ b/node_modules/@nx/next/src/executors/server/server.impl.js
+@@ -13,7 +13,8 @@ async function* serveExecutor(options, context) {
+     }
+     const buildOptions = (0, devkit_1.readTargetOptions)((0, devkit_1.parseTargetString)(options.buildTarget, context.projectGraph), context);
+     const projectRoot = context.workspace.projects[context.projectName].root;
+-    const { port, keepAliveTimeout, hostname } = options;
++    const {  keepAliveTimeout, hostname } = options;
++    const port = process.env.PORT || options.port;
+     // This is required for the default custom server to work. See the @nx/next:app generator.
+     process.env.NX_NEXT_DIR = projectRoot;
+     // Cast to any to overwrite NODE_ENV
+@@ -23,7 +24,7 @@ async function* serveExecutor(options, context) {
+             ? 'development'
+             : 'production';
+     // Setting port that the custom server should use.
+-    process.env.PORT = `${options.port}`;
++    process.env.PORT = `${port}`;
+     const args = (0, create_cli_options_1.createCliOptions)({ port, hostname });
+     if (keepAliveTimeout && !options.dev) {
+         args.push(`--keepAliveTimeout=${keepAliveTimeout}`);

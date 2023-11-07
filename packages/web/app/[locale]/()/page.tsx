@@ -1,7 +1,5 @@
-'use client';
-
-import { signOut, useSession } from 'next-auth/react';
-import { Button, Stack, Text, Title } from '@mantine/core';
+import { Stack, Text, Title, Button } from '@mantine/core';
+import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { Screensaver } from '@/app/_components/screensaver';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -12,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { editMeMutation } from '@/domain/mutations/edit-me-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
+import { LogoutButton } from '@/app/_components/logout-btn';
 
 // TODO: placeholder page for testing user session, profile editing & deleting
 
@@ -35,9 +34,7 @@ export default function HomePage() {
         </Stack>
         <Stack>
           <Button onClick={open}>Edit Profile</Button>
-          <Button size="xl" onClick={() => signOut()}>
-            Log Out
-          </Button>
+          <LogoutButton />
         </Stack>
       </Stack>
       <ProfileModal
@@ -92,3 +89,5 @@ function useHomePage() {
     handleDelete,
   };
 }
+
+export default withPrivatePage(HomePage);

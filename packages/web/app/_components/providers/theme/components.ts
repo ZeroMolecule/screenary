@@ -24,6 +24,11 @@ export const components: MantineThemeComponents = {
       radius: rem(6),
       size: 'md',
     },
+    styles: {
+      inner: {
+        gap: 'var(--mantine-spacing-md)',
+      },
+    },
   }),
   Modal: Modal.extend({
     styles: {

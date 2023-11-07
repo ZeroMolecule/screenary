@@ -1,6 +1,8 @@
-import { FC } from 'react';
+import { FC, SVGProps } from 'react';
 
-export const GoogleIcon: FC = () => {
+export type Props = SVGProps<SVGSVGElement>;
+
+export const GoogleIcon: FC<Props> = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +10,7 @@ export const GoogleIcon: FC = () => {
       height="16"
       viewBox="0 0 15 16"
       fill="none"
+      {...props}
     >
       <path
         d="M14.5 8.27157C14.5 7.68877 14.4482 7.26139 14.3446 6.80811H7.63599V9.46306H11.5731C11.4954 10.1236 11.068 11.1078 10.1096 11.7813L10.0967 11.872L12.2206 13.5167L12.3631 13.5297C13.723 12.2864 14.5 10.4473 14.5 8.27157Z"
