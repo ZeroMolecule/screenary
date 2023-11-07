@@ -16,6 +16,11 @@
       "todo": "To Do",
       "inbox": "Inbox",
       "calendar": "Calendar"
+    },
+    "userMenu": {
+      "avatarAlt": "Avatar placeholder",
+      "profile": "Profile",
+      "logout": "Log out"
     }
   }
 }

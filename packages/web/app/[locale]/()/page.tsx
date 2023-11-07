@@ -8,7 +8,7 @@ async function HomePage() {
   const session = await getServerSession(authOptions);
 
   return (
-    <Box h="100%" style={{ border: '2px solid green' }}>
+    <Box h="100%">
       <Stack justify="space-around" align="center">
         <Stack gap={0}>
           <Title c="white">Screenary</Title>

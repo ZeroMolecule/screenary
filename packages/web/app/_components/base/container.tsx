@@ -3,7 +3,7 @@ import {
   Container as MantineContainer,
   ContainerProps as MantineContainerProps,
 } from '@mantine/core';
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 type Props = MantineContainerProps;
 
@@ -11,7 +11,7 @@ export const Container: FC<Props> = ({ children, className, ...restProps }) => {
   return (
     <MantineContainer
       {...restProps}
-      className={classnames('container', className)}
+      className={classNames('container', className)}
     >
       {children}
     </MantineContainer>

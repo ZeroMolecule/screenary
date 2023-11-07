@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import logo from '@/public/images/logo-black.svg';
-import { Button, Group } from '@mantine/core';
-import { Navigation } from './navigation';
-import { Link } from '../base/link';
+import { Group } from '@mantine/core';
 import { paths } from '@/navigation/paths';
+import { Link } from '../base/link';
+import { Navigation } from './navigation';
+import { UserMenu } from './user-menu';
+import logo from '@/public/images/logo-black.svg';
 
 export const Header: FC = () => {
   const t = useTranslations('header');
@@ -18,7 +19,7 @@ export const Header: FC = () => {
         </Link>
         <Navigation />
       </Group>
-      <Button>User Profile</Button>
+      <UserMenu />
     </header>
   );
 };
