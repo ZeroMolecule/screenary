@@ -61,7 +61,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Providers locale={locale} session={session}>
-          {children}
+          <main className="main-layout">{children}</main>
         </Providers>
       </body>
     </html>

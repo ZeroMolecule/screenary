@@ -5,6 +5,32 @@
     "template": "%s | Screenary",
     "description": "All your screens and apps in one place."
   },
+  "notification": {
+    "success": {
+      "saved": "Saved!",
+      "deleted": "Deleted!"
+    },
+    "error": {
+      "somethingWentWrong": "Something went wrong."
+    }
+  },
+  "modal": {
+    "profile": {
+      "accountSettings": "Account Settings",
+      "deleteTitle": "Delete Profile",
+      "deleteDescription": "Are you sure you want to delete your profile?",
+      "deleteIconAlt": "Delete icon",
+      "profileImgAlt": "{user} profile photo",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "user@email.com",
+      "deleteProfileAction": "Delete a profile",
+      "cancelAction": "Cancel",
+      "saveAction": "Save",
+      "deleteAction": "Delete"
+    }
+  },
   "auth": {
     "logoAlt": "Screenary logo",
     "socialAction": "Continue with {provider}"
