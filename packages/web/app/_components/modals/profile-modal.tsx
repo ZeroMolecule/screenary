@@ -11,19 +11,20 @@ import {
   Title,
 } from '@mantine/core';
 import { IconTrash, IconUpload } from '@tabler/icons-react';
-import { User } from '@prisma/client';
+
 import { FormProvider, useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormTextInput } from '../base/form/text-input';
 import { Button } from '../base/button';
+import { DefaultSession, User } from 'next-auth';
 
 type Props = {
   opened: boolean;
   onClose: () => void;
   onSubmit: SubmitHandler<ProfileFormValues>;
   onDelete: () => Promise<void>;
-  user?: Partial<User>;
+  user: DefaultSession['user'];
 };
 
 export const ProfileModal: FC<Props> = (props) => {
