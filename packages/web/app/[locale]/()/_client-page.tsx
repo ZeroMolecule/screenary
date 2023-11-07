@@ -1,17 +1,17 @@
 'use client';
 
-import { Stack, Text, Title, Button } from '@mantine/core';
-import { Screensaver } from '@/app/_components/screensaver';
-import { useDisclosure } from '@mantine/hooks';
+import { LogoutButton } from '@/app/_components/logout-btn';
 import {
   ProfileFormValues,
   ProfileModal,
 } from '@/app/_components/modals/profile-modal';
-import { useMutation } from '@tanstack/react-query';
+import { Screensaver } from '@/app/_components/screensaver';
+import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
 import { editMeMutation } from '@/domain/mutations/edit-me-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
-import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
-import { LogoutButton } from '@/app/_components/logout-btn';
+import { Button, Stack, Text, Title } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { useMutation } from '@tanstack/react-query';
 import { signOut, useSession } from 'next-auth/react';
 
 // TODO: placeholder page for testing user session, profile editing & deleting
@@ -75,11 +75,11 @@ function useHomePage() {
   });
 
   const handleSubmit = async (values: ProfileFormValues) => {
-    await editMe(values);
+    await editMe(values).catch(() => null);
   };
 
   const handleDelete = async () => {
-    await deleteMe();
+    await deleteMe().catch(() => null);
   };
 
   return {
