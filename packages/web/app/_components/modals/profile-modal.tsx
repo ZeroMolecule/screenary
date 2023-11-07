@@ -17,7 +17,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormTextInput } from '../base/form/text-input';
 import { Button } from '../base/button';
-import { DefaultSession, User } from 'next-auth';
+import { DefaultSession } from 'next-auth';
 
 type Props = {
   opened: boolean;
