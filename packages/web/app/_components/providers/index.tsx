@@ -1,14 +1,17 @@
 import { FC, ReactNode } from 'react';
+import type { Session } from 'next-auth';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { ThemeProvider } from './theme';
+import { SessionProvider } from './session';
 import { getCurrentTimezone } from '@/utils/datetime';
 
 type Props = {
   locale: string;
+  session: Session | null;
   children: ReactNode;
 };
 
-export const Providers: FC<Props> = ({ locale, children }) => {
+export const Providers: FC<Props> = ({ locale, session, children }) => {
   const messages = useMessages();
 
   return (
@@ -17,7 +20,9 @@ export const Providers: FC<Props> = ({ locale, children }) => {
       messages={messages}
       timeZone={getCurrentTimezone()}
     >
-      <ThemeProvider>{children}</ThemeProvider>
+      <SessionProvider session={session}>
+        <ThemeProvider>{children}</ThemeProvider>
+      </SessionProvider>
     </NextIntlClientProvider>
   );
 };

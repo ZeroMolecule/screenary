@@ -13,5 +13,6 @@ export const envVariablesSchema = z.object({
   SENTRY_API_PROJECT: z.string().min(1),
   SENTRY_RELEASE: z.string().nullish(),
   DATABASE_URL: z.string().min(1),
+  SHADOW_DATABASE_URL: z.string().min(1),
   NEXTAUTH_SECRET: z.string().min(1),
 });

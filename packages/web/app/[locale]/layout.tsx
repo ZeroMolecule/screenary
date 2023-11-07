@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
 import { getTranslator } from 'next-intl/server';
 import { LOCALES } from '@/utils/constants';
 import { Providers } from '../_components/providers';
 import { ColorSchemeScript } from '@mantine/core';
+import { authOptions } from '@/domain/auth';
 import { MsClarity } from '../_components/ms-clarity';
 import { ENV } from '@/env.server';
 
@@ -28,7 +30,7 @@ export async function generateMetadata({
     openGraph: {
       title: t('title'),
       description: t('description'),
-      images: [{ url: 'cover-image.png' }],
+      images: [{ url: 'images/cover-image.png' }],
       locale,
       type: 'website',
     },
@@ -36,7 +38,7 @@ export async function generateMetadata({
       card: 'summary',
       title: t('title'),
       description: t('description'),
-      images: [{ url: 'cover-image.png' }],
+      images: [{ url: 'images/cover-image.png' }],
     },
   };
 }
@@ -49,6 +51,8 @@ export default async function RootLayout({
     return notFound();
   }
 
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang={locale}>
       <head>
@@ -56,7 +60,9 @@ export default async function RootLayout({
         <MsClarity />
       </head>
       <body>
-        <Providers locale={locale}>{children}</Providers>
+        <Providers locale={locale} session={session}>
+          {children}
+        </Providers>
       </body>
     </html>
   );
