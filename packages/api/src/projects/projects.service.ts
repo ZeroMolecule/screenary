@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../shared/services/prisma.service';
-import { Project, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { CreateProjectDto } from './dtos/create-project.dto';
 import { UpdateProjectDto } from './dtos/update-project.dto';
+import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 
 @Injectable()
 export class ProjectsService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(dto: CreateProjectDto, user: User): Promise<Project> {
+  async create(dto: CreateProjectDto, user: User) {
     return this.prismaService.project.create({
       data: {
         ...dto,
@@ -21,11 +22,7 @@ export class ProjectsService {
     });
   }
 
-  async update(
-    id: string,
-    dto: UpdateProjectDto,
-    user: User
-  ): Promise<Project | null> {
+  async update(id: string, dto: UpdateProjectDto, user: User) {
     return this.prismaService.project.update({
       where: {
         id: id,
@@ -35,13 +32,11 @@ export class ProjectsService {
           },
         },
       },
-      data: {
-        ...dto,
-      },
+      data: dto,
     });
   }
 
-  async findOne(id: string, user: User): Promise<Project | null> {
+  async findOne(id: string, user: User) {
     return this.prismaService.project.findFirst({
       where: {
         id: id,
@@ -54,19 +49,25 @@ export class ProjectsService {
     });
   }
 
-  async findMany(user: User): Promise<Project[]> {
-    return this.prismaService.project.findMany({
-      where: {
-        users: {
-          some: {
-            id: user.id,
-          },
+  async findMany(user: User, pagination: PaginationQuery) {
+    const where = {
+      users: {
+        some: {
+          id: user.id,
         },
       },
-    });
+    };
+
+    return Promise.all([
+      this.prismaService.project.findMany({
+        where,
+        ...pagination,
+      }),
+      this.prismaService.project.count({ where }),
+    ]);
   }
 
-  async remove(id: string, user: User): Promise<Project> {
+  async remove(id: string, user: User) {
     return this.prismaService.project.delete({
       where: {
         id: id,

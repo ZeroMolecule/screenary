@@ -8,6 +8,9 @@ import { catchError, Observable, of } from 'rxjs';
 import { Promise } from 'cypress/types/cy-bluebird';
 import { Prisma } from '@prisma/client';
 
+enum ErrorCodes {
+  DependingRecordNotFound = 'P2025',
+}
 @Injectable()
 export class PrismaExceptionInterceptor implements NestInterceptor {
   intercept(
@@ -16,13 +19,11 @@ export class PrismaExceptionInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       catchError((error) => {
-        // Check if the error is the specific error you want to catch
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === 'P2025') {
+          if (error.code === ErrorCodes.DependingRecordNotFound) {
             return of(null);
           }
         }
-        // If it's not the specific error, rethrow it
         throw error;
       })
     );

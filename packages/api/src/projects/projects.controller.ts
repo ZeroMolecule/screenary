@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Project, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import {
   CreateProjectDto,
   createProjectSchema,
@@ -19,6 +19,8 @@ import {
   updateProjectSchema,
 } from './dtos/update-project.dto';
 import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
+import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import { List } from '../shared/decorators/list.decorator';
 
 @Controller('projects')
 export class ProjectsController {
@@ -28,7 +30,7 @@ export class ProjectsController {
   async create(
     @Body(new ZodValidationPipe(createProjectSchema)) data: CreateProjectDto,
     @AuthUser() user: User
-  ): Promise<Project> {
+  ) {
     return this.projectService.create(data, user);
   }
 
@@ -37,28 +39,33 @@ export class ProjectsController {
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateProjectSchema)) data: UpdateProjectDto,
     @AuthUser() user: User
-  ): Promise<Project | null> {
+  ) {
     return this.projectService.update(id, data, user);
   }
 
   @Get(':id')
-  async findOne(
-    @Param('id') id: string,
-    @AuthUser() user: User
-  ): Promise<Project | null> {
+  async findOne(@Param('id') id: string, @AuthUser() user: User) {
     return this.projectService.findOne(id, user);
   }
 
   @Get()
-  async findMany(@AuthUser() user: User): Promise<Project[]> {
-    return this.projectService.findMany(user);
+  @List()
+  async findMany(
+    @AuthUser() user: User,
+    @PaginationQuery pagination: PaginationQuery
+  ) {
+    const [list, count] = await this.projectService.findMany(user, pagination);
+    return {
+      data: list,
+      pagination: {
+        ...pagination,
+        total: count,
+      },
+    };
   }
 
   @Delete(':id')
-  async remove(
-    @Param('id') id: string,
-    @AuthUser() user: User
-  ): Promise<Project | null> {
+  async remove(@Param('id') id: string, @AuthUser() user: User) {
     return this.projectService.remove(id, user);
   }
 }
