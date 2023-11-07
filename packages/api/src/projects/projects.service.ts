@@ -58,13 +58,14 @@ export class ProjectsService {
       },
     };
 
-    return Promise.all([
+    const [list, count] = await Promise.all([
       this.prismaService.project.findMany({
         where,
         ...pagination,
       }),
       this.prismaService.project.count({ where }),
     ]);
+    return { list, count };
   }
 
   async remove(id: string, user: User) {

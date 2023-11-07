@@ -54,7 +54,10 @@ export class ProjectsController {
     @AuthUser() user: User,
     @PaginationQuery pagination: PaginationQuery
   ) {
-    const [list, count] = await this.projectService.findMany(user, pagination);
+    const { list, count } = await this.projectService.findMany(
+      user,
+      pagination
+    );
     return {
       data: list,
       pagination: {
