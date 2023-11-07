@@ -1,6 +1,8 @@
 import {
   Button,
-  MantineThemeComponents, Text, Title,
+  MantineThemeComponents,
+  Text,
+  Title,
   Modal,
   TextInput,
   rem,
@@ -28,6 +30,8 @@ export const components: MantineThemeComponents = {
       inner: {
         gap: 'var(--mantine-spacing-md)',
       },
+    },
+  }),
   Text: Text.extend({
     defaultProps: {
       c: 'neutral.9',

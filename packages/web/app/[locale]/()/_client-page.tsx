@@ -5,11 +5,10 @@ import {
   ProfileFormValues,
   ProfileModal,
 } from '@/app/_components/modals/profile-modal';
-import { Screensaver } from '@/app/_components/screensaver';
 import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
 import { editMeMutation } from '@/domain/mutations/edit-me-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
-import { Button, Stack, Text, Title } from '@mantine/core';
+import { Box, Button, Stack, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useMutation } from '@tanstack/react-query';
 import { signOut, useSession } from 'next-auth/react';
@@ -21,7 +20,7 @@ export default function ClientHomePage() {
     useHomePage();
 
   return (
-    <Screensaver>
+    <Box w="100%">
       <Stack justify="space-around" align="center">
         <Stack gap={0}>
           <Title c="white">Screenary</Title>
@@ -46,7 +45,7 @@ export default function ClientHomePage() {
         onDelete={handleDelete}
         user={data?.user}
       />
-    </Screensaver>
+    </Box>
   );
 }
 
