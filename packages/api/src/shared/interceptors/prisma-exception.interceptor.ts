@@ -4,8 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { catchError, Observable, of } from 'rxjs';
-import { Promise } from 'cypress/types/cy-bluebird';
+import { catchError, of } from 'rxjs';
 import { Prisma } from '@prisma/client';
 
 enum ErrorCodes {
@@ -13,10 +12,7 @@ enum ErrorCodes {
 }
 @Injectable()
 export class PrismaExceptionInterceptor implements NestInterceptor {
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler
-  ): Observable<any> | Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler) {
     return next.handle().pipe(
       catchError((error) => {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
