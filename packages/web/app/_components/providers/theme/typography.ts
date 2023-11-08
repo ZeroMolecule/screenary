@@ -1,8 +1,12 @@
 import { MantineTheme, rem } from '@mantine/core';
 
-import { Inter } from 'next/font/google';
+import { Inter, Space_Mono } from 'next/font/google';
 
 const baseFont = Inter({ subsets: ['latin'] });
+export const secondaryFont = Space_Mono({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+});
 
 const baseFontSize = 16;
 

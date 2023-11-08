@@ -1,0 +1,13 @@
+.notifications-widget {
+  &__button {
+    border-left: 1px solid var(--mantine-color-neutral-7);
+
+    &:hover {
+      background-color: var(--mantine-color-neutral-8);
+    }
+  }
+
+  &__button-icon {
+    color: var(--mantine-color-neutral-3);
+  }
+}

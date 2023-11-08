@@ -48,5 +48,9 @@
       "profile": "Profile",
       "logout": "Log out"
     }
+  },
+  "notificationsWidget": {
+    "welcomeMessage": "Good afternoon, {username}",
+    "welcomeMessageFallback": "Welcome back"
   }
 }
