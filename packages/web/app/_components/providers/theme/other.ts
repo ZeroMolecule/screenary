@@ -4,6 +4,7 @@ export const other: MantineThemeOther = {
   googleIconColor: '#020203',
   googleIconBorderColor: '#C7C6C6',
   facebookIconBackgroundColor: '#3975EA',
+  glassColor: '#17140BE5',
 };
 
 export const resolver: CSSVariablesResolver = (theme) => ({
@@ -12,6 +13,7 @@ export const resolver: CSSVariablesResolver = (theme) => ({
     '--mantine-google-icon-border-color': theme.other.googleIconBorderColor,
     '--mantine-facebook-icon-background-color':
       theme.other.facebookIconBackgroundColor,
+    '--mantine-glass-color': theme.other.glassColor,
   },
   dark: {},
   light: {},

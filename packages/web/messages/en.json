@@ -51,6 +51,9 @@
   },
   "notificationsWidget": {
     "welcomeMessage": "Good afternoon, {username}",
-    "welcomeMessageFallback": "Welcome back"
+    "welcomeMessageFallback": "Welcome back",
+    "popover": {
+      "title": "Notifications"
+    }
   }
 }

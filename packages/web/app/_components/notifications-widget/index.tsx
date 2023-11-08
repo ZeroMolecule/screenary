@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { Button, Card, Group, Title } from '@mantine/core';
-import { IconBellFilled } from '@tabler/icons-react';
+import { Card, Group, Title } from '@mantine/core';
 import { useTranslations } from 'next-intl';
 import { DateTimeBlock } from './datetime-block';
+import { NotificationsPopover } from './notifications-popover';
 
 type Props = {
   username?: string | null;
@@ -20,18 +20,7 @@ export const NotificationsWidget: FC<Props> = (props) => {
           </Title>
           <DateTimeBlock />
         </Group>
-        <Button
-          variant="transparent"
-          h="100%"
-          p="xl"
-          radius={0}
-          className="notifications-widget__button"
-        >
-          <IconBellFilled
-            size={32}
-            className="notifications-widget__button-icon"
-          />
-        </Button>
+        <NotificationsPopover />
       </Group>
     </Card>
   );

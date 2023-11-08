@@ -6,6 +6,7 @@ import {
   Modal,
   TextInput,
   rem,
+  Popover,
 } from '@mantine/core';
 
 export const components: MantineThemeComponents = {
@@ -26,11 +27,11 @@ export const components: MantineThemeComponents = {
       radius: rem(6),
       size: 'md',
     },
-    styles: {
-      inner: {
-        gap: 'var(--mantine-spacing-md)',
-      },
-    },
+    // styles: {
+    //   inner: {
+    //     gap: 'var(--mantine-spacing-md)',
+    //   },
+    // },
   }),
   Text: Text.extend({
     defaultProps: {
@@ -52,12 +53,17 @@ export const components: MantineThemeComponents = {
       },
     },
   }),
-  // TODO: handle button
-  // Button: Button.extend({
-  //   styles: {
-  //     inner: {
-  //       gap: 'var(--mantine-spacing-md)',
-  //     },
-  //   },
-  // }),
+  Popover: Popover.extend({
+    defaultProps: {
+      radius: rem(24),
+    },
+    styles: {
+      dropdown: {
+        maxWidth: rem(350),
+        backgroundColor: 'var(--mantine-glass-color)',
+        boxShadow: '0px 40px 35px -20px rgba(0, 0, 0, 0.20)',
+        backdropFilter: 'blur(6px)',
+      },
+    },
+  }),
 };
