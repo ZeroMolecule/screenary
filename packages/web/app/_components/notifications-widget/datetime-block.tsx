@@ -6,7 +6,7 @@ import { TitleAlt } from '../base/title-alt';
 import { TextAlt } from '../base/text-alt';
 import { formatDate } from '@/utils/datetime';
 
-// TODO: 🧹 Polishing Phase - add datetime support based on user location
+// TODO: 🧹 Polishing Phase - optimize and add datetime support based on user location
 
 export const DateTimeBlock: FC = () => {
   const { currentTime, currentDate } = useDateTimeBlock();
