@@ -1,9 +1,8 @@
 import { FC } from 'react';
-import { Button, Card, Group, Stack, Title } from '@mantine/core';
+import { Button, Card, Group, Title } from '@mantine/core';
 import { IconBellFilled } from '@tabler/icons-react';
-import { TitleAlt } from '../base/title-alt';
-import { TextAlt } from '../base/text-alt';
 import { useTranslations } from 'next-intl';
+import { DateTimeBlock } from './datetime-block';
 
 type Props = {
   username?: string | null;
@@ -19,10 +18,7 @@ export const NotificationsWidget: FC<Props> = (props) => {
           <Title fz={44} fw={700} c="neutral.1">
             {message}
           </Title>
-          <Stack gap={0}>
-            <TitleAlt c="neutral.1">3:00 PM</TitleAlt>
-            <TextAlt c="neutral.3">Friday, July 21st</TextAlt>
-          </Stack>
+          <DateTimeBlock />
         </Group>
         <Button
           variant="transparent"
