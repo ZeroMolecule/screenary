@@ -6,6 +6,7 @@ import { paths } from '@/navigation/paths';
 import { Link } from '../base/link';
 import { UserWidget } from '../user-widget';
 import { Navigation } from './navigation';
+import { ADD_PROJECT_BUTTON_ID } from '@/utils/constants';
 import logo from '@/public/images/logo-black.svg';
 
 export const Header: FC = () => {
@@ -18,6 +19,7 @@ export const Header: FC = () => {
           <Image src={logo} alt={t('logoAlt')} />
         </Link>
         <Navigation />
+        <div id={ADD_PROJECT_BUTTON_ID} />
       </Group>
       <UserWidget />
     </header>

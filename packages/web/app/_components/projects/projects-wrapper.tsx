@@ -2,11 +2,13 @@
 
 import { FC } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Group } from '@mantine/core';
+import { Button, Group, Portal } from '@mantine/core';
 import { Project } from '@prisma/client';
 import { projectsQuery } from '@/domain/queries/projects-query';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
+import { ADD_PROJECT_BUTTON_ID } from '@/utils/constants';
+import { IconCirclePlus } from '@tabler/icons-react';
 
 export const ProjectsWrapper: FC = () => {
   const { projects } = useProjectsWrapper();
@@ -17,6 +19,18 @@ export const ProjectsWrapper: FC = () => {
 
   return (
     <Group h="100%">
+      <Portal target={`#${ADD_PROJECT_BUTTON_ID}`}>
+        <Button
+          variant="subtle"
+          bg="white"
+          c="neutral.7"
+          radius={6}
+          leftSection={<IconCirclePlus />}
+          className="add-project-button"
+        >
+          Add Project
+        </Button>
+      </Portal>
       {!projects?.length ? (
         <ProjectsEmptyPlaceholder />
       ) : (
