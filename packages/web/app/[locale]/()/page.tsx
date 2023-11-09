@@ -55,7 +55,7 @@ async function HomePage(props: Props) {
 }
 
 async function useHomePage({ params: { locale } }: Props) {
-  const t = await getTranslator(locale, 'home');
+  const t = await getTranslator(locale, 'shared');
   const session = await getServerSession(authOptions);
   const username = session?.user?.name;
 

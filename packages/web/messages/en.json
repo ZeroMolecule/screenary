@@ -14,6 +14,11 @@
       "somethingWentWrong": "Something went wrong."
     }
   },
+  "shared": {
+    "logoAlt": "Screenary logo",
+    "welcomeMessage": "Good afternoon, {username}",
+    "welcomeMessageFallback": "Welcome back"
+  },
   "modal": {
     "profile": {
       "accountSettings": "Account Settings",
@@ -32,7 +37,6 @@
     }
   },
   "auth": {
-    "logoAlt": "Screenary logo",
     "socialAction": "Continue with {provider}"
   },
   "header": {
@@ -50,17 +54,11 @@
     }
   },
   "notificationsWidget": {
-    "welcomeMessage": "Good afternoon, {username}",
-    "welcomeMessageFallback": "Welcome back",
     "popover": {
       "title": "Notifications"
     }
   },
-  "home": {
-    "logoAlt": "Screenary logo",
-    "welcomeMessage": "Good afternoon, {username}",
-    "welcomeMessageFallback": "Welcome back"
-  },
+  "home": {},
   "projects": {
     "empty": {
       "title": "Nothing Here Yet",

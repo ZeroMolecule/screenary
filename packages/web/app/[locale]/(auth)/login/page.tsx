@@ -6,7 +6,7 @@ import { SocialButton } from '@/app/_components/auth/social-button';
 import logoWhite from '@/public/images/logo-white.png';
 
 function LoginPage() {
-  const t = useTranslations('auth');
+  const t = useTranslations('shared');
 
   return (
     <Stack align="center" my="auto">

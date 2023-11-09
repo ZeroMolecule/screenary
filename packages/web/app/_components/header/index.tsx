@@ -4,8 +4,8 @@ import { useTranslations } from 'next-intl';
 import { Group } from '@mantine/core';
 import { paths } from '@/navigation/paths';
 import { Link } from '../base/link';
-import { Navigation } from './navigation';
 import { UserWidget } from '../user-widget';
+import { Navigation } from './navigation';
 import logo from '@/public/images/logo-black.svg';
 
 export const Header: FC = () => {

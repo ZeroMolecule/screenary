@@ -31,7 +31,7 @@ export const NotificationsWidget: FC<Props> = (props) => {
 };
 
 function useNotificationsWidget({ username }: Props) {
-  const t = useTranslations('notificationsWidget');
+  const t = useTranslations('shared');
 
   const message = username
     ? t('welcomeMessage', { username: username.split(' ')[0] })
