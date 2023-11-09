@@ -10,12 +10,13 @@ import { paths } from '@/navigation/paths';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/domain/auth';
 import { DateTimeBlock } from '@/app/_components/datetime-block';
+import { withPrivatePage } from '@/app/_hoc/with-private-page';
 
 type Props = {
   params: { locale: string };
 };
 
-export default async function HomePage(props: Props) {
+async function HomePage(props: Props) {
   const { t, message } = await useHomePage(props);
 
   return (
@@ -64,3 +65,5 @@ async function useHomePage({ params: { locale } }: Props) {
 
   return { t, message };
 }
+
+export default withPrivatePage(HomePage);

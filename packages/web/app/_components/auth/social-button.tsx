@@ -28,6 +28,7 @@ export const SocialButton: FC<Props> = (props) => {
 
   return (
     <Button
+      size="sm"
       justify="flex-start"
       c={buttonStyles.color}
       bg={buttonStyles.backgroundColor}
@@ -35,6 +36,7 @@ export const SocialButton: FC<Props> = (props) => {
       radius={6}
       leftSection={buttonStyles.icon}
       className={classNames({ 'social-button--google': provider === 'google' })}
+      classNames={{ inner: 'social-button__inner' }}
       onClick={() => signIn(provider, { callbackUrl: paths.home() })}
     >
       {label}
