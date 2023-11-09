@@ -1,8 +1,13 @@
+import { Box } from '@mantine/core';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
-import ClientHomePage from './_client-page';
+import { ProjectsWrapper } from '@/app/_components/projects/projects-wrapper';
 
 function HomePage() {
-  return <ClientHomePage />;
+  return (
+    <Box h="100%">
+      <ProjectsWrapper />
+    </Box>
+  );
 }
 
 export default withPrivatePage(HomePage);
