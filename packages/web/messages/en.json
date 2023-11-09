@@ -57,7 +57,9 @@
     }
   },
   "home": {
-    "logoAlt": "Screenary logo"
+    "logoAlt": "Screenary logo",
+    "welcomeMessage": "Good afternoon, {username}",
+    "welcomeMessageFallback": "Welcome back"
   },
   "projects": {
     "empty": {

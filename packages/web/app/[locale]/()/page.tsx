@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { getTranslator } from 'next-intl/server';
 import { ActionIcon, Box, Group, Stack, Text } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
 import logoImg from '@/public/images/logo-white.png';
@@ -9,9 +9,15 @@ import { TextAlt } from '@/app/_components/base/text-alt';
 import { IconBellFilled } from '@tabler/icons-react';
 import { Link } from '@/app/_components/base/link';
 import { paths } from '@/navigation/paths';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/domain/auth';
 
-export default function HomePage() {
-  const { t } = useHomePage();
+type Props = {
+  params: { locale: string };
+};
+
+export default async function HomePage(props: Props) {
+  const { t, message } = await useHomePage(props);
 
   return (
     <Screensaver>
@@ -43,7 +49,7 @@ export default function HomePage() {
             </ActionIcon>
           </Link>
           <Text fz={44} c="primary.1" fw={700}>
-            Good afternoon, John
+            {message}
           </Text>
         </Stack>
       </Stack>
@@ -51,8 +57,14 @@ export default function HomePage() {
   );
 }
 
-function useHomePage() {
-  const t = useTranslations('home');
+async function useHomePage({ params: { locale } }: Props) {
+  const t = await getTranslator(locale, 'home');
+  const session = await getServerSession(authOptions);
+  const username = session?.user?.name;
 
-  return { t };
+  const message = username
+    ? t('welcomeMessage', { username: username.split(' ')[0] })
+    : t('welcomeMessageFallback');
+
+  return { t, message };
 }
