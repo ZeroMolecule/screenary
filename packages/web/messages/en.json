@@ -37,6 +37,7 @@
     }
   },
   "auth": {
+    "login": "Login",
     "socialAction": "Continue with {provider}"
   },
   "header": {
@@ -60,6 +61,7 @@
   },
   "home": {},
   "projects": {
+    "title": "Projects",
     "empty": {
       "title": "Nothing Here Yet",
       "description": "Click ‘Add Project’ to start organizing your work on Screenary"
