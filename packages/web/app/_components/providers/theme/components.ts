@@ -46,6 +46,13 @@ export const components: MantineThemeComponents = {
       body: {
         padding: 'var(--mantine-spacing-xl)',
       },
+      overlay: {
+        margin: 'var(--mantine-spacing-xl)',
+        backgroundColor: 'var(--mantine-glass-color)',
+        borderRadius: 'var(--mantine-radius-xl)',
+        boxShadow: '0px 40px 35px -20px rgba(0, 0, 0, 0.20)',
+        backdropFilter: 'blur(30px)',
+      },
     },
   }),
   Popover: Popover.extend({
