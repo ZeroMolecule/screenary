@@ -66,6 +66,7 @@ export const UserMenu: FC = () => {
       right={0}
       chevron={<IconChevronDown />}
       chevronSize={24}
+      className="user-menu"
     >
       <AccordionItem
         value="user"

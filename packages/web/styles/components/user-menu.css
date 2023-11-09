@@ -1,4 +1,6 @@
 .user-menu {
+  z-index: 1;
+
   &__image {
     border-radius: 100%;
   }

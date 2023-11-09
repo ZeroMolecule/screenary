@@ -15,7 +15,7 @@ export default async function Layout({ children }: Props) {
   return (
     <Stack w="100%" justify="space-between" gap="xl">
       <Header />
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 overflow-auto">{children}</div>
       <NotificationsWidget username={session?.user?.name} />
     </Stack>
   );
