@@ -7,16 +7,20 @@ import { useDisclosure } from '@mantine/hooks';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { editMeMutation } from '@/domain/mutations/edit-me-mutation';
 import { deleteMeMutation } from '@/domain/mutations/delete-me-mutation';
-import { UserMenu } from './user-menu';
+import { UserMenu, UserMenuVariant } from './user-menu';
 import { ProfileFormValues, ProfileModal } from '../modals/profile-modal';
 
-export const UserWidget: FC = () => {
+type Props = {
+  variant?: UserMenuVariant;
+};
+
+export const UserWidget: FC<Props> = ({ variant }) => {
   const { opened, open, close, handleSubmit, handleDelete, user } =
     useUserWidget();
 
   return (
     <>
-      <UserMenu onOpen={open} user={user} />
+      <UserMenu variant={variant} onOpen={open} user={user} />
       <ProfileModal
         opened={opened}
         onClose={close}

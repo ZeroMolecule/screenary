@@ -28,14 +28,24 @@ type MenuAction = {
   onClick: () => void | Promise<void>;
 };
 
+export type UserMenuVariant = 'light' | 'dark';
 type Props = {
+  variant?: UserMenuVariant;
   user: DefaultSession['user'];
   onOpen: () => void;
 };
 
 export const UserMenu: FC<Props> = (props) => {
-  const { t, controlRef, panelWidth, isOpen, user, menuActions, toggle } =
-    useUserMenu(props);
+  const {
+    t,
+    isDark,
+    controlRef,
+    panelWidth,
+    isOpen,
+    user,
+    menuActions,
+    toggle,
+  } = useUserMenu(props);
 
   const renderMenuAction = (
     { icon: Icon, label, onClick }: MenuAction,
@@ -44,7 +54,7 @@ export const UserMenu: FC<Props> = (props) => {
     <Button
       key={index}
       variant="subtle"
-      c="neutral.9"
+      c={isDark ? 'neutral.2' : 'neutral.9'}
       justify="flex-start"
       leftSection={<Icon size={24} color="var(--mantine-color-neutral-4)" />}
       onClick={onClick}
@@ -57,14 +67,16 @@ export const UserMenu: FC<Props> = (props) => {
     <Accordion
       pos="absolute"
       right={0}
-      chevron={<IconChevronDown />}
+      chevron={<IconChevronDown color={isDark ? 'white' : 'black'} />}
       chevronSize={24}
       className="user-menu"
     >
       <AccordionItem
         value="user"
+        bg={isDark ? 'transparent' : 'neutral.1'}
         className={classNames('user-menu__item', {
           'user-menu__item--open': isOpen,
+          'user-menu__item--dark': isDark,
         })}
       >
         <AccordionControl
@@ -78,11 +90,15 @@ export const UserMenu: FC<Props> = (props) => {
               width={48}
               height={48}
               alt={user?.name ?? t('avatarAlt')}
-              className="user-menu__image"
+              className={classNames('user-menu__image', {
+                'user-menu__image--dark': isDark,
+              })}
             />
             <Stack gap={0}>
-              <Text size="lg">{user?.name}</Text>
-              <Text size="xs" c="neutral.5">
+              <Text size="lg" fw={500} c={isDark ? 'white' : 'neutral.9'}>
+                {user?.name}
+              </Text>
+              <Text size="xs" c={isDark ? 'neutral.2' : 'neutral.5'}>
                 {user?.email}
               </Text>
             </Stack>
@@ -96,7 +112,7 @@ export const UserMenu: FC<Props> = (props) => {
   );
 };
 
-function useUserMenu({ onOpen, user }: Props) {
+function useUserMenu({ variant = 'light', onOpen, user }: Props) {
   const t = useTranslations('header.userMenu');
   const controlRef = useRef<HTMLButtonElement | null>(null);
   const [panelWidth, setPanelWidth] = useState<number | undefined>(undefined);
@@ -131,6 +147,7 @@ function useUserMenu({ onOpen, user }: Props) {
 
   return {
     t,
+    isDark: variant === 'dark',
     controlRef,
     panelWidth,
     isOpen,

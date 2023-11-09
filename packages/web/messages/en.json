@@ -56,6 +56,9 @@
       "title": "Notifications"
     }
   },
+  "home": {
+    "logoAlt": "Screenary logo"
+  },
   "projects": {
     "empty": {
       "title": "Nothing Here Yet",

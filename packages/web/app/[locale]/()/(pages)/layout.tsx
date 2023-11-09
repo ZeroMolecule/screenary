@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
+import { getServerSession } from 'next-auth';
 import { Stack } from '@mantine/core';
+import { authOptions } from '@/domain/auth';
 import { Header } from '@/app/_components/header';
 import { NotificationsWidget } from '@/app/_components/notifications-widget';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/domain/auth';
 
 type Props = {
   children: ReactNode;

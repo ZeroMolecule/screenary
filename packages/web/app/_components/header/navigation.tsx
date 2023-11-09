@@ -17,7 +17,7 @@ function useNavigation() {
   const t = useTranslations('header');
 
   const navigationLinks: NavigationLink[] = [
-    { href: paths.home(), label: t('navigation.home') },
+    { href: paths.projects(), label: t('navigation.home') },
     { href: paths.todo(), label: t('navigation.todo') },
     { href: paths.inbox(), label: t('navigation.inbox') },
     { href: paths.calendar(), label: t('navigation.calendar') },

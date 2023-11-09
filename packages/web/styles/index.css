@@ -3,6 +3,7 @@
 @import './utilities.css';
 
 /* PAGES */
+@import './pages/home.css';
 
 /* COMPONENTS */
 @import './components/container.css';
