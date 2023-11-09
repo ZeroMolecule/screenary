@@ -27,11 +27,6 @@ export const components: MantineThemeComponents = {
       radius: rem(6),
       size: 'md',
     },
-    // styles: {
-    //   inner: {
-    //     gap: 'var(--mantine-spacing-md)',
-    //   },
-    // },
   }),
   Text: Text.extend({
     defaultProps: {
