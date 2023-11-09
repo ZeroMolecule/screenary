@@ -14,7 +14,10 @@ remoteApi.interceptors.request.use(async (config) => {
   if (!token) {
     if (typeof window === 'undefined') {
       const { cookies } = await import('next/headers');
-      token = cookies().get('next-auth.session-token')?.value;
+      //TODO: fix later :)
+      token =
+        cookies().get('next-auth.session-token')?.value ??
+        cookies().get('__Secure-next-auth.session-token')?.value;
     } else {
       const session = await getSession();
       token = session?.token;

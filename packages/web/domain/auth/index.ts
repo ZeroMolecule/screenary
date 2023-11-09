@@ -1,10 +1,10 @@
-import type { AuthOptions } from 'next-auth';
-import { cookies } from 'next/headers';
-import GoogleProvider from 'next-auth/providers/google';
-import FacebookProvider from 'next-auth/providers/facebook';
-import AppleProvider from 'next-auth/providers/apple';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { ENV } from '@/env.server';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import type { AuthOptions } from 'next-auth';
+import AppleProvider from 'next-auth/providers/apple';
+import FacebookProvider from 'next-auth/providers/facebook';
+import GoogleProvider from 'next-auth/providers/google';
+import { cookies } from 'next/headers';
 import { prisma } from '../db/prisma-client';
 
 export const authOptions: AuthOptions = {
@@ -38,7 +38,10 @@ export const authOptions: AuthOptions = {
       return token;
     },
     session: async ({ session, token }) => {
-      const cookieToken = cookies().get('next-auth.session-token')?.value;
+      //TODO: fix later :)
+      const cookieToken =
+        cookies().get('next-auth.session-token')?.value ??
+        cookies().get('__Secure-next-auth.session-token')?.value;
       if (cookieToken) {
         session.token = cookieToken;
       }
