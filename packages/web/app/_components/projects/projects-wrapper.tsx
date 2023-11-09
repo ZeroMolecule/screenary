@@ -19,6 +19,8 @@ import {
 import { TextAlt } from '../base/text-alt';
 import emptyIcon from '@/public/images/folder-icon.svg';
 import { useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
+import { projectsQuery } from '@/domain/queries/projects-query';
 
 export const ProjectsWrapper: FC = () => {
   const { t, placeholderArray } = useProjectsWrapper();
@@ -84,6 +86,9 @@ export const ProjectsWrapper: FC = () => {
 
 function useProjectsWrapper() {
   const t = useTranslations('projects');
+
+  const { data } = useQuery({ queryKey: projectsQuery.key });
+  console.log(data);
 
   const placeholderData = {
     name: 'Project Name',

@@ -11,6 +11,8 @@ import { isAxiosError } from 'axios';
 import { notifications } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
+import { getRemoteData } from '@/domain/remote/response/data';
+import { remoteApi } from '@/domain/remote';
 
 type Props = {
   children: ReactNode;
@@ -35,6 +37,12 @@ function useQueryClientProvider() {
     () =>
       new QueryClient({
         defaultOptions: {
+          queries: {
+            queryFn: async ({ queryKey }) => {
+              const [path, params] = queryKey as [string, unknown];
+              return getRemoteData(await remoteApi.get(path, { params }));
+            },
+          },
           mutations: {
             onSuccess,
             onError: (error) => {
