@@ -5,7 +5,7 @@ import { Group } from '@mantine/core';
 import { paths } from '@/navigation/paths';
 import { Link } from '../base/link';
 import { Navigation } from './navigation';
-import { UserMenu } from './user-menu';
+import { UserWidget } from '../user-widget';
 import logo from '@/public/images/logo-black.svg';
 
 export const Header: FC = () => {
@@ -19,7 +19,7 @@ export const Header: FC = () => {
         </Link>
         <Navigation />
       </Group>
-      <UserMenu />
+      <UserWidget />
     </header>
   );
 };

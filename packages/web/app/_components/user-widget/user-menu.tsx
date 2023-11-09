@@ -1,8 +1,8 @@
-'use client';
-
 import { FC, useEffect, useRef, useState } from 'react';
-import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { DefaultSession } from 'next-auth';
+import { signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import {
   Accordion,
   AccordionControl,
@@ -12,7 +12,6 @@ import {
   Group,
   Stack,
   Text,
-  useMantineTheme,
 } from '@mantine/core';
 import classNames from 'classnames';
 import {
@@ -21,10 +20,7 @@ import {
   IconSettings,
   TablerIconsProps,
 } from '@tabler/icons-react';
-import { useRouter } from '@/navigation';
-import { paths } from '@/navigation/paths';
 import placeholderImage from '@/public/images/cover-image.png';
-import { useTranslations } from 'next-intl';
 
 type MenuAction = {
   icon: (props: TablerIconsProps) => JSX.Element;
@@ -32,17 +28,14 @@ type MenuAction = {
   onClick: () => void | Promise<void>;
 };
 
-export const UserMenu: FC = () => {
-  const {
-    t,
-    controlRef,
-    panelWidth,
-    isOpen,
-    theme,
-    user,
-    menuActions,
-    toggle,
-  } = useUserMenu();
+type Props = {
+  user: DefaultSession['user'];
+  onOpen: () => void;
+};
+
+export const UserMenu: FC<Props> = (props) => {
+  const { t, controlRef, panelWidth, isOpen, user, menuActions, toggle } =
+    useUserMenu(props);
 
   const renderMenuAction = (
     { icon: Icon, label, onClick }: MenuAction,
@@ -53,7 +46,7 @@ export const UserMenu: FC = () => {
       variant="subtle"
       c="neutral.9"
       justify="flex-start"
-      leftSection={<Icon size={24} color={theme.colors.neutral[4]} />}
+      leftSection={<Icon size={24} color="var(--mantine-color-neutral-4)" />}
       onClick={onClick}
     >
       {label}
@@ -103,21 +96,17 @@ export const UserMenu: FC = () => {
   );
 };
 
-function useUserMenu() {
+function useUserMenu({ onOpen, user }: Props) {
   const t = useTranslations('header.userMenu');
   const controlRef = useRef<HTMLButtonElement | null>(null);
   const [panelWidth, setPanelWidth] = useState<number | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
-  const theme = useMantineTheme();
-  const { push } = useRouter();
-  const { data } = useSession();
-  const user = data?.user;
 
   const menuActions: MenuAction[] = [
     {
       icon: IconSettings,
       label: t('profile'),
-      onClick: () => push(paths.todo()),
+      onClick: onOpen,
     },
     {
       icon: IconLogout,
@@ -145,7 +134,6 @@ function useUserMenu() {
     controlRef,
     panelWidth,
     isOpen,
-    theme,
     user,
     menuActions,
     toggle,
