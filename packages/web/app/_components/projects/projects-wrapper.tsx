@@ -21,15 +21,15 @@ import emptyIcon from '@/public/images/folder-icon.svg';
 import { useTranslations } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import { projectsQuery } from '@/domain/queries/projects-query';
+import { Project } from '@prisma/client';
+
+// TODO: update check and bell icon count once api supports those fields
 
 export const ProjectsWrapper: FC = () => {
-  const { t, placeholderArray } = useProjectsWrapper();
+  const { t, projects } = useProjectsWrapper();
 
-  const renderProjectItem = (
-    { name, notificationCount, doneCount }: (typeof placeholderArray)[0],
-    index: number
-  ) => (
-    <div key={index} className="project-item-wrapper">
+  const renderProjectItem = ({ id, name }: Project) => (
+    <div key={id} className="project-item-wrapper">
       <Stack h="100%" p="lg" justify="space-between" className="project-item">
         <Group justify="space-between">
           <Group>
@@ -38,12 +38,12 @@ export const ProjectsWrapper: FC = () => {
                 size={24}
                 className="project-item__count-icon"
               />
-              <TextAlt size="lg">{doneCount}</TextAlt>
+              <TextAlt size="lg">2</TextAlt>
             </Group>
             <Divider orientation="vertical" c="neutral.3" />
             <Group gap={4}>
               <IconBellFilled size={24} className="project-item__count-icon" />
-              <TextAlt size="lg">{notificationCount}</TextAlt>
+              <TextAlt size="lg">10</TextAlt>
             </Group>
           </Group>
           <ActionIcon
@@ -65,7 +65,7 @@ export const ProjectsWrapper: FC = () => {
 
   return (
     <Group h="100%">
-      {!placeholderArray.length ? (
+      {!projects?.length ? (
         <Card mx="auto" p={64} radius={24} className="projects-empty-card">
           <Stack align="center" maw={275}>
             <Image src={emptyIcon} width={138} height={108} alt="" />
@@ -78,7 +78,7 @@ export const ProjectsWrapper: FC = () => {
           </Stack>
         </Card>
       ) : (
-        placeholderArray.map(renderProjectItem)
+        projects.map(renderProjectItem)
       )}
     </Group>
   );
@@ -87,16 +87,9 @@ export const ProjectsWrapper: FC = () => {
 function useProjectsWrapper() {
   const t = useTranslations('projects');
 
-  const { data } = useQuery({ queryKey: projectsQuery.key });
-  console.log(data);
+  const { data: projects } = useQuery<Project[]>({
+    queryKey: projectsQuery.key,
+  });
 
-  const placeholderData = {
-    name: 'Project Name',
-    doneCount: 2,
-    notificationCount: 10,
-  };
-  const placeholderArray: (typeof placeholderData)[] =
-    Array(5).fill(placeholderData);
-
-  return { t, placeholderArray };
+  return { t, projects };
 }
