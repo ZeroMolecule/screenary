@@ -4,13 +4,12 @@ import { ActionIcon, Box, Group, Stack, Text } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
 import logoImg from '@/public/images/logo-white.png';
 import { UserWidget } from '@/app/_components/user-widget';
-import { TitleAlt } from '@/app/_components/base/title-alt';
-import { TextAlt } from '@/app/_components/base/text-alt';
 import { IconBellFilled } from '@tabler/icons-react';
 import { Link } from '@/app/_components/base/link';
 import { paths } from '@/navigation/paths';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/domain/auth';
+import { DateTimeBlock } from '@/app/_components/datetime-block';
 
 type Props = {
   params: { locale: string };
@@ -29,14 +28,11 @@ export default async function HomePage(props: Props) {
           </Box>
         </Group>
         <Stack justify="center" align="center" gap={60} className="flex-1">
-          <Stack align="center" gap="xl">
-            <TitleAlt fz={128} lh="100px" c="primary.1">
-              3:00 PM
-            </TitleAlt>
-            <TextAlt fz={24} lh="28px" c="neutral.3">
-              Friday, July 21st
-            </TextAlt>
-          </Stack>
+          <DateTimeBlock
+            stackProps={{ align: 'center', gap: 'xl' }}
+            titleProps={{ fz: 128, lh: '100px', c: 'primary.1' }}
+            textProps={{ fz: 24, lh: '28px', c: 'neutral.3' }}
+          />
           <Link href={paths.projects()}>
             <ActionIcon
               variant="transparent"

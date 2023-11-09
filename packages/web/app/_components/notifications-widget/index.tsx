@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Card, Group, Title } from '@mantine/core';
 import { useTranslations } from 'next-intl';
-import { DateTimeBlock } from './datetime-block';
+import { DateTimeBlock } from '../datetime-block';
 import { NotificationsPopover } from './notifications-popover';
 
 type Props = {
@@ -18,7 +18,11 @@ export const NotificationsWidget: FC<Props> = (props) => {
           <Title fz={44} fw={700} c="neutral.1">
             {message}
           </Title>
-          <DateTimeBlock />
+          <DateTimeBlock
+            stackProps={{ gap: 0 }}
+            titleProps={{ c: 'neutral.1' }}
+            textProps={{ c: 'neutral.3' }}
+          />
         </Group>
         <NotificationsPopover />
       </Group>

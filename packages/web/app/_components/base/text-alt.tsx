@@ -7,6 +7,7 @@ import { secondaryFont } from '../providers/theme/typography';
 type Props = Omit<TextProps, 'ff'> & {
   children: ReactNode;
 };
+export type TextAltProps = Props;
 
 export const TextAlt: FC<Props> = ({ children, ...restProps }) => {
   return (

@@ -5,6 +5,7 @@ import { Title, TitleProps } from '@mantine/core';
 import { secondaryFont } from '../providers/theme/typography';
 
 type Props = Omit<TitleProps, 'ff'>;
+export type TitleAltProps = Props;
 
 export const TitleAlt: FC<Props> = ({ children, ...restProps }) => {
   return (
