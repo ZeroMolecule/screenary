@@ -31,7 +31,10 @@ async function ProjectsPage() {
 
 async function useProjectsPage() {
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({ queryKey: projectsQuery.key });
+  await queryClient.prefetchQuery({
+    queryKey: projectsQuery.key,
+    queryFn: projectsQuery.fnc,
+  });
   const dehydratedState = dehydrate(queryClient);
 
   return { dehydratedState };

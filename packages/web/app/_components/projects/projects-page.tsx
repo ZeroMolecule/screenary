@@ -27,8 +27,9 @@ export const ProjectsPage: FC = () => {
 };
 
 function useProjectsWrapper() {
-  const { data: projects } = useQuery<Project[]>({
+  const { data: projects } = useQuery({
     queryKey: projectsQuery.key,
+    queryFn: projectsQuery.fnc,
   });
 
   return { projects };
