@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { Card, Group } from '@mantine/core';
 import { useTranslations } from 'next-intl';
 import { DateTimeBlock } from '../datetime-block';
-import { NotificationsPopover } from './notifications-popover';
 import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
 import { Title } from '../base/title';
