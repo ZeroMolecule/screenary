@@ -12,6 +12,7 @@ import { authOptions } from '@/domain/auth';
 import { DateTimeBlock } from '@/app/_components/datetime-block';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { generateFirstName } from '@/domain/util/user';
+import { getTimeOfTheDay } from '@/utils/datetime';
 
 type Props = {
   params: { locale: string };
@@ -62,8 +63,11 @@ async function useHomePage({ params: { locale } }: Props) {
   const username = session?.user?.name;
 
   const message = username
-    ? t('welcomeMessage', { username: generateFirstName(username) })
-    : t('welcomeMessageFallback');
+    ? t('welcomeMessage.base', {
+        time: t(`welcomeMessage.time.${getTimeOfTheDay(new Date())}`),
+        username: generateFirstName(username),
+      })
+    : t('welcomeMessage.fallback');
 
   return { t, message };
 }

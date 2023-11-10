@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { DateTimeBlock } from '../datetime-block';
 import { NotificationsPopover } from './notifications-popover';
 import { generateFirstName } from '@/domain/util/user';
+import { getTimeOfTheDay } from '@/utils/datetime';
 
 type Props = {
   username?: string | null;
@@ -33,11 +34,14 @@ export const NotificationsWidget: FC<Props> = (props) => {
 };
 
 function useNotificationsWidget({ username }: Props) {
-  const t = useTranslations('shared');
+  const t = useTranslations('shared.welcomeMessage');
 
   const message = username
-    ? t('welcomeMessage', { username: generateFirstName(username) })
-    : t('welcomeMessageFallback');
+    ? t('base', {
+        time: t(`time.${getTimeOfTheDay(new Date())}`),
+        username: generateFirstName(username),
+      })
+    : t('fallback');
 
   return { message };
 }
