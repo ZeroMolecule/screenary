@@ -8,7 +8,7 @@ import { Project } from '@prisma/client';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
 
-export const ProjectsWrapper: FC = () => {
+export const ProjectsPage: FC = () => {
   const { projects } = useProjectsWrapper();
 
   const renderProjectItem = (project: Project) => (
