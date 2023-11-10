@@ -28,7 +28,6 @@ export const NotificationsWidget: FC<Props> = (props) => {
             initialDate={new Date()}
           />
         </Group>
-        <NotificationsPopover />
       </Group>
     </Card>
   );
