@@ -4,7 +4,6 @@ import {
   Button as MantineButton,
   Modal,
   Stack,
-  Text,
 } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
@@ -17,6 +16,7 @@ import { z } from 'zod';
 import { Button } from '../base/button';
 import { FormTextInput } from '../base/form/text-input';
 import { Title } from '../base/title';
+import { Text } from '../base/text';
 
 type Props = {
   opened: boolean;

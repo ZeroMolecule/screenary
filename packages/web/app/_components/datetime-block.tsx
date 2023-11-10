@@ -3,7 +3,7 @@
 import { FC } from 'react';
 import { Stack, StackProps } from '@mantine/core';
 import { Title, TitleProps } from './base/title';
-import { TextAlt, TextAltProps } from './base/text-alt';
+import { Text, TextProps } from './base/text';
 import { useLiveClock } from '@/hooks/use-live-clock';
 
 // TODO: 🧹 Polishing Phase - optimize and add datetime support based on user location
@@ -11,7 +11,7 @@ import { useLiveClock } from '@/hooks/use-live-clock';
 type Props = {
   stackProps?: StackProps;
   titleProps?: TitleProps;
-  textProps?: Omit<TextAltProps, 'children'>;
+  textProps?: Omit<TextProps, 'children'>;
   initialDate?: Date | string;
 };
 
@@ -24,7 +24,9 @@ export const DateTimeBlock: FC<Props> = (props) => {
       <Title ff="secondary" {...titleProps}>
         {currentTime}
       </Title>
-      <TextAlt {...textProps}>{currentDate}</TextAlt>
+      <Text ff="secondary" {...textProps}>
+        {currentDate}
+      </Text>
     </Stack>
   );
 };

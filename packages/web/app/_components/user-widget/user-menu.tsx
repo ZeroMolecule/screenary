@@ -11,7 +11,6 @@ import {
   Button,
   Group,
   Stack,
-  Text,
 } from '@mantine/core';
 import classNames from 'classnames';
 import {
@@ -21,6 +20,7 @@ import {
   TablerIconsProps,
 } from '@tabler/icons-react';
 import placeholderImage from '@/public/images/cover-image.png';
+import { Text } from '../base/text';
 
 type MenuAction = {
   icon: (props: TablerIconsProps) => JSX.Element;

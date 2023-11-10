@@ -10,7 +10,6 @@ import {
   PopoverDropdown,
   PopoverTarget,
   Stack,
-  Text,
 } from '@mantine/core';
 import {
   IconBellFilled,
@@ -22,6 +21,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { useDisclosure } from '@mantine/hooks';
 import { Title } from '../base/title';
+import { Text } from '../base/text';
 
 // TODO: add Popover global components if another popover is present in design
 

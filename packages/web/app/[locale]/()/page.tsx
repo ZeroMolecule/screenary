@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { getTranslator } from 'next-intl/server';
-import { ActionIcon, Box, Group, Stack, Text } from '@mantine/core';
+import { ActionIcon, Box, Group, Stack } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
 import logoImg from '@/public/images/logo-white.png';
 import { UserWidget } from '@/app/_components/user-widget';
@@ -13,6 +13,7 @@ import { DateTimeBlock } from '@/app/_components/datetime-block';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
+import { Text } from '@/app/_components/base/text';
 
 type Props = {
   params: { locale: string };

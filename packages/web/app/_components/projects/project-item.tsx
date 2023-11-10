@@ -6,8 +6,8 @@ import {
   IconCircleCheckFilled,
 } from '@tabler/icons-react';
 import { Project } from '@prisma/client';
-import { TextAlt } from '../base/text-alt';
 import { Title } from '../base/title';
+import { Text } from '../base/text';
 
 // TODO: update check and bell icon count once api supports those fields
 
@@ -26,12 +26,16 @@ export const ProjectItem: FC<Props> = ({ project: { name } }) => {
                 size={24}
                 className="project-item__count-icon"
               />
-              <TextAlt size="lg">2</TextAlt>
+              <Text ff="secondary" size="lg">
+                2
+              </Text>
             </Group>
             <Divider orientation="vertical" c="neutral.3" />
             <Group gap={4}>
               <IconBellFilled size={24} className="project-item__count-icon" />
-              <TextAlt size="lg">10</TextAlt>
+              <Text ff="secondary" size="lg">
+                10
+              </Text>
             </Group>
           </Group>
           <ActionIcon
