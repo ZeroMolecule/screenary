@@ -9,7 +9,7 @@ type Props = {
   href: string;
   label: string;
 };
-export type NavigationLink = Props;
+export type NavigationLinkProps = Props;
 
 export const NavigationLink: FC<Props> = (props) => {
   const { href, label, color } = useNavigationLink(props);
