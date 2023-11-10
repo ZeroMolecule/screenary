@@ -4,7 +4,6 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 dayjs.extend(advancedFormat);
 
 const DATE_TIME_FORMAT = {
-  default: '',
   dateWithLongDayMonthWithoutYear: 'dddd, MMMM Do',
   timeWith12HourClock: 'h:mm A',
 };
