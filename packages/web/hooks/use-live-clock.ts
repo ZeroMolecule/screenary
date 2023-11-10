@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { DateTimeFormat, formatDate } from '@/utils/datetime';
 
-export const useLiveClock = () => {
-  const [date, setDate] = useState(new Date());
+export const useLiveClock = (initialDate?: Date | string) => {
+  const [date, setDate] = useState(initialDate ?? new Date());
 
   const formatter = (format: DateTimeFormat) => formatDate(date, format);
 

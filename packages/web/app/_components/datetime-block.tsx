@@ -12,14 +12,12 @@ type Props = {
   stackProps?: StackProps;
   titleProps?: TitleAltProps;
   textProps?: Omit<TextAltProps, 'children'>;
+  initialDate?: Date | string;
 };
 
-export const DateTimeBlock: FC<Props> = ({
-  stackProps,
-  titleProps,
-  textProps,
-}) => {
-  const { currentTime, currentDate } = useDateTimeBlock();
+export const DateTimeBlock: FC<Props> = (props) => {
+  const { stackProps, titleProps, textProps, currentTime, currentDate } =
+    useDateTimeBlock(props);
 
   return (
     <Stack {...stackProps}>
@@ -29,10 +27,15 @@ export const DateTimeBlock: FC<Props> = ({
   );
 };
 
-function useDateTimeBlock() {
-  const { formatter } = useLiveClock();
+function useDateTimeBlock({
+  stackProps,
+  titleProps,
+  textProps,
+  initialDate,
+}: Props) {
+  const { formatter } = useLiveClock(initialDate);
   const currentTime = formatter('timeWith12HourClock');
   const currentDate = formatter('dateWithLongDayMonthWithoutYear');
 
-  return { currentTime, currentDate };
+  return { stackProps, titleProps, textProps, currentTime, currentDate };
 }

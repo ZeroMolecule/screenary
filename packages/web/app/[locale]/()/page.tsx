@@ -34,6 +34,7 @@ async function HomePage(props: Props) {
             stackProps={{ align: 'center', gap: 'xl' }}
             titleProps={{ fz: 128, lh: '100px', c: 'primary.1' }}
             textProps={{ fz: 24, lh: '28px', c: 'neutral.3' }}
+            initialDate={new Date()}
           />
           <Link href={paths.projects()}>
             <ActionIcon

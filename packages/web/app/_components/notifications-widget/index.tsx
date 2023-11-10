@@ -23,6 +23,7 @@ export const NotificationsWidget: FC<Props> = (props) => {
             stackProps={{ gap: 0 }}
             titleProps={{ c: 'neutral.1' }}
             textProps={{ c: 'neutral.3' }}
+            initialDate={new Date()}
           />
         </Group>
         <NotificationsPopover />
