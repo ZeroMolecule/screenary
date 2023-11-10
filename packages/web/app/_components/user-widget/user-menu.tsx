@@ -135,7 +135,7 @@ function useUserMenu({ variant = 'light', onOpen, user }: Props) {
     if (isOpen) {
       setTimeout(() => {
         setIsOpen(false);
-      }, 175);
+      }, 200);
     } else {
       setIsOpen(true);
     }
