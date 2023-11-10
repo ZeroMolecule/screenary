@@ -1,6 +1,7 @@
 /* GLOBAL & CONFIG */
 @import './global.css';
-@import './utilities.css';
+@import './utils/flex.css';
+@import './utils/overflow.css';
 
 /* PAGES */
 @import './pages/home.css';
