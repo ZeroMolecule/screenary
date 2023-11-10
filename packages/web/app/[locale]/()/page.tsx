@@ -34,8 +34,8 @@ async function HomePage(props: Props) {
         <Stack justify="center" align="center" gap={60} className="flex-1">
           <DateTimeBlock
             stackProps={{ align: 'center', gap: 'xl' }}
-            titleProps={{ fz: 128, lh: '100px', c: 'primary.1' }}
-            textProps={{ fz: 24, lh: '28px', c: 'neutral.3' }}
+            titleProps={{ fz: 128, lh: 0.75, c: 'primary.1' }}
+            textProps={{ fz: 24, lh: 1.2, c: 'neutral.3' }}
             initialDate={new Date()}
           />
           <Link href={paths.projects()}>
