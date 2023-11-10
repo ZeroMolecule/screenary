@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ActionIcon, Divider, Group, Stack, Title } from '@mantine/core';
+import { ActionIcon, Divider, Group, Stack } from '@mantine/core';
 import {
   IconArrowUpRight,
   IconBellFilled,
@@ -7,6 +7,7 @@ import {
 } from '@tabler/icons-react';
 import { Project } from '@prisma/client';
 import { TextAlt } from '../base/text-alt';
+import { Title } from '../base/title';
 
 // TODO: update check and bell icon count once api supports those fields
 

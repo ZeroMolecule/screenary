@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 import { Stack, StackProps } from '@mantine/core';
-import { TitleAlt, TitleAltProps } from './base/title-alt';
+import { Title, TitleProps } from './base/title';
 import { TextAlt, TextAltProps } from './base/text-alt';
 import { useLiveClock } from '@/hooks/use-live-clock';
 
@@ -10,7 +10,7 @@ import { useLiveClock } from '@/hooks/use-live-clock';
 
 type Props = {
   stackProps?: StackProps;
-  titleProps?: TitleAltProps;
+  titleProps?: TitleProps;
   textProps?: Omit<TextAltProps, 'children'>;
   initialDate?: Date | string;
 };
@@ -21,7 +21,9 @@ export const DateTimeBlock: FC<Props> = (props) => {
 
   return (
     <Stack {...stackProps}>
-      <TitleAlt {...titleProps}>{currentTime}</TitleAlt>
+      <Title ff="secondary" {...titleProps}>
+        {currentTime}
+      </Title>
       <TextAlt {...textProps}>{currentDate}</TextAlt>
     </Stack>
   );
