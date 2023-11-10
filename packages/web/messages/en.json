@@ -7,6 +7,7 @@
   },
   "notification": {
     "success": {
+      "added": "Added!",
       "saved": "Saved!",
       "deleted": "Deleted!"
     },
@@ -34,6 +35,17 @@
       "cancelAction": "Cancel",
       "saveAction": "Save",
       "deleteAction": "Delete"
+    },
+    "project": {
+      "title": "Project Settings",
+      "nameLabel": "Project Name",
+      "namePlaceholder": "Name",
+      "emailLabel": "Email URL",
+      "emailPlaceholder": "https://",
+      "calendarLabel": "Calendar URL",
+      "calendarPlaceholder": "https://",
+      "cancelAction": "Cancel",
+      "saveAction": "Save"
     }
   },
   "auth": {
