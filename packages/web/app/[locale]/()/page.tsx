@@ -11,6 +11,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/domain/auth';
 import { DateTimeBlock } from '@/app/_components/datetime-block';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
+import { generateFirstName } from '@/domain/util/user';
 
 type Props = {
   params: { locale: string };
@@ -60,7 +61,7 @@ async function useHomePage({ params: { locale } }: Props) {
   const username = session?.user?.name;
 
   const message = username
-    ? t('welcomeMessage', { username: username.split(' ')[0] })
+    ? t('welcomeMessage', { username: generateFirstName(username) })
     : t('welcomeMessageFallback');
 
   return { t, message };

@@ -3,6 +3,7 @@ import { Card, Group, Title } from '@mantine/core';
 import { useTranslations } from 'next-intl';
 import { DateTimeBlock } from '../datetime-block';
 import { NotificationsPopover } from './notifications-popover';
+import { generateFirstName } from '@/domain/util/user';
 
 type Props = {
   username?: string | null;
@@ -34,7 +35,7 @@ function useNotificationsWidget({ username }: Props) {
   const t = useTranslations('shared');
 
   const message = username
-    ? t('welcomeMessage', { username: username.split(' ')[0] })
+    ? t('welcomeMessage', { username: generateFirstName(username) })
     : t('welcomeMessageFallback');
 
   return { message };
