@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import Image from 'next/image';
 import { DefaultSession } from 'next-auth';
 import { signOut } from 'next-auth/react';
@@ -36,16 +36,7 @@ type Props = {
 };
 
 export const UserMenu: FC<Props> = (props) => {
-  const {
-    t,
-    isDark,
-    controlRef,
-    panelWidth,
-    isOpen,
-    user,
-    menuActions,
-    toggle,
-  } = useUserMenu(props);
+  const { t, isDark, isOpen, user, menuActions, toggle } = useUserMenu(props);
 
   const renderMenuAction = (
     { icon: Icon, label, onClick }: MenuAction,
@@ -79,11 +70,7 @@ export const UserMenu: FC<Props> = (props) => {
           'user-menu__item--dark': isDark,
         })}
       >
-        <AccordionControl
-          ref={controlRef}
-          className="user-menu__control"
-          onClick={toggle}
-        >
+        <AccordionControl className="user-menu__control" onClick={toggle}>
           <Group mr="md">
             <Image
               src={user?.image ?? placeholderImage}
@@ -104,7 +91,7 @@ export const UserMenu: FC<Props> = (props) => {
             </Stack>
           </Group>
         </AccordionControl>
-        <AccordionPanel w={panelWidth}>
+        <AccordionPanel>
           <Stack gap="xs">{menuActions.map(renderMenuAction)}</Stack>
         </AccordionPanel>
       </AccordionItem>
@@ -114,8 +101,6 @@ export const UserMenu: FC<Props> = (props) => {
 
 function useUserMenu({ variant = 'light', onOpen, user }: Props) {
   const t = useTranslations('header.userMenu');
-  const controlRef = useRef<HTMLButtonElement | null>(null);
-  const [panelWidth, setPanelWidth] = useState<number | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
 
   const menuActions: MenuAction[] = [
@@ -141,15 +126,9 @@ function useUserMenu({ variant = 'light', onOpen, user }: Props) {
     }
   };
 
-  useEffect(() => {
-    setPanelWidth(controlRef.current?.clientWidth);
-  }, []);
-
   return {
     t,
     isDark: variant === 'dark',
-    controlRef,
-    panelWidth,
     isOpen,
     user,
     menuActions,
