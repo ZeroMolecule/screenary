@@ -127,7 +127,7 @@ function useUserMenu({ variant = 'light', onOpen, user }: Props) {
     {
       icon: IconLogout,
       label: t('logout'),
-      onClick: async () => await signOut(),
+      onClick: () => signOut(),
     },
   ];
 
