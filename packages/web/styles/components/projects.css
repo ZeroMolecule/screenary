@@ -11,7 +11,7 @@
 
   &-wrapper {
     position: relative;
-    width: calc(33% - 7.65px);
+    width: calc(33% - 8px);
     height: calc(50% - (var(--mantine-spacing-xl) + var(--mantine-spacing-md)));
     margin-top: var(--mantine-spacing-xl);
 
