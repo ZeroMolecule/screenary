@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 
 // be sure to update intl.js if new value is added here
-type TimeOfTheDay = 'morning' | 'afternoon' | 'night';
+type TimeOfTheDay = 'morning' | 'afternoon' | 'evening';
 
 dayjs.extend(advancedFormat);
 
@@ -25,5 +25,5 @@ export const getTimeOfTheDay = (date: Date): TimeOfTheDay => {
   } else if (hour > 12 && hour <= 18) {
     return 'afternoon';
   }
-  return 'night';
+  return 'evening';
 };
