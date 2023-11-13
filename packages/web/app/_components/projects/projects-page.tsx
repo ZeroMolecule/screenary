@@ -7,7 +7,7 @@ import { Project } from '@prisma/client';
 import { projectsQuery } from '@/domain/queries/projects-query';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
-import { ADD_PROJECT_BUTTON_ID } from '@/utils/constants';
+import { HEADER_CONTAINER_ID } from '@/utils/constants';
 import { IconCirclePlus } from '@tabler/icons-react';
 import {
   ProjectFormValues,
@@ -30,7 +30,7 @@ export const ProjectsPage: FC = () => {
 
   return (
     <Group h="100%">
-      <Portal target={`#${ADD_PROJECT_BUTTON_ID}`}>
+      <Portal target={`#${HEADER_CONTAINER_ID}`}>
         <Button
           variant="subtle"
           bg="white"
