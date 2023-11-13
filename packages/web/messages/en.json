@@ -14,6 +14,18 @@
       "somethingWentWrong": "Something went wrong."
     }
   },
+  "shared": {
+    "logoAlt": "Screenary logo",
+    "welcomeMessage": {
+      "base": "Good {time}, {username}",
+      "fallback": "Welcome back",
+      "time": {
+        "morning": "morning",
+        "afternoon": "afternoon",
+        "evening": "evening"
+      }
+    }
+  },
   "modal": {
     "profile": {
       "accountSettings": "Account Settings",
@@ -32,7 +44,34 @@
     }
   },
   "auth": {
-    "logoAlt": "Screenary logo",
+    "login": "Login",
     "socialAction": "Continue with {provider}"
+  },
+  "header": {
+    "logoAlt": "Screenary logo",
+    "navigation": {
+      "home": "Home",
+      "todo": "To Do",
+      "inbox": "Inbox",
+      "calendar": "Calendar"
+    },
+    "userMenu": {
+      "avatarAlt": "Avatar placeholder",
+      "profile": "Profile",
+      "logout": "Log out"
+    }
+  },
+  "notificationsWidget": {
+    "popover": {
+      "title": "Notifications"
+    }
+  },
+  "home": {},
+  "projects": {
+    "title": "Projects",
+    "empty": {
+      "title": "Nothing Here Yet",
+      "description": "Click ‘Add Project’ to start organizing your work on Screenary"
+    }
   }
 }

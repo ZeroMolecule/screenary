@@ -1,4 +1,8 @@
 .social-button {
+  &__inner {
+    gap: var(--mantine-spacing-md);
+  }
+
   &--google {
     border: 0.87px solid var(--mantine-google-icon-border-color);
   }

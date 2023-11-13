@@ -5,7 +5,7 @@ export interface Data<Data, Meta = Record<string, never>> {
   meta: Meta;
 }
 
-export const getNextData = <T>(response: AxiosResponse<T>) => response.data;
+export const getAxiosData = <T>(response: AxiosResponse<T>) => response.data;
 
 export const getRemoteData = <T>(response: AxiosResponse<Data<T>>) =>
-  getNextData(response).data;
+  getAxiosData(response).data;

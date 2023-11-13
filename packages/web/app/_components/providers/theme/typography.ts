@@ -1,8 +1,18 @@
 import { MantineTheme, rem } from '@mantine/core';
 
-import { Inter } from 'next/font/google';
+import { Inter, Space_Mono } from 'next/font/google';
 
 const baseFont = Inter({ subsets: ['latin'] });
+export const secondaryFont = Space_Mono({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+});
+
+export const fontFamily = {
+  primary: baseFont.style.fontFamily,
+  secondary: secondaryFont.style.fontFamily,
+};
+export type FontFamilyVariant = keyof typeof fontFamily;
 
 const baseFontSize = 16;
 
@@ -14,7 +24,7 @@ type TypographyProps = Pick<
 >;
 
 export const typography: TypographyProps = {
-  fontFamily: baseFont.style.fontFamily,
+  fontFamily: fontFamily.primary,
   fontSizes: {
     xs: rem(12),
     sm: rem(14),
@@ -30,7 +40,7 @@ export const typography: TypographyProps = {
     xl: rem(28),
   },
   headings: {
-    fontFamily: baseFont.style.fontFamily,
+    fontFamily: fontFamily.primary,
     fontWeight: baseHeadingFontWeight,
     sizes: {
       h1: {

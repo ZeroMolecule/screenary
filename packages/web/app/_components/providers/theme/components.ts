@@ -1,9 +1,12 @@
 import {
   Button,
   MantineThemeComponents,
+  Text,
+  Title,
   Modal,
   TextInput,
   rem,
+  Popover,
 } from '@mantine/core';
 
 export const components: MantineThemeComponents = {
@@ -24,10 +27,15 @@ export const components: MantineThemeComponents = {
       radius: rem(6),
       size: 'md',
     },
-    styles: {
-      inner: {
-        gap: 'var(--mantine-spacing-md)',
-      },
+  }),
+  Text: Text.extend({
+    defaultProps: {
+      c: 'neutral.9',
+    },
+  }),
+  Title: Title.extend({
+    defaultProps: {
+      c: 'neutral.9',
     },
   }),
   Modal: Modal.extend({
@@ -37,6 +45,19 @@ export const components: MantineThemeComponents = {
       },
       body: {
         padding: 'var(--mantine-spacing-xl)',
+      },
+    },
+  }),
+  Popover: Popover.extend({
+    defaultProps: {
+      radius: rem(24),
+    },
+    styles: {
+      dropdown: {
+        maxWidth: rem(350),
+        backgroundColor: 'var(--mantine-glass-color)',
+        boxShadow: '0px 40px 35px -20px rgba(0, 0, 0, 0.20)',
+        backdropFilter: 'blur(6px)',
       },
     },
   }),

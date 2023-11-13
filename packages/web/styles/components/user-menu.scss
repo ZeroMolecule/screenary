@@ -1,0 +1,32 @@
+.user-menu {
+  z-index: 1;
+
+  &__image {
+    border-radius: 100%;
+
+    &--dark {
+      border: 1.5px solid var(--mantine-color-neutral-9);
+    }
+  }
+
+  &__item {
+    border: 1px solid var(--mantine-color-neutral-3);
+    border-radius: rem(1000);
+
+    &--open {
+      border-radius: rem(32);
+      box-shadow: 0px 4px 6px -4px rgba(16, 24, 40, 0.1),
+        0px 10px 15px -3px rgba(16, 24, 40, 0.1);
+    }
+
+    &--dark {
+      border: 1px solid var(--mantine-color-neutral-7);
+    }
+  }
+
+  &__control {
+    @include hover {
+      background-color: unset;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.home {
+  &__icon-button {
+    border: 1px solid var(--mantine-color-neutral-3);
+
+    &:hover {
+      background-color: var(--mantine-color-neutral-9);
+    }
+  }
+}
