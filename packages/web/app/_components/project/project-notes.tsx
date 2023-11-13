@@ -8,10 +8,13 @@ import {
 } from '@tabler/icons-react';
 import { FC } from 'react';
 import { Text } from '../base/text';
+import { useDisclosure } from '@mantine/hooks';
 
 export const ProjectNotes: FC = () => {
+  const { isOpen, open, close } = useProjectNotes();
+
   return (
-    <Card radius={24}>
+    <Card radius={24} pos="relative">
       <Stack>
         <Group justify="space-between">
           <Group gap="xs">
@@ -49,3 +52,9 @@ export const ProjectNotes: FC = () => {
     </Card>
   );
 };
+
+function useProjectNotes() {
+  const [isOpen, { open, close }] = useDisclosure(false);
+
+  return { isOpen, open, close };
+}
