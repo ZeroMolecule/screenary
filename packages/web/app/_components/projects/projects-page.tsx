@@ -68,10 +68,10 @@ function useProjectsWrapper() {
 
   const { mutateAsync: addProject } = useMutation({
     mutationFn: addProjectMutation.fnc,
-    onSuccess: () => {
+    onSuccess: async () => {
       onSuccess();
       close();
-      refetch();
+      await refetch();
       projectModalRef.current?.resetForm();
     },
   });
