@@ -20,7 +20,7 @@ export const ProjectsPage: FC = () => {
       {!projects?.length ? (
         <ProjectsEmptyPlaceholder />
       ) : (
-        projects.map(renderProjectItem)
+        <div className="projects-grid">{projects.map(renderProjectItem)}</div>
       )}
     </Group>
   );
