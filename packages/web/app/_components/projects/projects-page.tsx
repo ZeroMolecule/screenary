@@ -7,6 +7,7 @@ import { projectsQuery } from '@/domain/queries/projects-query';
 import { Project } from '@prisma/client';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
+import { Data } from '@/domain/remote/response/data';
 
 export const ProjectsPage: FC = () => {
   const { projects } = useProjectsWrapper();
@@ -27,10 +28,9 @@ export const ProjectsPage: FC = () => {
 };
 
 function useProjectsWrapper() {
-  const { data: projects } = useQuery({
+  const { data: projects } = useQuery<Data<Project[]>>({
     queryKey: projectsQuery.key,
-    queryFn: projectsQuery.fnc,
   });
 
-  return { projects };
+  return { projects: projects?.data };
 }
