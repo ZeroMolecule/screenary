@@ -32,7 +32,6 @@
       "accountSettings": "Account Settings",
       "deleteTitle": "Delete Profile",
       "deleteDescription": "Are you sure you want to delete your profile?",
-      "deleteIconAlt": "Delete icon",
       "profileImgAlt": "{user} profile photo",
       "nameLabel": "Name",
       "namePlaceholder": "Enter your name",
@@ -41,7 +40,8 @@
       "deleteProfileAction": "Delete a profile",
       "cancelAction": "Cancel",
       "saveAction": "Save",
-      "deleteAction": "Delete"
+      "deleteAction": "Delete",
+      "deleteIconAlt": "Delete icon"
     },
     "project": {
       "title": "Project Settings",
@@ -53,6 +53,13 @@
       "calendarPlaceholder": "https://",
       "cancelAction": "Cancel",
       "saveAction": "Save"
+    },
+    "delete": {
+      "title": "Delete",
+      "description": "Are you sure?",
+      "deleteIconAlt": "Delete icon",
+      "cancelAction": "Cancel",
+      "deleteAction": "Delete"
     }
   },
   "auth": {
@@ -85,5 +92,9 @@
       "title": "Nothing Here Yet",
       "description": "Click ‘Add Project’ to start organizing your work on Screenary"
     }
+  },
+  "project": {
+    "deleteTitle": "Delete Project",
+    "deleteDescription": "Are you sure you want to delete {projectName} project?"
   }
 }

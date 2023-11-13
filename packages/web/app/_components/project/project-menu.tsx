@@ -11,12 +11,12 @@ import { IconDots, IconPencil, IconTrash, IconX } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 
 type Props = {
-  openModal: () => void;
-  onDelete: () => Promise<void>;
+  openEditModal: () => void;
+  openDeleteModal: () => void;
 };
 
 export const ProjectMenu: FC<Props> = (props) => {
-  const { isOpen, toggle, close, handleOpenModal, onDelete } =
+  const { isOpen, toggle, close, handleOpenEditModal, handleOpenDeleteModal } =
     useProjectMenu(props);
 
   return (
@@ -41,7 +41,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             variant="transparent"
             size="lg"
             color="white"
-            onClick={onDelete}
+            onClick={handleOpenDeleteModal}
           >
             <IconTrash size={28} />
           </ActionIcon>
@@ -49,7 +49,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             variant="transparent"
             size="lg"
             color="white"
-            onClick={handleOpenModal}
+            onClick={handleOpenEditModal}
           >
             <IconPencil size={28} />
           </ActionIcon>
@@ -59,13 +59,18 @@ export const ProjectMenu: FC<Props> = (props) => {
   );
 };
 
-function useProjectMenu({ openModal, onDelete }: Props) {
+function useProjectMenu({ openEditModal, openDeleteModal }: Props) {
   const [isOpen, { toggle, close }] = useDisclosure(false);
 
-  const handleOpenModal = () => {
+  const handleOpenEditModal = () => {
     close();
-    openModal();
+    openEditModal();
   };
 
-  return { isOpen, toggle, close, handleOpenModal, onDelete };
+  const handleOpenDeleteModal = () => {
+    close();
+    openDeleteModal();
+  };
+
+  return { isOpen, toggle, close, handleOpenEditModal, handleOpenDeleteModal };
 }

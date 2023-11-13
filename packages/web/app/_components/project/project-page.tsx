@@ -17,31 +17,57 @@ import { EditProjectData } from '@/domain/types/project-data';
 import { deleteProjectMutation } from '@/domain/mutations/delete-project-mutation';
 import { useRouter } from '@/navigation';
 import { paths } from '@/navigation/paths';
+import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
+import { useTranslations } from 'next-intl';
+
+// TODO: custom modal hook
 
 export const ProjectPage: FC = () => {
-  const { isOpen, open, close, project, handleEdit, handleDelete } =
-    useProjectPage();
+  const {
+    t,
+    isEditOpen,
+    openEdit,
+    closeEdit,
+    isDeleteOpen,
+    openDelete,
+    closeDelete,
+    project,
+    handleEdit,
+    handleDelete,
+  } = useProjectPage();
 
   return (
     <>
       <h1>{project?.name}</h1>
       <Portal target={`#${EDIT_PROJECT_MENU_ID}`}>
-        <ProjectMenu openModal={open} onDelete={handleDelete} />
+        <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
       </Portal>
       <ProjectModal
-        opened={isOpen}
-        onClose={close}
+        opened={isEditOpen}
+        onClose={closeEdit}
         onSubmit={handleEdit}
         project={project}
+      />
+      <ConfirmDeleteModal
+        opened={isDeleteOpen}
+        onClose={closeDelete}
+        onCancel={closeDelete}
+        onSubmit={handleDelete}
+        title={t('deleteTitle')}
+        description={t('deleteDescription', { projectName: project?.name })}
       />
     </>
   );
 };
 
 function useProjectPage() {
+  const t = useTranslations('project');
   const { id } = useParams();
   const { replace } = useRouter();
-  const [isOpen, { open, close }] = useDisclosure(false);
+  const [isEditOpen, { open: openEdit, close: closeEdit }] =
+    useDisclosure(false);
+  const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
   const onEdit = useNotificationSuccess('saved');
   const onDelete = useNotificationSuccess('deleted');
 
@@ -53,7 +79,7 @@ function useProjectPage() {
     mutationFn: editProjectMutation.fnc,
     onSuccess: () => {
       onEdit();
-      close();
+      closeEdit();
       refetch();
     },
   });
@@ -62,6 +88,7 @@ function useProjectPage() {
     mutationFn: deleteProjectMutation.fnc,
     onSuccess: () => {
       onDelete();
+      closeDelete();
       replace(paths.projects());
     },
   });
@@ -76,9 +103,13 @@ function useProjectPage() {
   };
 
   return {
-    isOpen,
-    open,
-    close,
+    t,
+    isEditOpen,
+    openEdit,
+    closeEdit,
+    isDeleteOpen,
+    openDelete,
+    closeDelete,
     project: project?.data,
     handleEdit,
     handleDelete,
