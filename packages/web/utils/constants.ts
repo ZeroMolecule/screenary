@@ -4,3 +4,4 @@ export const DEFAULT_LOCALE = 'en';
 
 // 🖼️ UI
 export const ADD_PROJECT_BUTTON_ID = 'add-project';
+export const EDIT_PROJECT_MENU_ID = 'edit-project';

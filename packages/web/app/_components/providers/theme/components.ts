@@ -7,6 +7,7 @@ import {
   TextInput,
   rem,
   Popover,
+  Menu,
 } from '@mantine/core';
 
 export const components: MantineThemeComponents = {
@@ -65,6 +66,24 @@ export const components: MantineThemeComponents = {
         backgroundColor: 'var(--mantine-glass-color)',
         boxShadow: '0px 40px 35px -20px rgba(0, 0, 0, 0.20)',
         backdropFilter: 'blur(6px)',
+      },
+    },
+  }),
+  Menu: Menu.extend({
+    defaultProps: {
+      radius: 'md',
+    },
+    styles: {
+      dropdown: {
+        backgroundColor: 'var(--mantine-color-neutral-9)',
+        border: '1px solid var(--mantine-color-neutral-7)',
+        boxShadow:
+          '0px 1px 2px -1px rgba(16, 24, 40, 0.10), 0px 1px 3px 0px rgba(16, 24,40, 0.10)',
+      },
+      itemLabel: {
+        display: 'flex',
+        alignItems: 'center',
+        color: 'var(--mantine-color-white)',
       },
     },
   }),
