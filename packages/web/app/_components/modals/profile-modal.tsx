@@ -1,11 +1,5 @@
 import { FC } from 'react';
-import {
-  Box,
-  Group,
-  Button as MantineButton,
-  Modal,
-  Stack,
-} from '@mantine/core';
+import { Box, Group, Button as MantineButton, Stack } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -17,6 +11,7 @@ import { FormTextInput } from '../base/form/text-input';
 import { Title } from '../base/title';
 import { useDisclosure } from '@mantine/hooks';
 import { ConfirmDeleteModal } from './confirm-delete-modal';
+import { Modal } from './modal';
 
 type Props = {
   opened: boolean;
@@ -37,6 +32,7 @@ export const ProfileModal: FC<Props> = (props) => {
     isDeleteModalOpen,
     openDeleteModal,
     closeDeleteModal,
+    handleAfterClose,
     onSubmit,
     onDelete,
   } = useProfileModal(props);
@@ -54,7 +50,7 @@ export const ProfileModal: FC<Props> = (props) => {
   }
 
   return (
-    <Modal opened={opened} onClose={onClose} centered withCloseButton={false}>
+    <Modal opened={opened} onClose={onClose} afterClose={handleAfterClose}>
       <FormProvider {...profileForm}>
         <form onSubmit={onSubmit}>
           <Stack gap="lg">
@@ -134,6 +130,8 @@ function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
     formState: { isSubmitting },
   } = profileForm;
 
+  const handleAfterClose = () => reset();
+
   return {
     t,
     opened,
@@ -144,6 +142,7 @@ function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
     isDeleteModalOpen,
     openDeleteModal,
     closeDeleteModal,
+    handleAfterClose,
     onSubmit: handleSubmit(onSubmit),
     onDelete,
   };

@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Group, Modal, Stack, Button as MantineButton } from '@mantine/core';
+import { Group, Stack, Button as MantineButton } from '@mantine/core';
 import trashIcon from '@/public/images/trash-icon.svg';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
 import { Button } from '../base/button';
+import { Modal } from './modal';
 
 type Props = {
   opened: boolean;
@@ -20,7 +21,7 @@ export const ConfirmDeleteModal: FC<Props> = (props) => {
     useConfirmDeleteModal(props);
 
   return (
-    <Modal opened={opened} onClose={onClose} centered withCloseButton={false}>
+    <Modal opened={opened} onClose={onClose}>
       <Stack align="center" gap="lg">
         <Image
           src={trashIcon}
