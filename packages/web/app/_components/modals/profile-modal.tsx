@@ -1,10 +1,4 @@
-import {
-  Box,
-  Group,
-  Button as MantineButton,
-  Modal,
-  Stack,
-} from '@mantine/core';
+import { Box, Group, Button as MantineButton, Stack } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -17,6 +11,7 @@ import { Button } from '../base/button';
 import { FormTextInput } from '../base/form/text-input';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
+import { Modal } from './modal';
 
 type Props = {
   opened: boolean;
@@ -35,7 +30,8 @@ export const ProfileModal: FC<Props> = (props) => {
     profileForm,
     isLoading,
     setShowDelete,
-    handleClose,
+    onClose,
+    handleAfterClose,
     onSubmit,
     onDelete,
   } = useProfileModal(props);
@@ -70,12 +66,7 @@ export const ProfileModal: FC<Props> = (props) => {
   );
 
   return (
-    <Modal
-      opened={opened}
-      onClose={handleClose}
-      centered
-      withCloseButton={false}
-    >
+    <Modal opened={opened} onClose={onClose} afterClose={handleAfterClose}>
       {showDelete ? (
         deleteModalBody
       ) : (
@@ -118,7 +109,7 @@ export const ProfileModal: FC<Props> = (props) => {
                 </MantineButton>
               </Box>
               <Group grow gap="xs">
-                <MantineButton bg="neutral.7" fw={500} onClick={handleClose}>
+                <MantineButton bg="neutral.7" fw={500} onClick={onClose}>
                   {t('cancelAction')}
                 </MantineButton>
                 <MantineButton
@@ -152,14 +143,13 @@ function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
   });
   const {
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = profileForm;
 
-  const handleClose = async () => {
-    onClose();
-    setTimeout(() => {
-      setShowDelete(false);
-    }, 200);
+  const handleAfterClose = () => {
+    setShowDelete(false);
+    reset();
   };
 
   return {
@@ -170,7 +160,8 @@ function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
     profileForm,
     isLoading: isSubmitting,
     setShowDelete,
-    handleClose,
+    onClose,
+    handleAfterClose,
     onSubmit: handleSubmit(onSubmit),
     onDelete,
   };

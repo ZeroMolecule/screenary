@@ -7,6 +7,7 @@
   },
   "notification": {
     "success": {
+      "added": "Added!",
       "saved": "Saved!",
       "deleted": "Deleted!"
     },
@@ -41,6 +42,17 @@
       "cancelAction": "Cancel",
       "saveAction": "Save",
       "deleteAction": "Delete"
+    },
+    "project": {
+      "title": "Project Settings",
+      "nameLabel": "Project Name",
+      "namePlaceholder": "Name",
+      "emailLabel": "Email URL",
+      "emailPlaceholder": "https://",
+      "calendarLabel": "Calendar URL",
+      "calendarPlaceholder": "https://",
+      "cancelAction": "Cancel",
+      "saveAction": "Save"
     }
   },
   "auth": {
@@ -69,6 +81,7 @@
   "home": {},
   "projects": {
     "title": "Projects",
+    "addAction": "Add Project",
     "empty": {
       "title": "Nothing Here Yet",
       "description": "Click ‘Add Project’ to start organizing your work on Screenary"
