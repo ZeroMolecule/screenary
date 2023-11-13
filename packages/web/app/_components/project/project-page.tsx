@@ -6,7 +6,7 @@ import { Data } from '@/domain/remote/response/data';
 import { Project } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { EDIT_PROJECT_MENU_ID } from '@/utils/constants';
+import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
 import { Portal } from '@mantine/core';
 import { ProjectMenu } from './project-menu';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
@@ -39,7 +39,7 @@ export const ProjectPage: FC = () => {
   return (
     <>
       <h1>{project?.name}</h1>
-      <Portal target={`#${EDIT_PROJECT_MENU_ID}`}>
+      <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>
         <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
       </Portal>
       <ProjectModal

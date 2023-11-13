@@ -5,7 +5,7 @@ import { DateTimeBlock } from '../datetime-block';
 import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
 import { Title } from '../base/title';
-import { EDIT_PROJECT_MENU_ID } from '@/utils/constants';
+import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
 
 type Props = {
   username?: string | null;
@@ -22,7 +22,7 @@ export const NotificationsWidget: FC<Props> = (props) => {
             <Title fz={44} fw={700} c="neutral.1">
               {message}
             </Title>
-            <div id={EDIT_PROJECT_MENU_ID} />
+            <div id={NOTIFICATION_WIDGET_CONTAINER_ID} />
           </Group>
           <DateTimeBlock
             stackProps={{ gap: 0 }}
