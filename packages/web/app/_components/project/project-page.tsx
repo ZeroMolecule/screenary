@@ -14,30 +14,36 @@ import { useDisclosure } from '@mantine/hooks';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { editProjectMutation } from '@/domain/mutations/edit-project-mutation';
 import { EditProjectData } from '@/domain/types/project-data';
+import { deleteProjectMutation } from '@/domain/mutations/delete-project-mutation';
+import { useRouter } from '@/navigation';
+import { paths } from '@/navigation/paths';
 
 export const ProjectPage: FC = () => {
-  const { isOpen, open, close, project, handleEdit } = useProjectPage();
+  const { isOpen, open, close, project, handleEdit, handleDelete } =
+    useProjectPage();
 
   return (
     <>
       <h1>{project?.name}</h1>
       <Portal target={`#${EDIT_PROJECT_MENU_ID}`}>
-        <ProjectMenu openModal={open} />
-        <ProjectModal
-          opened={isOpen}
-          onClose={close}
-          onSubmit={handleEdit}
-          project={project}
-        />
+        <ProjectMenu openModal={open} onDelete={handleDelete} />
       </Portal>
+      <ProjectModal
+        opened={isOpen}
+        onClose={close}
+        onSubmit={handleEdit}
+        project={project}
+      />
     </>
   );
 };
 
 function useProjectPage() {
   const { id } = useParams();
+  const { replace } = useRouter();
   const [isOpen, { open, close }] = useDisclosure(false);
-  const onSuccess = useNotificationSuccess('saved');
+  const onEdit = useNotificationSuccess('saved');
+  const onDelete = useNotificationSuccess('deleted');
 
   const { data: project, refetch } = useQuery<Data<Project>>({
     queryKey: projectQuery.key(id),
@@ -46,9 +52,17 @@ function useProjectPage() {
   const { mutateAsync: editProject } = useMutation({
     mutationFn: editProjectMutation.fnc,
     onSuccess: () => {
-      onSuccess();
+      onEdit();
       close();
       refetch();
+    },
+  });
+
+  const { mutateAsync: deleteProject } = useMutation({
+    mutationFn: deleteProjectMutation.fnc,
+    onSuccess: () => {
+      onDelete();
+      replace(paths.projects());
     },
   });
 
@@ -57,11 +71,16 @@ function useProjectPage() {
     await editProject(data).catch(() => null);
   };
 
+  const handleDelete = async () => {
+    await deleteProject(id);
+  };
+
   return {
     isOpen,
     open,
     close,
     project: project?.data,
     handleEdit,
+    handleDelete,
   };
 }

@@ -12,10 +12,12 @@ import { useDisclosure } from '@mantine/hooks';
 
 type Props = {
   openModal: () => void;
+  onDelete: () => Promise<void>;
 };
 
 export const ProjectMenu: FC<Props> = (props) => {
-  const { isOpen, toggle, close, handleOpenModal } = useProjectMenu(props);
+  const { isOpen, toggle, close, handleOpenModal, onDelete } =
+    useProjectMenu(props);
 
   return (
     <Menu opened={isOpen} onChange={toggle}>
@@ -35,7 +37,12 @@ export const ProjectMenu: FC<Props> = (props) => {
             <IconX size={28} />
           </ActionIcon>
           <Divider color="neutral.7" />
-          <ActionIcon variant="transparent" size="lg" color="white">
+          <ActionIcon
+            variant="transparent"
+            size="lg"
+            color="white"
+            onClick={onDelete}
+          >
             <IconTrash size={28} />
           </ActionIcon>
           <ActionIcon
@@ -52,7 +59,7 @@ export const ProjectMenu: FC<Props> = (props) => {
   );
 };
 
-function useProjectMenu({ openModal }: Props) {
+function useProjectMenu({ openModal, onDelete }: Props) {
   const [isOpen, { toggle, close }] = useDisclosure(false);
 
   const handleOpenModal = () => {
@@ -60,5 +67,5 @@ function useProjectMenu({ openModal }: Props) {
     openModal();
   };
 
-  return { isOpen, toggle, close, handleOpenModal };
+  return { isOpen, toggle, close, handleOpenModal, onDelete };
 }
