@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { useTranslations } from 'next-intl';
 import { paths } from '@/navigation/paths';
-import { NavigationLink } from './navigation-link';
+import { NavigationLink, NavigationLinkProps } from './navigation-link';
 
 export const Navigation: FC = () => {
   const { navigationLinks } = useNavigation();
 
-  const renderLink = ({ href, label }: NavigationLink, index: number) => (
+  const renderLink = ({ href, label }: NavigationLinkProps, index: number) => (
     <NavigationLink key={index} href={href} label={label} />
   );
 
@@ -16,7 +16,7 @@ export const Navigation: FC = () => {
 function useNavigation() {
   const t = useTranslations('header');
 
-  const navigationLinks: NavigationLink[] = [
+  const navigationLinks: NavigationLinkProps[] = [
     { href: paths.projects(), label: t('navigation.home') },
     { href: paths.todo(), label: t('navigation.todo') },
     { href: paths.inbox(), label: t('navigation.inbox') },

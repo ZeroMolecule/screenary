@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Box } from '@mantine/core';
 import { getTranslator } from 'next-intl/server';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
-import { ProjectsWrapper } from '@/app/_components/projects/projects-wrapper';
+import { ProjectsPage as ClientProjectsPage } from '@/app/_components/projects/projects-page';
 import { getQueryClient } from '@/domain/queries/server-query-client';
 import { projectsQuery } from '@/domain/queries/projects-query';
 
@@ -24,11 +23,9 @@ async function ProjectsPage() {
   const { dehydratedState } = await useProjectsPage();
 
   return (
-    <Box h="100%">
-      <HydrationBoundary state={dehydratedState}>
-        <ProjectsWrapper />
-      </HydrationBoundary>
-    </Box>
+    <HydrationBoundary state={dehydratedState}>
+      <ClientProjectsPage />
+    </HydrationBoundary>
   );
 }
 

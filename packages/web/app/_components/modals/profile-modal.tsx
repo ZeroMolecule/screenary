@@ -4,20 +4,19 @@ import {
   Button as MantineButton,
   Modal,
   Stack,
-  Text,
-  Title,
 } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { FC, useState } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DefaultSession } from 'next-auth';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../base/button';
 import { FormTextInput } from '../base/form/text-input';
+import { Title } from '../base/title';
+import { Text } from '../base/text';
 
 type Props = {
   opened: boolean;

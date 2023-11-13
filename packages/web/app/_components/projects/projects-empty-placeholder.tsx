@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Card, Stack, Text, Title } from '@mantine/core';
+import { Card, Stack } from '@mantine/core';
+import { Title } from '../base/title';
+import { Text } from '../base/text';
 import emptyIcon from '@/public/images/folder-icon.svg';
 
 export const ProjectsEmptyPlaceholder: FC = () => {

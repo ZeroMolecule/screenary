@@ -25,7 +25,7 @@
   }
 
   &__control {
-    @mixin hover {
+    @include hover {
       background-color: unset;
     }
   }

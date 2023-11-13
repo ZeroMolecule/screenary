@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { getTranslator } from 'next-intl/server';
-import { ActionIcon, Box, Group, Stack, Text } from '@mantine/core';
+import { ActionIcon, Box, Group, Stack } from '@mantine/core';
 import { Screensaver } from '@/app/_components/screensaver';
 import logoImg from '@/public/images/logo-white.png';
 import { UserWidget } from '@/app/_components/user-widget';
@@ -11,6 +11,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/domain/auth';
 import { DateTimeBlock } from '@/app/_components/datetime-block';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
+import { generateFirstName } from '@/domain/util/user';
+import { getTimeOfTheDay } from '@/utils/datetime';
+import { Text } from '@/app/_components/base/text';
 
 type Props = {
   params: { locale: string };
@@ -31,8 +34,9 @@ async function HomePage(props: Props) {
         <Stack justify="center" align="center" gap={60} className="flex-1">
           <DateTimeBlock
             stackProps={{ align: 'center', gap: 'xl' }}
-            titleProps={{ fz: 128, lh: '100px', c: 'primary.1' }}
-            textProps={{ fz: 24, lh: '28px', c: 'neutral.3' }}
+            titleProps={{ fz: 128, lh: 0.75, c: 'primary.1' }}
+            textProps={{ fz: 24, lh: 1.2, c: 'neutral.3' }}
+            initialDate={new Date()}
           />
           <Link href={paths.projects()}>
             <ActionIcon
@@ -60,8 +64,11 @@ async function useHomePage({ params: { locale } }: Props) {
   const username = session?.user?.name;
 
   const message = username
-    ? t('welcomeMessage', { username: username.split(' ')[0] })
-    : t('welcomeMessageFallback');
+    ? t('welcomeMessage.base', {
+        time: t(`welcomeMessage.time.${getTimeOfTheDay(new Date())}`),
+        username: generateFirstName(username),
+      })
+    : t('welcomeMessage.fallback');
 
   return { t, message };
 }

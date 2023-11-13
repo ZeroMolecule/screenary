@@ -1,8 +1,10 @@
 import { FC } from 'react';
-import { Card, Group, Title } from '@mantine/core';
+import { Card, Group } from '@mantine/core';
 import { useTranslations } from 'next-intl';
 import { DateTimeBlock } from '../datetime-block';
-import { NotificationsPopover } from './notifications-popover';
+import { generateFirstName } from '@/domain/util/user';
+import { getTimeOfTheDay } from '@/utils/datetime';
+import { Title } from '../base/title';
 
 type Props = {
   username?: string | null;
@@ -22,20 +24,23 @@ export const NotificationsWidget: FC<Props> = (props) => {
             stackProps={{ gap: 0 }}
             titleProps={{ c: 'neutral.1' }}
             textProps={{ c: 'neutral.3' }}
+            initialDate={new Date()}
           />
         </Group>
-        <NotificationsPopover />
       </Group>
     </Card>
   );
 };
 
 function useNotificationsWidget({ username }: Props) {
-  const t = useTranslations('shared');
+  const t = useTranslations('shared.welcomeMessage');
 
   const message = username
-    ? t('welcomeMessage', { username: username.split(' ')[0] })
-    : t('welcomeMessageFallback');
+    ? t('base', {
+        time: t(`time.${getTimeOfTheDay(new Date())}`),
+        username: generateFirstName(username),
+      })
+    : t('fallback');
 
   return { message };
 }

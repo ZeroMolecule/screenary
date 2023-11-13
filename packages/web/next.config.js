@@ -34,6 +34,9 @@ const nextConfig = {
   images: {
     remotePatterns: [{ hostname: 'lh3.googleusercontent.com' }],
   },
+  sassOptions: {
+    prependData: '@import "./_mantine.scss";',
+  },
   sentry: {
     hideSourceMaps: true,
     widenClientFileUpload: true,

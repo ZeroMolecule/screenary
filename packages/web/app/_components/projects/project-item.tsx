@@ -1,12 +1,13 @@
 import { FC } from 'react';
-import { ActionIcon, Divider, Group, Stack, Title } from '@mantine/core';
+import { ActionIcon, Divider, Group, Stack } from '@mantine/core';
 import {
   IconArrowUpRight,
   IconBellFilled,
   IconCircleCheckFilled,
 } from '@tabler/icons-react';
 import { Project } from '@prisma/client';
-import { TextAlt } from '../base/text-alt';
+import { Title } from '../base/title';
+import { Text } from '../base/text';
 import { Link } from '../base/link';
 import { paths } from '@/navigation/paths';
 
@@ -27,12 +28,16 @@ export const ProjectItem: FC<Props> = ({ project: { id, name } }) => {
                 size={24}
                 className="project-item__count-icon"
               />
-              <TextAlt size="lg">2</TextAlt>
+              <Text ff="secondary" size="lg">
+                2
+              </Text>
             </Group>
             <Divider orientation="vertical" c="neutral.3" />
             <Group gap={4}>
               <IconBellFilled size={24} className="project-item__count-icon" />
-              <TextAlt size="lg">10</TextAlt>
+              <Text ff="secondary" size="lg">
+                10
+              </Text>
             </Group>
           </Group>
           <ActionIcon

@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import { QueryClient } from '@tanstack/react-query';
-import { getRemoteData } from '../remote/response/data';
 import { remoteApi } from '../remote';
+import { getAxiosData } from '../remote/response/data';
 
 export const getQueryClient = cache(
   () =>
@@ -10,7 +10,7 @@ export const getQueryClient = cache(
         queries: {
           queryFn: async ({ queryKey }) => {
             const [path, params] = queryKey as [string, unknown];
-            return getRemoteData(await remoteApi.get(path, { params }));
+            return getAxiosData(await remoteApi.get(path, { params }));
           },
         },
       },

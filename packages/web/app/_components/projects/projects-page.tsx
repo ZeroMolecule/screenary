@@ -17,8 +17,9 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
+import { Data } from '@/domain/remote/response/data';
 
-export const ProjectsWrapper: FC = () => {
+export const ProjectsPage: FC = () => {
   const { projectModalRef, isOpen, open, close, projects, handleSubmit } =
     useProjectsWrapper();
 
@@ -50,7 +51,7 @@ export const ProjectsWrapper: FC = () => {
       {!projects?.length ? (
         <ProjectsEmptyPlaceholder />
       ) : (
-        projects.map(renderProjectItem)
+        <div className="projects-grid">{projects.map(renderProjectItem)}</div>
       )}
     </Group>
   );
@@ -62,7 +63,7 @@ function useProjectsWrapper() {
   const [isOpen, { open, close }] = useDisclosure(false);
   const onSuccess = useNotificationSuccess('added');
 
-  const { data: projects } = useQuery<Project[]>({
+  const { data: projects } = useQuery<Data<Project[]>>({
     queryKey: projectsQuery.key,
   });
 
@@ -71,10 +72,10 @@ function useProjectsWrapper() {
     onSuccess: (data) => {
       onSuccess();
       close();
-      qc.setQueryData<Project[]>(projectsQuery.key, (currData) => [
-        ...(currData ?? []),
-        data,
-      ]);
+      qc.setQueryData(projectsQuery.key, (currData: Data<Project[]>) => ({
+        ...currData,
+        data: [...(currData.data ?? []), data],
+      }));
       projectModalRef.current?.resetForm();
     },
   });
@@ -83,5 +84,12 @@ function useProjectsWrapper() {
     await addProject(values).catch(() => null);
   };
 
-  return { projectModalRef, isOpen, open, close, projects, handleSubmit };
+  return {
+    projectModalRef,
+    isOpen,
+    open,
+    close,
+    projects: projects?.data,
+    handleSubmit,
+  };
 }
