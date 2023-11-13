@@ -34,7 +34,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             color="neutral.5"
             onClick={close}
           >
-            <IconX size={28} />
+            <IconX size={24} />
           </ActionIcon>
           <Divider color="neutral.7" />
           <ActionIcon
@@ -43,7 +43,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             color="white"
             onClick={handleOpenDeleteModal}
           >
-            <IconTrash size={28} />
+            <IconTrash size={24} />
           </ActionIcon>
           <ActionIcon
             variant="transparent"
@@ -51,7 +51,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             color="white"
             onClick={handleOpenEditModal}
           >
-            <IconPencil size={28} />
+            <IconPencil size={24} />
           </ActionIcon>
         </Stack>
       </MenuDropdown>
