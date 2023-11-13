@@ -62,8 +62,8 @@ function useProjectsWrapper() {
     mutationFn: addProjectMutation.fnc,
     onSuccess: async () => {
       onSuccess();
-      close();
       await refetch();
+      close();
     },
   });
 
