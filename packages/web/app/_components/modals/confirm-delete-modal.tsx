@@ -10,14 +10,13 @@ import { Button } from '../base/button';
 type Props = {
   opened: boolean;
   onClose: () => void;
-  onCancel: () => void;
   onSubmit: () => Promise<void>;
   title?: string;
   description?: string;
 };
 
 export const ConfirmDeleteModal: FC<Props> = (props) => {
-  const { t, opened, onClose, onCancel, onSubmit, title, description } =
+  const { t, opened, onClose, onSubmit, title, description } =
     useConfirmDeleteModal(props);
 
   return (
@@ -36,7 +35,7 @@ export const ConfirmDeleteModal: FC<Props> = (props) => {
           {description}
         </Text>
         <Group w="75%" gap="xs" grow>
-          <MantineButton bg="neutral.7" fw={500} onClick={onCancel}>
+          <MantineButton bg="neutral.7" fw={500} onClick={onClose}>
             {t('cancelAction')}
           </MantineButton>
           <Button bg="primary.7" fw={500} onClick={onSubmit}>
@@ -51,7 +50,6 @@ export const ConfirmDeleteModal: FC<Props> = (props) => {
 function useConfirmDeleteModal({
   opened,
   onClose,
-  onCancel,
   onSubmit,
   title,
   description,
@@ -62,7 +60,6 @@ function useConfirmDeleteModal({
     t,
     opened,
     onClose,
-    onCancel,
     onSubmit,
     title: title ?? t('title'),
     description: description ?? t('description'),

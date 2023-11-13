@@ -40,8 +40,7 @@
       "deleteProfileAction": "Delete a profile",
       "cancelAction": "Cancel",
       "saveAction": "Save",
-      "deleteAction": "Delete",
-      "deleteIconAlt": "Delete icon"
+      "deleteAction": "Delete"
     },
     "project": {
       "title": "Project Settings",

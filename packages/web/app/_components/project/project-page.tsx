@@ -51,7 +51,6 @@ export const ProjectPage: FC = () => {
       <ConfirmDeleteModal
         opened={isDeleteOpen}
         onClose={closeDelete}
-        onCancel={closeDelete}
         onSubmit={handleDelete}
         title={t('deleteTitle')}
         description={t('deleteDescription', { projectName: project?.name })}
