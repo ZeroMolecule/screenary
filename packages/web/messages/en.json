@@ -87,6 +87,7 @@
   "home": {},
   "projects": {
     "title": "Projects",
+    "addAction": "Add Project",
     "empty": {
       "title": "Nothing Here Yet",
       "description": "Click ‘Add Project’ to start organizing your work on Screenary"

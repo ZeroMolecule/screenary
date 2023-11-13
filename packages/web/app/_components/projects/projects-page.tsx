@@ -1,26 +1,23 @@
 'use client';
 
-import { FC, useRef } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { FC } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Group, Portal } from '@mantine/core';
 import { Project } from '@prisma/client';
 import { projectsQuery } from '@/domain/queries/projects-query';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
-import { ADD_PROJECT_BUTTON_ID } from '@/utils/constants';
+import { HEADER_CONTAINER_ID } from '@/utils/constants';
 import { IconCirclePlus } from '@tabler/icons-react';
-import {
-  ProjectFormValues,
-  ProjectModal,
-  ProjectModalRef,
-} from '../modals/project-modal';
+import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
 import { useDisclosure } from '@mantine/hooks';
 import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
+import { useTranslations } from 'next-intl';
 
 export const ProjectsPage: FC = () => {
-  const { projectModalRef, isOpen, open, close, projects, handleSubmit } =
+  const { t, isOpen, open, close, projects, handleSubmit } =
     useProjectsWrapper();
 
   const renderProjectItem = (project: Project) => (
@@ -29,7 +26,7 @@ export const ProjectsPage: FC = () => {
 
   return (
     <Group h="100%">
-      <Portal target={`#${ADD_PROJECT_BUTTON_ID}`}>
+      <Portal target={`#${HEADER_CONTAINER_ID}`}>
         <Button
           variant="subtle"
           bg="white"
@@ -39,15 +36,10 @@ export const ProjectsPage: FC = () => {
           className="add-project-button"
           onClick={open}
         >
-          Add Project
+          {t('addAction')}
         </Button>
       </Portal>
-      <ProjectModal
-        ref={projectModalRef}
-        opened={isOpen}
-        onClose={close}
-        onSubmit={handleSubmit}
-      />
+      <ProjectModal opened={isOpen} onClose={close} onSubmit={handleSubmit} />
       {!projects?.length ? (
         <ProjectsEmptyPlaceholder />
       ) : (
@@ -58,25 +50,20 @@ export const ProjectsPage: FC = () => {
 };
 
 function useProjectsWrapper() {
-  const qc = useQueryClient();
-  const projectModalRef = useRef<ProjectModalRef>(null);
+  const t = useTranslations('projects');
   const [isOpen, { open, close }] = useDisclosure(false);
   const onSuccess = useNotificationSuccess('added');
 
-  const { data: projects } = useQuery<Data<Project[]>>({
+  const { data: projects, refetch } = useQuery<Data<Project[]>>({
     queryKey: projectsQuery.key,
   });
 
   const { mutateAsync: addProject } = useMutation({
     mutationFn: addProjectMutation.fnc,
-    onSuccess: (data) => {
+    onSuccess: async () => {
       onSuccess();
       close();
-      qc.setQueryData(projectsQuery.key, (currData: Data<Project[]>) => ({
-        ...currData,
-        data: [...(currData.data ?? []), data],
-      }));
-      projectModalRef.current?.resetForm();
+      await refetch();
     },
   });
 
@@ -85,7 +72,7 @@ function useProjectsWrapper() {
   };
 
   return {
-    projectModalRef,
+    t,
     isOpen,
     open,
     close,

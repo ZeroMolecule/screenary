@@ -130,6 +130,7 @@ function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
   });
   const {
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = profileForm;
 
