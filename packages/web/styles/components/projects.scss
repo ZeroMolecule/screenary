@@ -11,6 +11,10 @@
   overflow: auto;
 }
 
+.add-project-button {
+  border: 1px solid var(--mantine-color-neutral-3);
+}
+
 .project-item {
   position: relative;
   background-color: var(--mantine-color-white);
