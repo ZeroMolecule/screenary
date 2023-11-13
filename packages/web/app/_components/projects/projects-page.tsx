@@ -18,9 +18,10 @@ import { useDisclosure } from '@mantine/hooks';
 import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
+import { useTranslations } from 'next-intl';
 
 export const ProjectsPage: FC = () => {
-  const { projectModalRef, isOpen, open, close, projects, handleSubmit } =
+  const { t, projectModalRef, isOpen, open, close, projects, handleSubmit } =
     useProjectsWrapper();
 
   const renderProjectItem = (project: Project) => (
@@ -39,7 +40,7 @@ export const ProjectsPage: FC = () => {
           className="add-project-button"
           onClick={open}
         >
-          Add Project
+          {t('addAction')}
         </Button>
       </Portal>
       <ProjectModal
@@ -58,6 +59,7 @@ export const ProjectsPage: FC = () => {
 };
 
 function useProjectsWrapper() {
+  const t = useTranslations('projects');
   const projectModalRef = useRef<ProjectModalRef>(null);
   const [isOpen, { open, close }] = useDisclosure(false);
   const onSuccess = useNotificationSuccess('added');
@@ -81,6 +83,7 @@ function useProjectsWrapper() {
   };
 
   return {
+    t,
     projectModalRef,
     isOpen,
     open,
