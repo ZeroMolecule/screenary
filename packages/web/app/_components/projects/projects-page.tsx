@@ -61,9 +61,9 @@ function useProjectsWrapper() {
   const { mutateAsync: addProject } = useMutation({
     mutationFn: addProjectMutation.fnc,
     onSuccess: async () => {
+      await refetch();
       onSuccess();
       close();
-      await refetch();
     },
   });
 
