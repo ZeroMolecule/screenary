@@ -1,10 +1,10 @@
-import { CSSVariablesResolver, MantineThemeOther } from '@mantine/core';
+import { CSSVariablesResolver, MantineThemeOther, rgba } from '@mantine/core';
 
 export const other: MantineThemeOther = {
   googleIconColor: '#020203',
   googleIconBorderColor: '#C7C6C6',
   facebookIconBackgroundColor: '#3975EA',
-  glassColor: '#17140BE5',
+  glassColor: rgba('#17140B', 0.9),
 };
 
 export const resolver: CSSVariablesResolver = (theme) => ({

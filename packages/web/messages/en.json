@@ -17,8 +17,15 @@
   },
   "shared": {
     "logoAlt": "Screenary logo",
-    "welcomeMessage": "Good afternoon, {username}",
-    "welcomeMessageFallback": "Welcome back"
+    "welcomeMessage": {
+      "base": "Good {time}, {username}",
+      "fallback": "Welcome back",
+      "time": {
+        "morning": "morning",
+        "afternoon": "afternoon",
+        "evening": "evening"
+      }
+    }
   },
   "modal": {
     "profile": {
