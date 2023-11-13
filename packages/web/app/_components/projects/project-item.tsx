@@ -7,6 +7,8 @@ import {
 } from '@tabler/icons-react';
 import { Project } from '@prisma/client';
 import { TextAlt } from '../base/text-alt';
+import { Link } from '../base/link';
+import { paths } from '@/navigation/paths';
 
 // TODO: update check and bell icon count once api supports those fields
 
@@ -14,9 +16,9 @@ type Props = {
   project: Project;
 };
 
-export const ProjectItem: FC<Props> = ({ project: { name } }) => {
+export const ProjectItem: FC<Props> = ({ project: { id, name } }) => {
   return (
-    <div className="project-item-wrapper">
+    <Link href={paths.project(id)} className="project-item-wrapper">
       <Stack h="100%" p="lg" justify="space-between" className="project-item">
         <Group justify="space-between">
           <Group>
@@ -47,6 +49,6 @@ export const ProjectItem: FC<Props> = ({ project: { name } }) => {
           {name}
         </Title>
       </Stack>
-    </div>
+    </Link>
   );
 };
