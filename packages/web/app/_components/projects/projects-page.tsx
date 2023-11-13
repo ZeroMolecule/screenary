@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useRef } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Group, Portal } from '@mantine/core';
 import { Project } from '@prisma/client';
 import { projectsQuery } from '@/domain/queries/projects-query';
@@ -58,24 +58,20 @@ export const ProjectsPage: FC = () => {
 };
 
 function useProjectsWrapper() {
-  const qc = useQueryClient();
   const projectModalRef = useRef<ProjectModalRef>(null);
   const [isOpen, { open, close }] = useDisclosure(false);
   const onSuccess = useNotificationSuccess('added');
 
-  const { data: projects } = useQuery<Data<Project[]>>({
+  const { data: projects, refetch } = useQuery<Data<Project[]>>({
     queryKey: projectsQuery.key,
   });
 
   const { mutateAsync: addProject } = useMutation({
     mutationFn: addProjectMutation.fnc,
-    onSuccess: (data) => {
+    onSuccess: () => {
       onSuccess();
       close();
-      qc.setQueryData(projectsQuery.key, (currData: Data<Project[]>) => ({
-        ...currData,
-        data: [...(currData.data ?? []), data],
-      }));
+      refetch();
       projectModalRef.current?.resetForm();
     },
   });
