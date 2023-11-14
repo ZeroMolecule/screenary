@@ -118,7 +118,7 @@ function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
 
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
+    values: {
       name: user?.name ?? '',
       email: user?.email ?? '',
       image: user?.image ?? '',
