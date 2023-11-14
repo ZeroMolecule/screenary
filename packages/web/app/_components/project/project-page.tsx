@@ -76,10 +76,10 @@ function useProjectPage() {
 
   const { mutateAsync: editProject } = useMutation({
     mutationFn: editProjectMutation.fnc,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await refetch();
       onEdit();
       closeEdit();
-      refetch();
     },
   });
 
