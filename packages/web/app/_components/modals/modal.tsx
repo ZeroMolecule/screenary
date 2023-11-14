@@ -19,11 +19,12 @@ export const Modal: FC<Props> = (props) => {
 };
 
 function useModal({ afterClose, children, ...restProps }: Props) {
-  const ref = useRef(afterClose);
+  const afterCloseRef = useRef(afterClose);
+  afterCloseRef.current = afterClose;
 
   useEffect(() => {
-    if (ref.current && !restProps.opened) {
-      const timeout = setTimeout(ref.current, 200);
+    if (afterCloseRef.current && !restProps.opened) {
+      const timeout = setTimeout(afterCloseRef.current, 200);
       return () => clearTimeout(timeout);
     }
   }, [restProps.opened]);
