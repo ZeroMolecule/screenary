@@ -98,7 +98,7 @@ function useProjectPage() {
   };
 
   const handleDelete = async () => {
-    await deleteProject(id);
+    await deleteProject(id).catch(() => null);
   };
 
   return {
