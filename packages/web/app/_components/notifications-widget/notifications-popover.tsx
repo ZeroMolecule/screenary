@@ -22,6 +22,7 @@ import { useTranslations } from 'next-intl';
 import { useDisclosure } from '@mantine/hooks';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
+import styles from '@/styles/index.module.scss';
 
 // TODO: add Popover global components if another popover is present in design
 
@@ -33,7 +34,7 @@ export const NotificationsPopover: FC = () => {
     { message, date, time, text }: (typeof placeholderArray)[0],
     index: number
   ) => (
-    <Stack key={index} className="notifications-widget__popover-item">
+    <Stack key={index} className={styles['notifications-widget__popover-item']}>
       <Stack gap={10} p={24}>
         <Group justify="space-between" align="flex-start">
           <Group align="flex-start" gap={8}>
@@ -71,12 +72,12 @@ export const NotificationsPopover: FC = () => {
           h="100%"
           p="xl"
           radius={0}
-          className="notifications-widget__button"
+          className={styles['notifications-widget__button']}
           onClick={toggle}
         >
           <IconBellFilled
             size={32}
-            className="notifications-widget__button-icon"
+            className={styles['notifications-widget__button-icon']}
           />
         </Button>
       </PopoverTarget>
@@ -86,7 +87,7 @@ export const NotificationsPopover: FC = () => {
             w="100%"
             p="lg"
             justify="space-between"
-            className="notifications-widget__popover-header"
+            className={styles['notifications-widget__popover-header']}
           >
             <Title order={5} c="white">
               {t('title')}
@@ -95,10 +96,13 @@ export const NotificationsPopover: FC = () => {
               <IconX size={24} color="white" />
             </ActionIcon>
           </Group>
-          <Stack className="notifications-widget__popover-body">
+          <Stack className={styles['notifications-widget__popover-body']}>
             {placeholderArray.map(renderNotification)}
           </Stack>
-          <Group w="100%" className="notifications-widget__popover-actions">
+          <Group
+            w="100%"
+            className={styles['notifications-widget__popover-actions']}
+          >
             <Button
               variant="subtle"
               c="white"

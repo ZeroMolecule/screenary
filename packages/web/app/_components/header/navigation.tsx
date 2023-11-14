@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { useTranslations } from 'next-intl';
 import { paths } from '@/navigation/paths';
 import { NavigationLink, NavigationLinkProps } from './navigation-link';
+import styles from '@/styles/index.module.scss';
 
 export const Navigation: FC = () => {
   const { navigationLinks } = useNavigation();
@@ -10,7 +11,11 @@ export const Navigation: FC = () => {
     <NavigationLink key={index} href={href} label={label} />
   );
 
-  return <nav className="header-nav">{navigationLinks.map(renderLink)}</nav>;
+  return (
+    <nav className={styles['header-nav']}>
+      {navigationLinks.map(renderLink)}
+    </nav>
+  );
 };
 
 function useNavigation() {

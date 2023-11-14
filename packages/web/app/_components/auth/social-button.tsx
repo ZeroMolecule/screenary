@@ -10,6 +10,7 @@ import { AppleIcon } from '../icons/apple-icon';
 import { FacebookIcon } from '../icons/facebook-icon';
 import { GoogleIcon } from '../icons/google-icon';
 import { paths } from '@/navigation/paths';
+import styles from '@/styles/index.module.scss';
 
 type ButtonStyles = {
   icon: ReactElement;
@@ -35,8 +36,10 @@ export const SocialButton: FC<Props> = (props) => {
       fw={500}
       radius={6}
       leftSection={buttonStyles.icon}
-      className={classNames({ 'social-button--google': provider === 'google' })}
-      classNames={{ inner: 'social-button__inner' }}
+      className={classNames({
+        [styles['social-button--google']]: provider === 'google',
+      })}
+      classNames={{ inner: styles['social-button__inner'] }}
       onClick={() => signIn(provider, { callbackUrl: paths.home() })}
     >
       {label}

@@ -12,6 +12,7 @@ import { FormTextInput } from '../base/form/text-input';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
 import { Modal } from './modal';
+import styles from '@/styles/index.module.scss';
 
 type Props = {
   opened: boolean;
@@ -80,7 +81,7 @@ export const ProfileModal: FC<Props> = (props) => {
                   width={64}
                   height={64}
                   alt={t('profileImgAlt', { user: user?.name })}
-                  className="profile-modal__avatar-img"
+                  className={styles['profile-modal__avatar-img']}
                 />
               </Group>
               <FormTextInput

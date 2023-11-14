@@ -15,6 +15,7 @@ import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { useTranslations } from 'next-intl';
+import styles from '@/styles/index.module.scss';
 
 export const ProjectsPage: FC = () => {
   const { t, isOpen, open, close, projects, handleSubmit } =
@@ -33,7 +34,7 @@ export const ProjectsPage: FC = () => {
           c="neutral.7"
           radius={6}
           leftSection={<IconCirclePlus />}
-          className="add-project-button"
+          className={styles['add-project-button']}
           onClick={open}
         >
           {t('addAction')}
@@ -43,7 +44,9 @@ export const ProjectsPage: FC = () => {
       {!projects?.length ? (
         <ProjectsEmptyPlaceholder />
       ) : (
-        <div className="projects-grid">{projects.map(renderProjectItem)}</div>
+        <div className={styles['projects-grid']}>
+          {projects.map(renderProjectItem)}
+        </div>
       )}
     </Group>
   );
