@@ -5,7 +5,7 @@ import { redirect } from '@/navigation';
 import { paths } from '@/navigation/paths';
 
 type Props = {
-  params: { locale: string };
+  params: { locale: string; id: string };
 };
 
 export const withPrivatePage = (Component: FC<Props>) => {

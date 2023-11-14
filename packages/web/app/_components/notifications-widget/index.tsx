@@ -5,6 +5,7 @@ import { DateTimeBlock } from '../datetime-block';
 import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
 import { Title } from '../base/title';
+import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
 
 type Props = {
   username?: string | null;
@@ -17,9 +18,12 @@ export const NotificationsWidget: FC<Props> = (props) => {
     <Card bg="neutral.9" radius="xl" p={0}>
       <Group justify="space-between" gap={0}>
         <Group justify="space-between" px="xl" py="lg" className="flex-1">
-          <Title fz={44} fw={700} c="neutral.1">
-            {message}
-          </Title>
+          <Group gap="md">
+            <Title fz={44} fw={700} c="neutral.1">
+              {message}
+            </Title>
+            <div id={NOTIFICATION_WIDGET_CONTAINER_ID} />
+          </Group>
           <DateTimeBlock
             stackProps={{ gap: 0 }}
             titleProps={{ c: 'neutral.1' }}

@@ -72,7 +72,7 @@ function useProjectModal({ opened, onClose, onSubmit, project }: Props) {
 
   const projectForm = useForm<ProjectFormValues>({
     resolver: zodResolver(projectSchema),
-    defaultValues: {
+    values: {
       name: project?.name ?? '',
       emailUrl: project?.emailUrl ?? '',
       calendarUrl: project?.calendarUrl ?? '',
