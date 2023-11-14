@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import {
   Modal as MantineModal,
   ModalProps as MantineModalProps,
@@ -19,12 +19,15 @@ export const Modal: FC<Props> = (props) => {
 };
 
 function useModal({ afterClose, children, ...restProps }: Props) {
+  const afterCloseRef = useRef(afterClose);
+  afterCloseRef.current = afterClose;
+
   useEffect(() => {
-    if (afterClose && !restProps.opened) {
-      const timeout = setTimeout(afterClose, 200);
+    if (afterCloseRef.current && !restProps.opened) {
+      const timeout = setTimeout(afterCloseRef.current, 200);
       return () => clearTimeout(timeout);
     }
-  }, [afterClose, restProps.opened]);
+  }, [restProps.opened]);
 
   return { children, restProps };
 }

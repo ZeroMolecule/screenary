@@ -8,6 +8,8 @@ import {
 import { Project } from '@prisma/client';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
+import { Link } from '../base/link';
+import { paths } from '@/navigation/paths';
 import styles from '@/styles/components/projects.module.scss';
 
 // TODO: update check and bell icon count once api supports those fields
@@ -16,9 +18,9 @@ type Props = {
   project: Project;
 };
 
-export const ProjectItem: FC<Props> = ({ project: { name } }) => {
+export const ProjectItem: FC<Props> = ({ project: { id, name } }) => {
   return (
-    <div className={styles['project-item-wrapper']}>
+    <Link href={paths.project(id)} className={styles['project-item-wrapper']}>
       <Stack
         h="100%"
         p="lg"
@@ -61,6 +63,6 @@ export const ProjectItem: FC<Props> = ({ project: { name } }) => {
           {name}
         </Title>
       </Stack>
-    </div>
+    </Link>
   );
 };
