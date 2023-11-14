@@ -9,6 +9,7 @@ import { ColorSchemeScript } from '@mantine/core';
 import { authOptions } from '@/domain/auth';
 import { MsClarity } from '../_components/ms-clarity';
 import { ENV } from '@/env.server';
+import styles from '@/styles/global.module.scss';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };
@@ -61,7 +62,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Providers locale={locale} session={session}>
-          <main className="main-layout">{children}</main>
+          <main className={styles['main-layout']}>{children}</main>
         </Providers>
       </body>
     </html>

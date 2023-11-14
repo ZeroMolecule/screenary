@@ -14,6 +14,8 @@ import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
 import { Text } from '@/app/_components/base/text';
+import styles from '@/styles/pages/home.module.scss';
+import stylesFlex from '@/styles/utils/flex.module.scss';
 
 type Props = {
   params: { locale: string };
@@ -27,11 +29,21 @@ async function HomePage(props: Props) {
       <Stack w="100%">
         <Group w="100%">
           <Image src={logoImg} width={208} height={64} alt={t('logoAlt')} />
-          <Box w="100%" h="100%" pos="relative" className="flex-1">
+          <Box
+            w="100%"
+            h="100%"
+            pos="relative"
+            className={stylesFlex['flex-1']}
+          >
             <UserWidget variant="dark" />
           </Box>
         </Group>
-        <Stack justify="center" align="center" gap={60} className="flex-1">
+        <Stack
+          justify="center"
+          align="center"
+          gap={60}
+          className={stylesFlex['flex-1']}
+        >
           <DateTimeBlock
             stackProps={{ align: 'center', gap: 'xl' }}
             titleProps={{ fz: 128, lh: 0.75, c: 'primary.1' }}
@@ -44,7 +56,7 @@ async function HomePage(props: Props) {
               size={80}
               radius="100%"
               c="neutral.3"
-              className="home__icon-button"
+              className={styles['home__icon-button']}
             >
               <IconBellFilled size={32} />
             </ActionIcon>

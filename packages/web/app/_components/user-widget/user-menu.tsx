@@ -21,6 +21,7 @@ import {
 } from '@tabler/icons-react';
 import placeholderImage from '@/public/images/cover-image.png';
 import { Text } from '../base/text';
+import styles from '@/styles/components/user-menu.module.scss';
 
 type MenuAction = {
   icon: (props: TablerIconsProps) => JSX.Element;
@@ -60,25 +61,28 @@ export const UserMenu: FC<Props> = (props) => {
       right={0}
       chevron={<IconChevronDown color={isDark ? 'white' : 'black'} />}
       chevronSize={24}
-      className="user-menu"
+      className={styles['user-menu']}
     >
       <AccordionItem
         value="user"
-        bg={isDark ? 'transparent' : 'neutral.1'}
-        className={classNames('user-menu__item', {
-          'user-menu__item--open': isOpen,
-          'user-menu__item--dark': isDark,
+        bg={isDark ? '#2F2B23' : 'neutral.1'}
+        className={classNames(styles['user-menu__item'], {
+          [styles['user-menu__item--open']]: isOpen,
+          [styles['user-menu__item--dark']]: isDark,
         })}
       >
-        <AccordionControl className="user-menu__control" onClick={toggle}>
+        <AccordionControl
+          className={styles['user-menu__control']}
+          onClick={toggle}
+        >
           <Group mr="md">
             <Image
               src={user?.image ?? placeholderImage}
               width={48}
               height={48}
               alt={user?.name ?? t('avatarAlt')}
-              className={classNames('user-menu__image', {
-                'user-menu__image--dark': isDark,
+              className={classNames(styles['user-menu__image'], {
+                [styles['user-menu__image--dark']]: isDark,
               })}
             />
             <Stack gap={0}>
