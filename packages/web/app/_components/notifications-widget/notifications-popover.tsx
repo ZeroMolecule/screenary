@@ -22,7 +22,7 @@ import { useTranslations } from 'next-intl';
 import { useDisclosure } from '@mantine/hooks';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/notifications-widget.module.scss';
 
 // TODO: add Popover global components if another popover is present in design
 

@@ -4,8 +4,9 @@ import { Stack } from '@mantine/core';
 import { authOptions } from '@/domain/auth';
 import { Header } from '@/app/_components/header';
 import { NotificationsWidget } from '@/app/_components/notifications-widget';
-import styles from '@/styles/index.module.scss';
 import classNames from 'classnames';
+import stylesFlex from '@/styles/utils/flex.module.scss';
+import stylesOverflow from '@/styles/utils/overflow.module.scss';
 
 type Props = {
   children: ReactNode;
@@ -17,7 +18,12 @@ export default async function Layout({ children }: Props) {
   return (
     <Stack w="100%" justify="space-between" gap="xl">
       <Header />
-      <div className={classNames(styles['flex-1'], styles['overflow-auto'])}>
+      <div
+        className={classNames(
+          stylesFlex['flex-1'],
+          stylesOverflow['overflow-auto']
+        )}
+      >
         {children}
       </div>
       <NotificationsWidget username={session?.user?.name} />

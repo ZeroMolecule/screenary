@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { Container } from './base/container';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/screensaver.module.scss';
 
 type Props = {
   children: ReactNode;

@@ -9,7 +9,7 @@ import { ColorSchemeScript } from '@mantine/core';
 import { authOptions } from '@/domain/auth';
 import { MsClarity } from '../_components/ms-clarity';
 import { ENV } from '@/env.server';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/global.module.scss';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };

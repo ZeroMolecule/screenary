@@ -8,7 +8,7 @@ import { UserWidget } from '../user-widget';
 import { Navigation } from './navigation';
 import { HEADER_CONTAINER_ID } from '@/utils/constants';
 import logo from '@/public/images/logo-black.svg';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/header.module.scss';
 
 export const Header: FC = () => {
   const t = useTranslations('header');

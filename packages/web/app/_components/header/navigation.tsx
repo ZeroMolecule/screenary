@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useTranslations } from 'next-intl';
 import { paths } from '@/navigation/paths';
 import { NavigationLink, NavigationLinkProps } from './navigation-link';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/header.module.scss';
 
 export const Navigation: FC = () => {
   const { navigationLinks } = useNavigation();

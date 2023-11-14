@@ -12,7 +12,7 @@ import { FormTextInput } from '../base/form/text-input';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
 import { Modal } from './modal';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/modals/profile-modal.module.scss';
 
 type Props = {
   opened: boolean;

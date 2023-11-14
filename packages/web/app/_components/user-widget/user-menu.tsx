@@ -21,7 +21,7 @@ import {
 } from '@tabler/icons-react';
 import placeholderImage from '@/public/images/cover-image.png';
 import { Text } from '../base/text';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/user-menu.module.scss';
 
 type MenuAction = {
   icon: (props: TablerIconsProps) => JSX.Element;

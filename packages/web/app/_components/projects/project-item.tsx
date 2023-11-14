@@ -8,7 +8,7 @@ import {
 import { Project } from '@prisma/client';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/projects.module.scss';
 
 // TODO: update check and bell icon count once api supports those fields
 

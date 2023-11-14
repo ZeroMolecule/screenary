@@ -5,7 +5,7 @@ import { Card, Stack } from '@mantine/core';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
 import emptyIcon from '@/public/images/folder-icon.svg';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/projects.module.scss';
 
 export const ProjectsEmptyPlaceholder: FC = () => {
   const { t } = useProjectsEmptyPlaceholder();

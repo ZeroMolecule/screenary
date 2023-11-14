@@ -10,7 +10,7 @@ import { AppleIcon } from '../icons/apple-icon';
 import { FacebookIcon } from '../icons/facebook-icon';
 import { GoogleIcon } from '../icons/google-icon';
 import { paths } from '@/navigation/paths';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/social-button.module.scss';
 
 type ButtonStyles = {
   icon: ReactElement;

@@ -15,7 +15,7 @@ import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { useTranslations } from 'next-intl';
-import styles from '@/styles/index.module.scss';
+import styles from '@/styles/components/projects.module.scss';
 
 export const ProjectsPage: FC = () => {
   const { t, isOpen, open, close, projects, handleSubmit } =
