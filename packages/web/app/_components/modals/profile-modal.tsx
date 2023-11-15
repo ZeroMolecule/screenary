@@ -12,6 +12,7 @@ import { Title } from '../base/title';
 import { useDisclosure } from '@mantine/hooks';
 import { ConfirmDeleteModal } from './confirm-delete-modal';
 import { Modal } from './modal';
+import styles from '@/styles/components/modals/profile-modal.module.scss';
 
 type Props = {
   opened: boolean;
@@ -61,7 +62,7 @@ export const ProfileModal: FC<Props> = (props) => {
                 width={64}
                 height={64}
                 alt={t('profileImgAlt', { user: user?.name })}
-                className="profile-modal__avatar-img"
+                className={styles['profile-modal__avatar-img']}
               />
             </Group>
             <FormTextInput
@@ -118,7 +119,7 @@ function useProfileModal({ opened, onClose, onSubmit, onDelete, user }: Props) {
 
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
+    values: {
       name: user?.name ?? '',
       email: user?.email ?? '',
       image: user?.image ?? '',

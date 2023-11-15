@@ -6,6 +6,8 @@ import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
 import { Title } from '../base/title';
 import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
+import styles from '@/styles/components/notifications-widget.module.scss';
+import stylesFlex from '@/styles/utils/flex.module.scss';
 
 type Props = {
   username?: string | null;
@@ -17,7 +19,12 @@ export const NotificationsWidget: FC<Props> = (props) => {
   return (
     <Card bg="neutral.9" radius="xl" p={0}>
       <Group justify="space-between" gap={0}>
-        <Group justify="space-between" px="xl" py="lg" className="flex-1">
+        <Group
+          justify="space-between"
+          px="xl"
+          py="lg"
+          className={stylesFlex['flex-1']}
+        >
           <Group gap="md">
             <Title fz={44} fw={700} c="neutral.1">
               {message}

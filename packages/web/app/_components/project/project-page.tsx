@@ -79,10 +79,10 @@ function useProjectPage() {
 
   const { mutateAsync: editProject } = useMutation({
     mutationFn: editProjectMutation.fnc,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await refetch();
       onEdit();
       closeEdit();
-      refetch();
     },
   });
 
@@ -101,7 +101,7 @@ function useProjectPage() {
   };
 
   const handleDelete = async () => {
-    await deleteProject(id);
+    await deleteProject(id).catch(() => null);
   };
 
   return {
