@@ -95,6 +95,10 @@
   },
   "project": {
     "deleteTitle": "Delete Project",
-    "deleteDescription": "Are you sure you want to delete {projectName} project?"
+    "deleteDescription": "Are you sure you want to delete {projectName} project?",
+    "notes": {
+      "title": "Notes",
+      "addAction": "Add Note"
+    }
   }
 }

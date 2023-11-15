@@ -19,7 +19,7 @@ import { useRouter } from '@/navigation';
 import { paths } from '@/navigation/paths';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useTranslations } from 'next-intl';
-import { ProjectNotes } from './project-notes';
+import { Notes } from './notes';
 
 // TODO: custom modal hook
 
@@ -40,7 +40,7 @@ export const ProjectPage: FC = () => {
   return (
     <Group h="100%" justify="space-between" align="flex-start">
       <h1>{project?.name}</h1>
-      <ProjectNotes />
+      <Notes />
 
       <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>
         <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
