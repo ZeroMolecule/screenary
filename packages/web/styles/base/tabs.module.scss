@@ -1,0 +1,17 @@
+.root {
+  &[data-variant='default'] {
+    --_list-border-width: 0;
+  }
+}
+
+.tab {
+  &[data-active] {
+    background-color: var(--mantine-color-primary-1);
+    border: 0;
+    border-radius: rem(24);
+  }
+
+  &:hover {
+    border-radius: rem(24);
+  }
+}
