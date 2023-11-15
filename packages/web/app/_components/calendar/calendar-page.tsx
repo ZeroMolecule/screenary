@@ -7,7 +7,7 @@ import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { Calendar } from './calendar';
 
 export const CalendarPage: FC = () => {
-  const { projectId, tabs, handleChange } = useCalendarPage();
+  const { projectId, calendarUrl, tabs, handleChange } = useCalendarPage();
 
   return (
     <Stack h="100%" gap="sm">
@@ -16,13 +16,14 @@ export const CalendarPage: FC = () => {
         tabs={tabs}
         onChange={handleChange}
       />
-      <Calendar />
+      <Calendar url={calendarUrl ?? ''} />
     </Stack>
   );
 };
 
 function useCalendarPage() {
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
+  const { id: projectId, calendarUrl } = selectedProject ?? {};
 
-  return { projectId: selectedProject?.id, tabs, handleChange };
+  return { projectId, calendarUrl, tabs, handleChange };
 }
