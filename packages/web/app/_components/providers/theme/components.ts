@@ -94,8 +94,6 @@ export const components: MantineThemeComponents = {
       list: {
         padding: rem(4),
         backgroundColor: 'var(--mantine-color-white)',
-        flexWrap: 'nowrap',
-        overflow: 'auto',
         border: '1px solid var(--mantine-color-neutral-3)',
         borderRadius: rem(24),
       },

@@ -11,7 +11,7 @@ export const Calendar: FC<Props> = () => {
   return (
     <Card h="100%" radius={24} className={overflowStyles['overflow-auto']}>
       <iframe
-        src="https://calendar.google.com/calendar/embed?src=c_02a1eff8d02f6476c8e69a307c4b20c173a76b56b737f2c1b9d1054470719093%40group.calendar.google.com&ctz=Europe%2FBelgrade"
+        src="https://calendar.google.com/calendar/embed?ctz=Europe%2FBelgrade&showTitle=1&showNav=1&showDate=1&showTabs=1&showCalendars=1&showTz=0&src=bHVrYS5kdXNha0B6ZXJvbW9sZWN1bGUuY29t&src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&src=Y18wMmExZWZmOGQwMmY2NDc2YzhlNjlhMzA3YzRiMjBjMTczYTc2YjU2YjczN2YyYzFiOWQxMDU0NDcwNzE5MDkzQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&src=ZW4uY3JvYXRpYW4jaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23039BE5&color=%2333B679&color=%233F51B5&color=%230B8043"
         className={styles.iframe}
       />
     </Card>
