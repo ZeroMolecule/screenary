@@ -34,6 +34,7 @@ model User {
   image         String?
   accounts      Account[]
   projects      Project[]
+  notes         Note[]
 }
 
 model Project {
@@ -44,4 +45,17 @@ model Project {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   users       User[]
+  notes       Note[]
+}
+
+model Note {
+  id        String @id @default(cuid())
+  projectId String
+  userId    String
+
+  content   String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
