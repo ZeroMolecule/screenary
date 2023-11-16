@@ -8,39 +8,39 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { NotesService } from './notes.service';
 import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
-import { CreateNoteDto, createNoteSchema } from './dtos/create-note.dto';
+import { CreateTaskDto, createTaskSchema } from './dtos/create-task.dto';
+import { Project } from '../shared/decorators/project.decorator';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
 import { User } from '@prisma/client';
-import { Project } from '../shared/decorators/project.decorator';
-import { ProjectGuard } from '../shared/guards/project.guard';
+import { TasksService } from './tasks.service';
+import { UpdateTaskDto, updateTaskSchema } from './dtos/update-task.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
-import { UpdateNoteDto, updateNoteSchema } from './dtos/update-note.dto';
+import { ProjectGuard } from '../shared/guards/project.guard';
 
-@Controller('notes')
+@Controller('tasks')
 @UseGuards(ProjectGuard)
-export class NotesController {
-  constructor(private readonly notesService: NotesService) {}
+export class TasksController {
+  constructor(private readonly tasksService: TasksService) {}
 
   @Post()
   async create(
-    @Body(new ZodValidationPipe(createNoteSchema)) data: CreateNoteDto,
+    @Body(new ZodValidationPipe(createTaskSchema)) data: CreateTaskDto,
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.notesService.create(data, project.id, user);
+    return this.tasksService.create(data, project.id, user.id);
   }
 
   @Put(':id')
   async update(
-    @Body(new ZodValidationPipe(updateNoteSchema)) data: UpdateNoteDto,
+    @Body(new ZodValidationPipe(updateTaskSchema)) data: UpdateTaskDto,
     @Param('id') id: string,
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.notesService.update(id, project.id, data, user);
+    return this.tasksService.update(id, data, project.id, user.id);
   }
 
   @Get(':id')
@@ -49,7 +49,7 @@ export class NotesController {
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.notesService.findOne(id, project.id, user);
+    return this.tasksService.findOne(id, project.id, user.id);
   }
 
   @Get()
@@ -59,9 +59,9 @@ export class NotesController {
     @AuthUser() user: User,
     @PaginationQuery pagination: PaginationQuery
   ) {
-    const { list, count } = await this.notesService.findMany(
+    const { list, count } = await this.tasksService.findMany(
       project.id,
-      user,
+      user.id,
       pagination
     );
     return {
@@ -79,6 +79,6 @@ export class NotesController {
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.notesService.remove(id, project.id, user);
+    return this.tasksService.remove(id, project.id, user.id);
   }
 }
