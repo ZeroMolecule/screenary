@@ -11,8 +11,9 @@ import { UsersModule } from './users/users.module';
 import { PrismaExceptionInterceptor } from './shared/interceptors/prisma-exception.interceptor';
 import { NotesModule } from './notes/notes.module';
 import { ProjectsModule } from './projects/projects.module';
+import { TasksModule } from './tasks/tasks.module';
 
-const projectModules = [NotesModule];
+const projectModules = [NotesModule, TasksModule];
 
 @Module({
   imports: [
@@ -28,8 +29,9 @@ const projectModules = [NotesModule];
     }),
     PrismaModule,
     UsersModule,
-    NotesModule,
     ProjectsModule,
+    TasksModule,
+    NotesModule,
     RouterModule.register([
       {
         path: '',
