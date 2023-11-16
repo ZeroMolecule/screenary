@@ -3,11 +3,12 @@
 }
 
 .note {
-  max-width: rem(288);
-  min-height: rem(160);
+  max-width: rem(280);
+  min-height: rem(180);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: var(--mantine-spacing-sm);
   background-color: var(--mantine-color-primary-2);
   border: 1px solid var(--mantine-color-primary-3);
   border-radius: rem(4);
@@ -16,7 +17,7 @@
 }
 
 .noteInner {
-  max-height: rem(100);
+  max-height: rem(150);
   overflow: auto;
 }
 

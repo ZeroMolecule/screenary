@@ -26,6 +26,7 @@ import { Notes } from './notes';
 export const ProjectPage: FC = () => {
   const {
     t,
+    id,
     isEditOpen,
     openEdit,
     closeEdit,
@@ -40,7 +41,7 @@ export const ProjectPage: FC = () => {
   return (
     <Group h="100%" justify="space-between" align="flex-start">
       <h1>{project?.name}</h1>
-      <Notes />
+      <Notes projectId={id} />
 
       <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>
         <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
@@ -106,6 +107,7 @@ function useProjectPage() {
 
   return {
     t,
+    id,
     isEditOpen,
     openEdit,
     closeEdit,

@@ -4,15 +4,18 @@ import { ActionIcon, Button, Card, Group } from '@mantine/core';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { Title } from '../base/title';
 import { Note } from './note';
+import { Note as NoteModel } from '@prisma/client';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
-  notes: any[];
+  notes: NoteModel[];
   onClose: () => void;
 };
 
-export const NotesExpanded: FC<Props> = ({ notes, onClose }) => {
-  const { t } = useNotesExpanded();
+export const NotesExpanded: FC<Props> = (props) => {
+  const { t, notes, onClose } = useNotesExpanded(props);
+
+  const renderNote = (note: NoteModel) => <Note key={note.id} note={note} />;
 
   return (
     <Card className={styles.notesContainer}>
@@ -24,15 +27,7 @@ export const NotesExpanded: FC<Props> = ({ notes, onClose }) => {
           <IconX />
         </ActionIcon>
       </Group>
-      <div className={styles.notesGrid}>
-        <Note note={{}} />
-        <Note note={{}} />
-        <Note note={{}} />
-        <Note note={{}} />
-        <Note note={{}} />
-        <Note note={{}} />
-        <Note note={{}} />
-      </div>
+      <div className={styles.notesGrid}>{notes.map(renderNote)}</div>
       <Button
         variant="transparent"
         size="xs"
@@ -49,8 +44,8 @@ export const NotesExpanded: FC<Props> = ({ notes, onClose }) => {
   );
 };
 
-function useNotesExpanded() {
+function useNotesExpanded({ notes, onClose }: Props) {
   const t = useTranslations('project.notes');
 
-  return { t };
+  return { t, notes, onClose };
 }

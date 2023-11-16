@@ -3,27 +3,22 @@ import { ActionIcon, Box, Card, Group } from '@mantine/core';
 import { IconCircleXFilled } from '@tabler/icons-react';
 import { Text } from '../base/text';
 import { formatDate } from '@/utils/datetime';
+import { Note as NoteModel } from '@prisma/client';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
-  note: any;
+  note: NoteModel;
 };
 
 export const Note: FC<Props> = ({ note }) => {
   return (
     <Card className={styles.note}>
       <Box className={styles.noteInner}>
-        <Text c="primary.9">
-          What if there was a cool way to solve this huge problem? What if there
-          was a cool way to solve this huge problem? What if there was a cool
-          way to solve this huge problem? What if there was a cool way to solve
-          this huge problem? What if there was a cool way to solve this huge
-          problem? What if there was a cool way to solve this huge problem?
-        </Text>
+        <Text c="primary.9">{note.content}</Text>
       </Box>
       <Group justify="space-between">
         <Text size="sm" ff="secondary" c="primary.5">
-          {formatDate(new Date(), 'dateAndTime')}
+          {formatDate(note.updatedAt ?? note.createdAt, 'dateAndTime')}
         </Text>
         <ActionIcon
           variant="transparent"
