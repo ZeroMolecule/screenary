@@ -62,6 +62,9 @@ export class ProjectsService {
       this.prismaService.project.findMany({
         where,
         ...pagination,
+        orderBy: {
+          createdAt: 'desc',
+        },
       }),
       this.prismaService.project.count({ where }),
     ]);
