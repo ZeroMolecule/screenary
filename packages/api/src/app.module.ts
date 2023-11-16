@@ -32,10 +32,10 @@ const projectModules = [NotesModule];
     ProjectsModule,
     RouterModule.register([
       {
-        path: 'projects',
+        path: '',
         module: ProjectsModule,
         children: projectModules.map((module) => ({
-          path: ':projectId',
+          path: 'projects/:projectId',
           module,
         })),
       },
