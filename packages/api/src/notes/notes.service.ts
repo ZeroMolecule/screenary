@@ -58,6 +58,9 @@ export class NotesService {
       this.prismaService.note.findMany({
         where,
         ...pagination,
+        orderBy: {
+          createdAt: 'desc',
+        },
       }),
       this.prismaService.note.count({ where }),
     ]);
