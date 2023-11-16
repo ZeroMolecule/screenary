@@ -115,7 +115,6 @@ function useNotes({ projectId }: Props) {
   const { mutateAsync: editNote } = useMutation({
     mutationFn: editNoteMutation.fnc,
     onSuccess: (data) => {
-      onCreated();
       qc.setQueryData(
         notesQuery.key(projectId),
         (currData: Data<NoteModel[]>) => {
