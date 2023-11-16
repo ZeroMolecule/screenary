@@ -17,7 +17,7 @@ import { Project } from '../shared/decorators/project.decorator';
 import { ProjectGuard } from '../shared/guards/project.guard';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
-import { updateNoteSchema } from './dtos/update-note.dto';
+import { UpdateNoteDto, updateNoteSchema } from './dtos/update-note.dto';
 
 @Controller('notes')
 @UseGuards(ProjectGuard)
@@ -35,7 +35,7 @@ export class NotesController {
 
   @Put(':id')
   async update(
-    @Body(new ZodValidationPipe(updateNoteSchema)) data: CreateNoteDto,
+    @Body(new ZodValidationPipe(updateNoteSchema)) data: UpdateNoteDto,
     @Param('id') id: string,
     @Project() project: Project,
     @AuthUser() user: User

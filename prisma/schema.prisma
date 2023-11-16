@@ -59,7 +59,7 @@ model Note {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model Task {
@@ -77,7 +77,7 @@ model Task {
   dueDate   DateTime?
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
 
   @@unique([projectId, order])
 }

@@ -14,7 +14,7 @@ import { Project } from '../shared/decorators/project.decorator';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
 import { User } from '@prisma/client';
 import { TasksService } from './tasks.service';
-import { updateTaskSchema } from './dtos/update-task.dto';
+import { UpdateTaskDto, updateTaskSchema } from './dtos/update-task.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { ProjectGuard } from '../shared/guards/project.guard';
@@ -35,7 +35,7 @@ export class TasksController {
 
   @Put(':id')
   async update(
-    @Body(new ZodValidationPipe(updateTaskSchema)) data: CreateTaskDto,
+    @Body(new ZodValidationPipe(updateTaskSchema)) data: UpdateTaskDto,
     @Param('id') id: string,
     @Project() project: Project,
     @AuthUser() user: User
