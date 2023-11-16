@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowsMaximize, IconInbox, IconPlus } from '@tabler/icons-react';
@@ -13,6 +13,9 @@ import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
 import { orderBy } from 'lodash';
+import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
+import { Note as NoteModel } from '@prisma/client';
+import { Data } from '@/domain/remote/response/data';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
@@ -30,6 +33,7 @@ export const Notes: FC<Props> = (props) => {
     handleOpenModal,
     handleCloseModal,
     handleCreate,
+    handleEdit,
     handleDelete,
   } = useNotes(props);
 
@@ -52,7 +56,11 @@ export const Notes: FC<Props> = (props) => {
               <IconPlus />
             </ActionIcon>
           </Group>
-          <Note note={notes[0]} onOpenDelete={handleOpenModal} />
+          <Note
+            note={notes[0]}
+            onOpenDelete={handleOpenModal}
+            onEdit={handleEdit}
+          />
           <Group justify="flex-end">
             <ActionIcon
               variant="transparent"
@@ -69,6 +77,7 @@ export const Notes: FC<Props> = (props) => {
             onClose={fold}
             onOpenDelete={handleOpenModal}
             onCreate={handleCreate}
+            onEdit={handleEdit}
           />
         )}
       </Card>
@@ -84,6 +93,7 @@ export const Notes: FC<Props> = (props) => {
 
 function useNotes({ projectId }: Props) {
   const t = useTranslations('project.notes');
+  const qc = useQueryClient();
   const [noteId, setNotedId] = useState<string | null>(null);
   const [isExpanded, { open: expand, close: fold }] = useDisclosure(false);
   const [isModalOpen, { open: openModal, close: closeModal }] =
@@ -100,6 +110,25 @@ function useNotes({ projectId }: Props) {
     onSuccess: async () => {
       await refetch();
       onCreated();
+    },
+  });
+  const { mutateAsync: editNote } = useMutation({
+    mutationFn: editNoteMutation.fnc,
+    onSuccess: (data) => {
+      onCreated();
+      qc.setQueryData(
+        notesQuery.key(projectId),
+        (currData: Data<NoteModel[]>) => {
+          const notes =
+            currData?.data?.map((note) =>
+              note.id === data.id ? data : note
+            ) ?? [];
+          return {
+            ...currData,
+            data: notes,
+          };
+        }
+      );
     },
   });
   const { mutateAsync: deleteNote } = useMutation({
@@ -122,7 +151,11 @@ function useNotes({ projectId }: Props) {
   };
 
   const handleCreate = async () => {
-    await createNote({ projectId });
+    await createNote({ projectId }).catch(() => null);
+  };
+
+  const handleEdit = async ({ userId, ...note }: NoteModel) => {
+    await editNote(note).catch(() => null);
   };
 
   const handleDelete = async () => {
@@ -141,6 +174,7 @@ function useNotes({ projectId }: Props) {
     handleOpenModal,
     handleCloseModal,
     handleCreate,
+    handleEdit,
     handleDelete,
   };
 }

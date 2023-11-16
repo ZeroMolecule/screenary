@@ -12,13 +12,20 @@ type Props = {
   onClose: () => void;
   onOpenDelete: (id: string) => void;
   onCreate: () => Promise<void>;
+  onEdit: (note: NoteModel) => Promise<void>;
 };
 
 export const NotesExpanded: FC<Props> = (props) => {
-  const { t, notes, onClose, onOpenDelete, onCreate } = useNotesExpanded(props);
+  const { t, notes, onClose, onOpenDelete, onCreate, onEdit } =
+    useNotesExpanded(props);
 
   const renderNote = (note: NoteModel) => (
-    <Note key={note.id} note={note} onOpenDelete={onOpenDelete} />
+    <Note
+      key={note.id}
+      note={note}
+      onOpenDelete={onOpenDelete}
+      onEdit={onEdit}
+    />
   );
 
   return (
@@ -49,8 +56,14 @@ export const NotesExpanded: FC<Props> = (props) => {
   );
 };
 
-function useNotesExpanded({ notes, onClose, onOpenDelete, onCreate }: Props) {
+function useNotesExpanded({
+  notes,
+  onClose,
+  onOpenDelete,
+  onCreate,
+  onEdit,
+}: Props) {
   const t = useTranslations('project.notes');
 
-  return { t, notes, onClose, onOpenDelete, onCreate };
+  return { t, notes, onClose, onOpenDelete, onCreate, onEdit };
 }

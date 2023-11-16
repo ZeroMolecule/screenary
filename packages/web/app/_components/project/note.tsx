@@ -1,21 +1,29 @@
-import { FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { ActionIcon, Box, Card, Group } from '@mantine/core';
 import { IconCircleXFilled } from '@tabler/icons-react';
 import { Note as NoteModel } from '@prisma/client';
 import { Text } from '../base/text';
 import { formatDate } from '@/utils/datetime';
+import { debounce } from 'lodash';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
   note: NoteModel;
+  onEdit: (note: NoteModel) => Promise<void>;
   onOpenDelete: (id: string) => void;
 };
 
-export const Note: FC<Props> = ({ note, onOpenDelete }) => {
+export const Note: FC<Props> = (props) => {
+  const { note, onOpenDelete, handleChange } = useNote(props);
+
   return (
     <Card className={styles.note}>
       <Box className={styles.noteInner}>
-        <Text c="primary.9">{note.content}</Text>
+        <textarea
+          defaultValue={note.content}
+          className={styles.textarea}
+          onChange={handleChange}
+        />
       </Box>
       <Group justify="space-between">
         <Text size="sm" ff="secondary" c="primary.5">
@@ -33,3 +41,12 @@ export const Note: FC<Props> = ({ note, onOpenDelete }) => {
     </Card>
   );
 };
+
+function useNote({ note, onEdit, onOpenDelete }: Props) {
+  const handleChange = debounce(async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const data: NoteModel = { ...note, content: e.target.value };
+    await onEdit(data);
+  }, 1000);
+
+  return { note, onOpenDelete, handleChange };
+}
