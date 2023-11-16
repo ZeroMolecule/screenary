@@ -10,12 +10,15 @@ import styles from '@/styles/components/notes.module.scss';
 type Props = {
   notes: NoteModel[];
   onClose: () => void;
+  onOpenDelete: (id: string) => void;
 };
 
 export const NotesExpanded: FC<Props> = (props) => {
-  const { t, notes, onClose } = useNotesExpanded(props);
+  const { t, notes, onClose, onOpenDelete } = useNotesExpanded(props);
 
-  const renderNote = (note: NoteModel) => <Note key={note.id} note={note} />;
+  const renderNote = (note: NoteModel) => (
+    <Note key={note.id} note={note} onOpenDelete={onOpenDelete} />
+  );
 
   return (
     <Card className={styles.notesContainer}>
@@ -44,8 +47,8 @@ export const NotesExpanded: FC<Props> = (props) => {
   );
 };
 
-function useNotesExpanded({ notes, onClose }: Props) {
+function useNotesExpanded({ notes, onClose, onOpenDelete }: Props) {
   const t = useTranslations('project.notes');
 
-  return { t, notes, onClose };
+  return { t, notes, onClose, onOpenDelete };
 }

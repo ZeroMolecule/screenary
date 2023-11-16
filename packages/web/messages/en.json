@@ -98,7 +98,8 @@
     "deleteDescription": "Are you sure you want to delete {projectName} project?",
     "notes": {
       "title": "Notes",
-      "addAction": "Add Note"
+      "addAction": "Add Note",
+      "deleteTitle": "Delete Note"
     }
   }
 }

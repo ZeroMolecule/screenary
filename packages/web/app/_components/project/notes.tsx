@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowsMaximize, IconInbox, IconPlus } from '@tabler/icons-react';
@@ -8,6 +8,9 @@ import { Text } from '../base/text';
 import { NotesExpanded } from './notes-expanded';
 import { Note } from './note';
 import { notesQuery } from '@/domain/queries/notes-query';
+import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
+import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
+import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
@@ -15,7 +18,17 @@ type Props = {
 };
 
 export const Notes: FC<Props> = (props) => {
-  const { t, isOpen, open, close, notes } = useNotes(props);
+  const {
+    t,
+    notes,
+    isExpanded,
+    expand,
+    fold,
+    isModalOpen,
+    handleOpenModal,
+    handleCloseModal,
+    handleDelete,
+  } = useNotes(props);
 
   return (
     <Box h="100%" pos="relative">
@@ -35,33 +48,81 @@ export const Notes: FC<Props> = (props) => {
               <IconPlus />
             </ActionIcon>
           </Group>
-          <Note note={notes[0]} />
+          <Note note={notes[0]} onOpenDelete={handleOpenModal} />
           <Group justify="flex-end">
-            <ActionIcon variant="transparent" color="neutral.5" onClick={open}>
+            <ActionIcon
+              variant="transparent"
+              color="neutral.5"
+              onClick={expand}
+            >
               <IconArrowsMaximize />
             </ActionIcon>
           </Group>
         </Stack>
-        {isOpen && <NotesExpanded notes={notes} onClose={close} />}
+        {isExpanded && (
+          <NotesExpanded
+            notes={notes}
+            onClose={fold}
+            onOpenDelete={handleOpenModal}
+          />
+        )}
       </Card>
+      <ConfirmDeleteModal
+        title={t('deleteTitle')}
+        opened={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleDelete}
+      />
     </Box>
   );
 };
 
 function useNotes({ projectId }: Props) {
   const t = useTranslations('project.notes');
-  const [isOpen, { open, close }] = useDisclosure(false);
+  const [noteId, setNotedId] = useState<string | null>(null);
+  const [isExpanded, { open: expand, close: fold }] = useDisclosure(false);
+  const [isModalOpen, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
+  const onDelete = useNotificationSuccess('deleted');
 
-  const { data: notes } = useQuery({
+  const { data: notes, refetch } = useQuery({
     queryKey: notesQuery.key(projectId),
     queryFn: () => notesQuery.fnc(projectId),
   });
+  const { mutateAsync: deleteNote } = useMutation({
+    mutationFn: deleteNoteMutation.fnc,
+    onSuccess: async () => {
+      await refetch();
+      onDelete();
+      handleCloseModal();
+    },
+  });
+
+  const handleOpenModal = (id: string) => {
+    setNotedId(id);
+    openModal();
+  };
+
+  const handleCloseModal = () => {
+    setNotedId(null);
+    closeModal();
+  };
+
+  const handleDelete = async () => {
+    if (noteId) {
+      await deleteNote({ id: noteId, projectId }).catch(() => null);
+    }
+  };
 
   return {
     t,
-    isOpen,
-    open,
-    close,
     notes: notes?.data ?? [],
+    isExpanded,
+    expand,
+    fold,
+    isModalOpen,
+    handleOpenModal,
+    handleCloseModal,
+    handleDelete,
   };
 }
