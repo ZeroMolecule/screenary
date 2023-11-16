@@ -8,6 +8,7 @@
   "notification": {
     "success": {
       "added": "Added!",
+      "created": "Created!",
       "saved": "Saved!",
       "deleted": "Deleted!"
     },

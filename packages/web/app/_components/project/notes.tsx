@@ -11,6 +11,8 @@ import { notesQuery } from '@/domain/queries/notes-query';
 import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
+import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
+import { orderBy } from 'lodash';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
@@ -27,6 +29,7 @@ export const Notes: FC<Props> = (props) => {
     isModalOpen,
     handleOpenModal,
     handleCloseModal,
+    handleCreate,
     handleDelete,
   } = useNotes(props);
 
@@ -44,6 +47,7 @@ export const Notes: FC<Props> = (props) => {
             <ActionIcon
               variant="transparent"
               color="var(--mantine-color-neutral-9)"
+              onClick={handleCreate}
             >
               <IconPlus />
             </ActionIcon>
@@ -64,6 +68,7 @@ export const Notes: FC<Props> = (props) => {
             notes={notes}
             onClose={fold}
             onOpenDelete={handleOpenModal}
+            onCreate={handleCreate}
           />
         )}
       </Card>
@@ -83,11 +88,19 @@ function useNotes({ projectId }: Props) {
   const [isExpanded, { open: expand, close: fold }] = useDisclosure(false);
   const [isModalOpen, { open: openModal, close: closeModal }] =
     useDisclosure(false);
+  const onCreated = useNotificationSuccess('created');
   const onDelete = useNotificationSuccess('deleted');
 
   const { data: notes, refetch } = useQuery({
     queryKey: notesQuery.key(projectId),
     queryFn: () => notesQuery.fnc(projectId),
+  });
+  const { mutateAsync: createNote } = useMutation({
+    mutationFn: addNoteMutation.fnc,
+    onSuccess: async () => {
+      await refetch();
+      onCreated();
+    },
   });
   const { mutateAsync: deleteNote } = useMutation({
     mutationFn: deleteNoteMutation.fnc,
@@ -108,6 +121,10 @@ function useNotes({ projectId }: Props) {
     closeModal();
   };
 
+  const handleCreate = async () => {
+    await createNote({ projectId });
+  };
+
   const handleDelete = async () => {
     if (noteId) {
       await deleteNote({ id: noteId, projectId }).catch(() => null);
@@ -116,13 +133,14 @@ function useNotes({ projectId }: Props) {
 
   return {
     t,
-    notes: notes?.data ?? [],
+    notes: orderBy(notes?.data, 'createdAt', 'desc') ?? [],
     isExpanded,
     expand,
     fold,
     isModalOpen,
     handleOpenModal,
     handleCloseModal,
+    handleCreate,
     handleDelete,
   };
 }
