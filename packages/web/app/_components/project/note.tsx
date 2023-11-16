@@ -6,6 +6,7 @@ import { Text } from '../base/text';
 import { formatDate } from '@/utils/datetime';
 import { debounce } from 'lodash';
 import styles from '@/styles/components/notes.module.scss';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   note: NoteModel;
@@ -14,7 +15,15 @@ type Props = {
 };
 
 export const Note: FC<Props> = (props) => {
-  const { note, onOpenDelete, handleChange } = useNote(props);
+  const { t, note, onOpenDelete, handleChange } = useNote(props);
+
+  if (!note) {
+    return (
+      <Text ta="center" c="neutral.4">
+        {t('emptyShortText')}
+      </Text>
+    );
+  }
 
   return (
     <Card className={styles.note}>
@@ -43,10 +52,12 @@ export const Note: FC<Props> = (props) => {
 };
 
 function useNote({ note, onEdit, onOpenDelete }: Props) {
+  const t = useTranslations('project.notes');
+
   const handleChange = debounce(async (e: ChangeEvent<HTMLTextAreaElement>) => {
     const data: NoteModel = { ...note, content: e.target.value };
     await onEdit(data);
   }, 1000);
 
-  return { note, onOpenDelete, handleChange };
+  return { t, note, onOpenDelete, handleChange };
 }

@@ -6,6 +6,7 @@ import { Title } from '../base/title';
 import { Note } from './note';
 import { Note as NoteModel } from '@prisma/client';
 import styles from '@/styles/components/notes.module.scss';
+import { Text } from '../base/text';
 
 type Props = {
   notes: NoteModel[];
@@ -38,7 +39,13 @@ export const NotesExpanded: FC<Props> = (props) => {
           <IconX />
         </ActionIcon>
       </Group>
-      <div className={styles.notesGrid}>{notes.map(renderNote)}</div>
+      {!notes.length ? (
+        <Text mt="md" c="neutral.1" fw={500}>
+          {t('emptyLongText')}
+        </Text>
+      ) : (
+        <div className={styles.notesGrid}>{notes.map(renderNote)}</div>
+      )}
       <Button
         variant="transparent"
         size="xs"

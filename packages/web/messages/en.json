@@ -100,7 +100,9 @@
     "notes": {
       "title": "Notes",
       "addAction": "Add Note",
-      "deleteTitle": "Delete Note"
+      "deleteTitle": "Delete Note",
+      "emptyShortText": "Empty.",
+      "emptyLongText": "There is no notes. Try adding some."
     }
   }
 }
