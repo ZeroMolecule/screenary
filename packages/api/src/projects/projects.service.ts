@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../shared/services/prisma.service';
-import { User } from '@prisma/client';
+import { TaskStatus, User } from '@prisma/client';
 import { CreateProjectDto } from './dtos/create-project.dto';
 import { UpdateProjectDto } from './dtos/update-project.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
@@ -65,10 +65,26 @@ export class ProjectsService {
         orderBy: {
           createdAt: 'desc',
         },
+        include: {
+          _count: {
+            select: {
+              tasks: {
+                where: {
+                  status: {
+                    not: TaskStatus.DONE,
+                  },
+                },
+              },
+            },
+          },
+        },
       }),
       this.prismaService.project.count({ where }),
     ]);
-    return { list, count };
+    return {
+      list,
+      count,
+    };
   }
 
   async remove(id: string, user: User) {
