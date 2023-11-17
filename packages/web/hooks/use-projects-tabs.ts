@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Project } from '@prisma/client';
-import { TabOption } from '@/app/_components/projects-tabs';
-import { projectsQuery } from '@/domain/queries/projects-query';
-import { Data } from '@/domain/remote/response/data';
-import { useSearchParams } from 'next/navigation';
 import { usePathname, useRouter } from '@/navigation';
+import { TabOption } from '@/app/_components/projects-tabs';
+import { Data } from '@/domain/remote/response/data';
+import { projectsQuery } from '@/domain/queries/projects-query';
 
 const PROJECT_TAB_PARAMS_KEY = 'tab';
 
@@ -18,10 +17,11 @@ export const useProjectsTabs = () => {
     queryKey: projectsQuery.key,
   });
 
-  const [selectedProject, setSelectedProject] = useState(() => {
-    const id = searchParams.get(PROJECT_TAB_PARAMS_KEY);
-    return id ? projects?.data.find((p) => p.id === id) : projects?.data[0];
-  });
+  const selectedProject = searchParams.get(PROJECT_TAB_PARAMS_KEY)
+    ? projects?.data.find(
+        (p) => p.id === searchParams.get(PROJECT_TAB_PARAMS_KEY)
+      )
+    : projects?.data[0];
 
   const tabs: TabOption[] =
     projects?.data.map(({ id, name }) => ({
@@ -35,7 +35,6 @@ export const useProjectsTabs = () => {
       params.set(PROJECT_TAB_PARAMS_KEY, value);
     }
     replace(`${pathname}?${params.toString()}`);
-    setSelectedProject(projects?.data.find((p) => p.id === value));
   };
 
   return { selectedProject, tabs, handleChange };
