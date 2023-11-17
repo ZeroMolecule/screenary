@@ -60,6 +60,7 @@ export const Notes: FC<Props> = (props) => {
             note={notes[0]}
             onOpenDelete={handleOpenModal}
             onEdit={handleEdit}
+            single
           />
           <Group justify="flex-end">
             <ActionIcon

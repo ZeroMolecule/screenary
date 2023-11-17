@@ -7,15 +7,17 @@ import { formatDate } from '@/utils/datetime';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import styles from '@/styles/components/notes.module.scss';
+import classNames from 'classnames';
 
 type Props = {
   note: NoteModel;
   onEdit: (note: NoteModel) => Promise<void>;
   onOpenDelete: (id: string) => void;
+  single?: boolean;
 };
 
 export const Note: FC<Props> = (props) => {
-  const { t, note, onOpenDelete, handleChange } = useNote(props);
+  const { t, note, onOpenDelete, handleChange, single } = useNote(props);
 
   if (!note) {
     return (
@@ -26,7 +28,7 @@ export const Note: FC<Props> = (props) => {
   }
 
   return (
-    <Card className={styles.note}>
+    <Card className={classNames(styles.note, { [styles.noteSingle]: single })}>
       <Box className={styles.noteInner}>
         <Textarea defaultValue={note.content} onChange={handleChange} />
       </Box>
@@ -47,7 +49,7 @@ export const Note: FC<Props> = (props) => {
   );
 };
 
-function useNote({ note, onEdit, onOpenDelete }: Props) {
+function useNote({ note, onEdit, onOpenDelete, single }: Props) {
   const t = useTranslations('project.notes');
 
   const handleChange = debounce(async (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -55,5 +57,5 @@ function useNote({ note, onEdit, onOpenDelete }: Props) {
     await onEdit(data);
   }, 1000);
 
-  return { t, note, onOpenDelete, handleChange };
+  return { t, note, onOpenDelete, handleChange, single };
 }
