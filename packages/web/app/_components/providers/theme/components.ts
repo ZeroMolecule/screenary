@@ -90,26 +90,11 @@ export const components: MantineThemeComponents = {
     },
   }),
   Tabs: Tabs.extend({
-    styles: {
-      list: {
-        padding: rem(4),
-        backgroundColor: 'var(--mantine-color-white)',
-        border: '1px solid var(--mantine-color-neutral-3)',
-        borderRadius: rem(24),
-      },
-      tab: {
-        border: 0,
-        padding: `${rem(6)} var(--mantine-spacing-lg)`,
-      },
-      tabLabel: {
-        color: 'var(--mantine-color-neutral-7)',
-        fontWeight: 500,
-        lineHeight: 1.45,
-      },
-    },
     classNames: {
-      tab: tabStyles.tab,
       root: tabStyles.root,
+      list: tabStyles.list,
+      tab: tabStyles.tab,
+      tabLabel: tabStyles.tabLabel,
     },
   }),
 };
