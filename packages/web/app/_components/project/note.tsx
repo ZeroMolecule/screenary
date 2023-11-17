@@ -29,7 +29,7 @@ export const Note: FC<Props> = (props) => {
 
   return (
     <Card
-      key={note.content}
+      key={`${note.id}/${note.content}`}
       className={classNames(styles.note, { [styles.noteSingle]: single })}
     >
       <Box className={styles.noteInner}>
