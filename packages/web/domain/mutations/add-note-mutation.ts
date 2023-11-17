@@ -4,8 +4,8 @@ import { getRemoteData } from '../remote/response/data';
 import { AddNoteData } from '../types/note-data';
 
 export const addNoteMutation = {
-  fnc: (data: AddNoteData) =>
+  fnc: ({ projectId }: AddNoteData) =>
     remoteApi
-      .post(`projects/${data.projectId}/notes`, { data })
+      .post(`projects/${projectId}/notes`, { data: {} })
       .then(getRemoteData<Note>),
 };
