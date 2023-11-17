@@ -46,19 +46,6 @@ export class ProjectsService {
           },
         },
       },
-      include: {
-        _count: {
-          select: {
-            tasks: {
-              where: {
-                status: {
-                  not: TaskStatus.DONE,
-                },
-              },
-            },
-          },
-        },
-      },
     });
   }
 
