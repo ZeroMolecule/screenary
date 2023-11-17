@@ -12,7 +12,6 @@ import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
-import { orderBy } from 'lodash';
 import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
 import { Note as NoteModel } from '@prisma/client';
 import { Data } from '@/domain/remote/response/data';
@@ -153,8 +152,8 @@ function useNotes({ projectId }: Props) {
     await createNote({ projectId }).catch(() => null);
   };
 
-  const handleEdit = async ({ userId, ...note }: NoteModel) => {
-    await editNote(note).catch(() => null);
+  const handleEdit = async ({ id, projectId, content }: NoteModel) => {
+    await editNote({ id, projectId, content }).catch(() => null);
   };
 
   const handleDelete = async () => {
@@ -165,7 +164,7 @@ function useNotes({ projectId }: Props) {
 
   return {
     t,
-    notes: orderBy(notes?.data, 'createdAt', 'desc') ?? [],
+    notes: notes?.data ?? [],
     isExpanded,
     expand,
     fold,
