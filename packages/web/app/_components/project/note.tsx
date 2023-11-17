@@ -1,12 +1,12 @@
 import { ChangeEvent, FC } from 'react';
-import { ActionIcon, Box, Card, Group } from '@mantine/core';
+import { ActionIcon, Box, Card, Group, Textarea } from '@mantine/core';
 import { IconCircleXFilled } from '@tabler/icons-react';
 import { Note as NoteModel } from '@prisma/client';
 import { Text } from '../base/text';
 import { formatDate } from '@/utils/datetime';
 import { debounce } from 'lodash';
-import styles from '@/styles/components/notes.module.scss';
 import { useTranslations } from 'next-intl';
+import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
   note: NoteModel;
@@ -28,13 +28,9 @@ export const Note: FC<Props> = (props) => {
   return (
     <Card className={styles.note}>
       <Box className={styles.noteInner}>
-        <textarea
-          defaultValue={note.content}
-          className={styles.textarea}
-          onChange={handleChange}
-        />
+        <Textarea defaultValue={note.content} onChange={handleChange} />
       </Box>
-      <Group justify="space-between">
+      <Group justify="space-between" px="md" pb="md">
         <Text size="sm" ff="secondary" c="primary.5">
           {formatDate(note.updatedAt ?? note.createdAt, 'dateAndTime')}
         </Text>
