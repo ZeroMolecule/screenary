@@ -1,0 +1,33 @@
+.root {
+  &[data-variant='default'] {
+    --_list-border-width: 0;
+  }
+}
+
+.list {
+  padding: rem(4);
+  background-color: var(--mantine-color-white);
+  border: 1px solid var(--mantine-color-neutral-3);
+  border-radius: rem(24);
+}
+
+.tab {
+  border: 0;
+  padding: rem(6) var(--mantine-spacing-lg);
+
+  &[data-active] {
+    background-color: var(--mantine-color-primary-1);
+    border: 0;
+    border-radius: rem(24);
+  }
+
+  &:hover {
+    border-radius: rem(24);
+  }
+}
+
+.tabLabel {
+  color: var(--mantine-color-neutral-7);
+  font-weight: 500;
+  line-height: 1.45;
+}

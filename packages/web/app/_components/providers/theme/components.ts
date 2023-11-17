@@ -8,7 +8,9 @@ import {
   rem,
   Popover,
   Menu,
+  Tabs,
 } from '@mantine/core';
+import tabStyles from '@/styles/base/tabs.module.scss';
 
 export const components: MantineThemeComponents = {
   TextInput: TextInput.extend({
@@ -85,6 +87,14 @@ export const components: MantineThemeComponents = {
         alignItems: 'center',
         color: 'var(--mantine-color-white)',
       },
+    },
+  }),
+  Tabs: Tabs.extend({
+    classNames: {
+      root: tabStyles.root,
+      list: tabStyles.list,
+      tab: tabStyles.tab,
+      tabLabel: tabStyles.tabLabel,
     },
   }),
 };

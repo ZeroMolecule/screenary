@@ -84,7 +84,6 @@
       "title": "Notifications"
     }
   },
-  "home": {},
   "projects": {
     "title": "Projects",
     "addAction": "Add Project",
@@ -96,5 +95,8 @@
   "project": {
     "deleteTitle": "Delete Project",
     "deleteDescription": "Are you sure you want to delete {projectName} project?"
+  },
+  "calendar": {
+    "title": "Calendar"
   }
 }
