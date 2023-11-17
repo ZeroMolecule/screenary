@@ -84,7 +84,7 @@ export class ProjectsService {
               tasks: {
                 where: {
                   status: {
-                    not: TaskStats.DONE,
+                    not: TaskStatus.DONE,
                   },
                 },
               },
