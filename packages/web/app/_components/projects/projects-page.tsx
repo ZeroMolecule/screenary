@@ -3,7 +3,6 @@
 import { FC } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Group, Portal } from '@mantine/core';
-import { Project } from '@prisma/client';
 import { projectsQuery } from '@/domain/queries/projects-query';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
@@ -15,6 +14,7 @@ import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { useTranslations } from 'next-intl';
+import { Project } from '@/types/prisma/project';
 import styles from '@/styles/components/projects.module.scss';
 
 export const ProjectsPage: FC = () => {
