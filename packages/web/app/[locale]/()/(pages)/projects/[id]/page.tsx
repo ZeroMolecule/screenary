@@ -22,10 +22,7 @@ async function useProjectPage(id: string) {
   const queryClient = getQueryClient();
   await Promise.all([
     queryClient.prefetchQuery({ queryKey: projectQuery.key(id) }),
-    queryClient.prefetchQuery({
-      queryKey: notesQuery.key(id),
-      queryFn: () => notesQuery.fnc(id),
-    }),
+    queryClient.prefetchQuery({ queryKey: notesQuery.key(id) }),
   ]);
   const dehydratedState = dehydrate(queryClient);
 

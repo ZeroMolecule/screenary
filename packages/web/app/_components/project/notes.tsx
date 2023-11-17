@@ -102,9 +102,8 @@ function useNotes({ projectId }: Props) {
   const onCreated = useNotificationSuccess('created');
   const onDelete = useNotificationSuccess('deleted');
 
-  const { data: notes, refetch } = useQuery({
+  const { data: notes, refetch } = useQuery<Data<NoteModel[]>>({
     queryKey: notesQuery.key(projectId),
-    queryFn: () => notesQuery.fnc(projectId),
   });
   const { mutateAsync: createNote } = useMutation({
     mutationFn: addNoteMutation.fnc,
