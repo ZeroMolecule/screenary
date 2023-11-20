@@ -9,8 +9,10 @@ import {
   Popover,
   Menu,
   Tabs,
+  Checkbox,
 } from '@mantine/core';
 import tabStyles from '@/styles/base/tabs.module.scss';
+import { IconCircleFilled } from '@tabler/icons-react';
 
 export const components: MantineThemeComponents = {
   TextInput: TextInput.extend({
@@ -22,6 +24,20 @@ export const components: MantineThemeComponents = {
         paddingBlock: rem(10),
         paddingInline: rem(12),
         borderRadius: rem(6),
+      },
+    },
+  }),
+  Checkbox: Checkbox.extend({
+    defaultProps: {
+      icon: IconCircleFilled,
+    },
+    styles: {
+      input: {
+        backgroundColor: 'transparent',
+        borderRadius: '100%',
+      },
+      icon: {
+        color: 'var(--mantine-color-destructive-5)',
       },
     },
   }),

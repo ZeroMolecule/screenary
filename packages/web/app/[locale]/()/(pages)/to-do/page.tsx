@@ -7,7 +7,7 @@ import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { TasksPage as ClientTasksPage } from '@/app/_components/tasks/tasks-page';
 import { Data } from '@/domain/remote/response/data';
 import { Project } from '@prisma/client';
-import { tasksQuery } from '@/domain/queries/todos-query';
+import { tasksQuery } from '@/domain/queries/tasks-query';
 
 type Props = {
   params: { locale: string };

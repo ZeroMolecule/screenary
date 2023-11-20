@@ -7,19 +7,29 @@ import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
 import { Title } from '../base/title';
 import { useQuery } from '@tanstack/react-query';
-import { tasksQuery } from '@/domain/queries/todos-query';
+import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
-import { Task } from '@prisma/client';
 import { IconPlus } from '@tabler/icons-react';
 import { EmptyPlaceholder } from '../empty-placeholder';
 import { useTranslations } from 'next-intl';
+import { groupBy } from 'lodash';
+import { TaskStatus } from '@prisma/client';
+import { TasksList } from './tasks-list';
 import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
 
 export const TasksPage: FC = () => {
-  const { t, tasks, projectId, projectName, tabs, handleChange } =
-    useTasksPage();
+  const {
+    t,
+    projectId,
+    projectName,
+    tabs,
+    todos,
+    done,
+    isEmpty,
+    handleChange,
+  } = useTasksPage();
 
   return (
     <Stack h="100%" gap={8}>
@@ -41,7 +51,7 @@ export const TasksPage: FC = () => {
           </ActionIcon>
         </Group>
         <Box className={overflowStyles['overflow-auto']}>
-          {!tasks.length ? (
+          {isEmpty ? (
             // TODO: fix aligning
             <EmptyPlaceholder
               title={t('empty.title')}
@@ -49,7 +59,10 @@ export const TasksPage: FC = () => {
               image={<Image src={emptyIcon} width={140} height={140} alt="" />}
             />
           ) : (
-            <Title>{projectId}</Title>
+            <Stack gap={46}>
+              <TasksList title={t('todo')} tasks={todos} />
+              <TasksList title={t('done')} tasks={done} />
+            </Stack>
           )}
         </Box>
       </Card>
@@ -67,6 +80,16 @@ function useTasksPage() {
     enabled: !!projectId,
   });
   const tasks = data?.data ?? [];
+  const results = groupBy(tasks, 'status');
 
-  return { t, tasks, projectId, projectName, tabs, handleChange };
+  return {
+    t,
+    projectId,
+    projectName,
+    tabs,
+    todos: results[TaskStatus.TODO],
+    done: results[TaskStatus.DONE],
+    isEmpty: !tasks.length,
+    handleChange,
+  };
 }

@@ -101,7 +101,9 @@
     "empty": {
       "title": "Nothing Here Yet",
       "description": "Click the plus button in the corner to start adding Tasks to your To Do list."
-    }
+    },
+    "todo": "To-Do",
+    "done": "Completed"
   },
   "calendar": {
     "title": "Calendar"

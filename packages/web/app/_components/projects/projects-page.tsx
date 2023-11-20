@@ -85,7 +85,7 @@ function useProjectsWrapper() {
     isOpen,
     open,
     close,
-    projects: [],
+    projects: projects?.data,
     handleSubmit,
   };
 }
