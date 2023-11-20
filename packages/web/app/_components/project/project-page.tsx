@@ -1,9 +1,8 @@
 'use client';
 
 import { FC } from 'react';
-import { projectQuery } from '@/domain/queries/project-query';
+import { Project, projectQuery } from '@/domain/queries/project-query';
 import { Data } from '@/domain/remote/response/data';
-import { Project } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';

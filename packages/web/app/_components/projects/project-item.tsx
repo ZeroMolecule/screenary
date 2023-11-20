@@ -5,7 +5,7 @@ import { Title } from '../base/title';
 import { Text } from '../base/text';
 import { Link } from '../base/link';
 import { paths } from '@/navigation/paths';
-import { Project } from '@/types/prisma/project';
+import { Project } from '@/domain/queries/projects-query';
 import styles from '@/styles/components/projects.module.scss';
 
 type Props = {

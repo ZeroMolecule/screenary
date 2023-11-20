@@ -3,7 +3,7 @@
 import { FC } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Group, Portal } from '@mantine/core';
-import { projectsQuery } from '@/domain/queries/projects-query';
+import { Project, projectsQuery } from '@/domain/queries/projects-query';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
 import { HEADER_CONTAINER_ID } from '@/utils/constants';
@@ -14,7 +14,6 @@ import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { useTranslations } from 'next-intl';
-import { Project } from '@/types/prisma/project';
 import styles from '@/styles/components/projects.module.scss';
 
 export const ProjectsPage: FC = () => {
@@ -61,7 +60,7 @@ function useProjectsWrapper() {
     queryKey: projectsQuery.key,
   });
 
-  const { mutateAsync: addProject } = useMutation({
+  const { data, mutateAsync: addProject } = useMutation({
     mutationFn: addProjectMutation.fnc,
     onSuccess: async () => {
       await refetch();
@@ -69,6 +68,7 @@ function useProjectsWrapper() {
       close();
     },
   });
+  console.log(data);
 
   const handleSubmit = async (values: ProjectFormValues) => {
     await addProject(values).catch(() => null);

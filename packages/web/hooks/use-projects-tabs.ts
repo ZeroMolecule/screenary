@@ -1,10 +1,9 @@
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Project } from '@prisma/client';
 import { usePathname, useRouter } from '@/navigation';
 import { TabOption } from '@/app/_components/projects-tabs';
 import { Data } from '@/domain/remote/response/data';
-import { projectsQuery } from '@/domain/queries/projects-query';
+import { Project, projectsQuery } from '@/domain/queries/projects-query';
 
 const PROJECT_TAB_PARAMS_KEY = 'tab';
 
