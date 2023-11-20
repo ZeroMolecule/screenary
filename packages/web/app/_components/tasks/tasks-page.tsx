@@ -1,8 +1,9 @@
 'use client';
 
 import { FC } from 'react';
+import Image from 'next/image';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
-import { ActionIcon, Card, Group, Stack } from '@mantine/core';
+import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
 import { Title } from '../base/title';
 import { useQuery } from '@tanstack/react-query';
@@ -13,8 +14,8 @@ import { IconPlus } from '@tabler/icons-react';
 import { EmptyPlaceholder } from '../empty-placeholder';
 import { useTranslations } from 'next-intl';
 import emptyIcon from '@/public/images/check-icon.svg';
+import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
-import Image from 'next/image';
 
 export const TasksPage: FC = () => {
   const { t, tasks, projectId, projectName, tabs, handleChange } =
@@ -39,15 +40,18 @@ export const TasksPage: FC = () => {
             <IconPlus />
           </ActionIcon>
         </Group>
-        {!tasks.length ? (
-          <EmptyPlaceholder
-            title={t('empty.title')}
-            description={t('empty.description')}
-            image={<Image src={emptyIcon} width={140} height={140} alt="" />}
-          />
-        ) : (
-          <Title>{projectId}</Title>
-        )}
+        <Box className={overflowStyles['overflow-auto']}>
+          {!tasks.length ? (
+            // TODO: fix aligning
+            <EmptyPlaceholder
+              title={t('empty.title')}
+              description={t('empty.description')}
+              image={<Image src={emptyIcon} width={140} height={140} alt="" />}
+            />
+          ) : (
+            <Title>{projectId}</Title>
+          )}
+        </Box>
       </Card>
     </Stack>
   );
