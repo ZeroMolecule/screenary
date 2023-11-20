@@ -7,7 +7,7 @@ import { Project } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
-import { Portal } from '@mantine/core';
+import { Group, Portal } from '@mantine/core';
 import { ProjectMenu } from './project-menu';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
 import { useDisclosure } from '@mantine/hooks';
@@ -19,12 +19,14 @@ import { useRouter } from '@/navigation';
 import { paths } from '@/navigation/paths';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useTranslations } from 'next-intl';
+import { Notes } from './notes';
 
 // TODO: custom modal hook
 
 export const ProjectPage: FC = () => {
   const {
     t,
+    id,
     isEditOpen,
     openEdit,
     closeEdit,
@@ -37,8 +39,10 @@ export const ProjectPage: FC = () => {
   } = useProjectPage();
 
   return (
-    <>
+    <Group h="100%" justify="space-between" align="flex-start">
       <h1>{project?.name}</h1>
+      <Notes projectId={id} />
+
       <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>
         <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
       </Portal>
@@ -55,7 +59,7 @@ export const ProjectPage: FC = () => {
         title={t('deleteTitle')}
         description={t('deleteDescription', { projectName: project?.name })}
       />
-    </>
+    </Group>
   );
 };
 
@@ -103,6 +107,7 @@ function useProjectPage() {
 
   return {
     t,
+    id,
     isEditOpen,
     openEdit,
     closeEdit,

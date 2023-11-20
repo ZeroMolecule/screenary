@@ -30,7 +30,7 @@ export const ThemeProvider: FC<Props> = ({ children }) => {
       cssVariablesResolver={resolver}
       defaultColorScheme="light"
     >
-      <Notifications position="top-right" />
+      <Notifications position="top-right" containerWidth={300} limit={3} />
       {children}
     </MantineProvider>
   );

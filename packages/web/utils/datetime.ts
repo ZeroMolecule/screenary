@@ -9,6 +9,7 @@ dayjs.extend(advancedFormat);
 const DATE_TIME_FORMAT = {
   dateWithLongDayMonthWithoutYear: 'dddd, MMMM Do',
   timeWith12HourClock: 'h:mm A',
+  dateAndTime: 'MM/DD/YYYY h:mm A',
 };
 export type DateTimeFormat = keyof typeof DATE_TIME_FORMAT;
 
