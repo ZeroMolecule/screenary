@@ -3,8 +3,7 @@
 import { FC } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Group, Portal } from '@mantine/core';
-import { Project } from '@prisma/client';
-import { projectsQuery } from '@/domain/queries/projects-query';
+import { Project, projectsQuery } from '@/domain/queries/projects-query';
 import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
 import { HEADER_CONTAINER_ID } from '@/utils/constants';

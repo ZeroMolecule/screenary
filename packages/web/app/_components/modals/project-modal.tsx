@@ -3,10 +3,10 @@ import { useTranslations } from 'next-intl';
 import { Button, Group, Stack, Title } from '@mantine/core';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Project } from '@prisma/client';
 import { z } from 'zod';
 import { FormTextInput } from '../base/form/text-input';
 import { Modal } from './modal';
+import { Project } from '@/domain/queries/project-query';
 
 type Props = {
   opened: boolean;
