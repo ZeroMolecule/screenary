@@ -60,7 +60,7 @@ function useProjectsWrapper() {
     queryKey: projectsQuery.key,
   });
 
-  const { data, mutateAsync: addProject } = useMutation({
+  const { mutateAsync: addProject } = useMutation({
     mutationFn: addProjectMutation.fnc,
     onSuccess: async () => {
       await refetch();
@@ -68,7 +68,6 @@ function useProjectsWrapper() {
       close();
     },
   });
-  console.log(data);
 
   const handleSubmit = async (values: ProjectFormValues) => {
     await addProject(values).catch(() => null);
