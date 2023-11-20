@@ -1,15 +1,15 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import Image from 'next/image';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
-import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
+import { ActionIcon, Box, Button, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
 import { Title } from '../base/title';
 import { useQuery } from '@tanstack/react-query';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
-import { IconPlus } from '@tabler/icons-react';
+import { IconEye, IconEyeOff, IconPlus } from '@tabler/icons-react';
 import { EmptyPlaceholder } from '../empty-placeholder';
 import { useTranslations } from 'next-intl';
 import { groupBy } from 'lodash';
@@ -28,16 +28,34 @@ export const TasksPage: FC = () => {
     todos,
     done,
     isEmpty,
+    hideCompleted,
+    handleHideCompleted,
     handleChange,
   } = useTasksPage();
 
   return (
     <Stack h="100%" gap={8}>
-      <ProjectsTabs
-        defaultTab={projectId}
-        tabs={tabs}
-        onChange={handleChange}
-      />
+      <Group justify="space-between">
+        <ProjectsTabs
+          defaultTab={projectId}
+          tabs={tabs}
+          onChange={handleChange}
+        />
+        <Button
+          size="sm"
+          variant="subtle"
+          bg="white"
+          c="neutral.7"
+          radius={6}
+          leftSection={
+            hideCompleted ? <IconEye size={20} /> : <IconEyeOff size={20} />
+          }
+          className={styles.hideButton}
+          onClick={handleHideCompleted}
+        >
+          {hideCompleted ? t('showAction') : t('hideAction')}
+        </Button>
+      </Group>
       <Card h="100%" radius={24} className={styles.tasks}>
         <Group justify="space-between">
           <Title order={3} fw={600}>
@@ -61,7 +79,7 @@ export const TasksPage: FC = () => {
           ) : (
             <Stack gap={46}>
               <TasksList title={t('todo')} tasks={todos} />
-              <TasksList title={t('done')} tasks={done} />
+              {!hideCompleted && <TasksList title={t('done')} tasks={done} />}
             </Stack>
           )}
         </Box>
@@ -72,6 +90,7 @@ export const TasksPage: FC = () => {
 
 function useTasksPage() {
   const t = useTranslations('tasks');
+  const [hideCompleted, setHideCompleted] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
 
@@ -82,6 +101,10 @@ function useTasksPage() {
   const tasks = data?.data ?? [];
   const results = groupBy(tasks, 'status');
 
+  const handleHideCompleted = () => {
+    setHideCompleted(!hideCompleted);
+  };
+
   return {
     t,
     projectId,
@@ -90,6 +113,8 @@ function useTasksPage() {
     todos: results[TaskStatus.TODO],
     done: results[TaskStatus.DONE],
     isEmpty: !tasks.length,
+    hideCompleted,
+    handleHideCompleted,
     handleChange,
   };
 }

@@ -103,7 +103,9 @@
       "description": "Click the plus button in the corner to start adding Tasks to your To Do list."
     },
     "todo": "To-Do",
-    "done": "Completed"
+    "done": "Completed",
+    "hideAction": "Hide Completed",
+    "showAction": "Show Completed"
   },
   "calendar": {
     "title": "Calendar"
