@@ -31,11 +31,12 @@ export const ProjectsPage: FC = () => {
     <Group h="100%">
       <Portal target={`#${HEADER_CONTAINER_ID}`}>
         <Button
+          size="sm"
           variant="subtle"
           bg="white"
           c="neutral.7"
           radius={6}
-          leftSection={<IconCirclePlus />}
+          leftSection={<IconCirclePlus size={20} />}
           className={styles['add-project-button']}
           onClick={open}
         >
