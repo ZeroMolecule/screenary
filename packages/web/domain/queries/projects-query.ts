@@ -1,3 +1,9 @@
+import { Prisma } from '@prisma/client';
+
+export type Project = Prisma.ProjectGetPayload<{
+  include: { _count: { select: { tasks: true } } };
+}>;
+
 export const PROJECTS_QUERY_KEY = 'projects';
 
 export const projectsQuery = {

@@ -8,6 +8,7 @@ import {
   rem,
   Popover,
   Menu,
+  Textarea,
   Tabs,
   Checkbox,
 } from '@mantine/core';
@@ -24,6 +25,26 @@ export const components: MantineThemeComponents = {
         paddingBlock: rem(10),
         paddingInline: rem(12),
         borderRadius: rem(6),
+      },
+    },
+  }),
+  Textarea: Textarea.extend({
+    styles: {
+      root: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+      },
+      wrapper: {
+        height: '100%',
+      },
+      input: {
+        height: '100%',
+        padding: 'var(--mantine-spacing-md)',
+        fontSize: 'var(--mantine-font-size-md)',
+        color: 'var(--mantine-color-primary-9)',
+        backgroundColor: 'transparent',
+        border: 0,
       },
     },
   }),

@@ -1,24 +1,18 @@
 import { FC } from 'react';
-import { ActionIcon, Divider, Group, Stack } from '@mantine/core';
-import {
-  IconArrowUpRight,
-  IconBellFilled,
-  IconCircleCheckFilled,
-} from '@tabler/icons-react';
-import { Project } from '@prisma/client';
+import { ActionIcon, Group, Stack } from '@mantine/core';
+import { IconArrowUpRight, IconCircleCheckFilled } from '@tabler/icons-react';
 import { Title } from '../base/title';
 import { Text } from '../base/text';
 import { Link } from '../base/link';
 import { paths } from '@/navigation/paths';
+import { Project } from '@/domain/queries/projects-query';
 import styles from '@/styles/components/projects.module.scss';
-
-// TODO: update check and bell icon count once api supports those fields
 
 type Props = {
   project: Project;
 };
 
-export const ProjectItem: FC<Props> = ({ project: { id, name } }) => {
+export const ProjectItem: FC<Props> = ({ project: { id, name, _count } }) => {
   return (
     <Link href={paths.project(id)} className={styles['project-item-wrapper']}>
       <Stack
@@ -28,26 +22,14 @@ export const ProjectItem: FC<Props> = ({ project: { id, name } }) => {
         className={styles['project-item']}
       >
         <Group justify="space-between">
-          <Group>
-            <Group gap={4}>
-              <IconCircleCheckFilled
-                size={24}
-                className={styles['project-item__count-icon']}
-              />
-              <Text ff="secondary" size="lg">
-                2
-              </Text>
-            </Group>
-            <Divider orientation="vertical" c="neutral.3" />
-            <Group gap={4}>
-              <IconBellFilled
-                size={24}
-                className={styles['project-item__count-icon']}
-              />
-              <Text ff="secondary" size="lg">
-                10
-              </Text>
-            </Group>
+          <Group gap={4}>
+            <IconCircleCheckFilled
+              size={24}
+              className={styles['project-item__count-icon']}
+            />
+            <Text ff="secondary" size="lg">
+              {_count.tasks}
+            </Text>
           </Group>
           <ActionIcon
             size="xl"

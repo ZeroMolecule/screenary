@@ -8,6 +8,7 @@
   "notification": {
     "success": {
       "added": "Added!",
+      "created": "Created!",
       "saved": "Saved!",
       "deleted": "Deleted!"
     },
@@ -94,7 +95,14 @@
   },
   "project": {
     "deleteTitle": "Delete Project",
-    "deleteDescription": "Are you sure you want to delete {projectName} project?"
+    "deleteDescription": "Are you sure you want to delete {projectName} project?",
+    "notes": {
+      "title": "Notes",
+      "addAction": "Add Note",
+      "deleteTitle": "Delete Note",
+      "emptyShortText": "Empty.",
+      "emptyLongText": "There is no notes. Try adding some."
+    }
   },
   "tasks": {
     "title": "To Do",
