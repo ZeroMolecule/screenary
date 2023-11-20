@@ -9,10 +9,20 @@
   border-bottom: 1px solid var(--mantine-color-neutral-3);
 }
 
-.taskItemDoneTitle {
-  text-decoration: line-through 2px solid var(--mantine-color-destructive-5);
-}
-
 .hideButton {
   border: 1px solid var(--mantine-color-neutral-3);
+}
+
+.inputWrapper {
+  --_input-height: unset;
+}
+
+.input {
+  padding: 0 !important;
+  border: 0;
+}
+
+.inputDone {
+  text-decoration: line-through 2px solid var(--mantine-color-destructive-5);
+  color: var(--mantine-color-neutral-4);
 }
