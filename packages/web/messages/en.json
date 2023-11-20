@@ -96,6 +96,13 @@
     "deleteTitle": "Delete Project",
     "deleteDescription": "Are you sure you want to delete {projectName} project?"
   },
+  "tasks": {
+    "title": "To Do",
+    "empty": {
+      "title": "Nothing Here Yet",
+      "description": "Click the plus button in the corner to start adding Tasks to your To Do list."
+    }
+  },
   "calendar": {
     "title": "Calendar"
   }
