@@ -37,7 +37,7 @@ export const Notes: FC<Props> = (props) => {
   } = useNotes(props);
 
   return (
-    <Box h="100%" pos="relative">
+    <Box h="100%" pos="relative" miw={322} mih={306}>
       <Card radius={24} pos="unset" className={styles.notesCard}>
         <Stack>
           <Group justify="space-between">
@@ -55,12 +55,23 @@ export const Notes: FC<Props> = (props) => {
               <IconPlus />
             </ActionIcon>
           </Group>
-          <Note
-            note={notes[0]}
-            onOpenDelete={handleOpenModal}
-            onEdit={handleEdit}
-            single
-          />
+          {isExpanded ? (
+            <NotesExpanded
+              notes={notes}
+              onClose={fold}
+              onOpenDelete={handleOpenModal}
+              onCreate={handleCreate}
+              onEdit={handleEdit}
+            />
+          ) : (
+            <Note
+              key={notes[0]?.id}
+              note={notes[0]}
+              onOpenDelete={handleOpenModal}
+              onEdit={handleEdit}
+              single
+            />
+          )}
           <Group justify="flex-end">
             <ActionIcon
               variant="transparent"
@@ -71,15 +82,6 @@ export const Notes: FC<Props> = (props) => {
             </ActionIcon>
           </Group>
         </Stack>
-        {isExpanded && (
-          <NotesExpanded
-            notes={notes}
-            onClose={fold}
-            onOpenDelete={handleOpenModal}
-            onCreate={handleCreate}
-            onEdit={handleEdit}
-          />
-        )}
       </Card>
       <ConfirmDeleteModal
         title={t('deleteTitle')}

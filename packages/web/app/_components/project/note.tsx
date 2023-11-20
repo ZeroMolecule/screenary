@@ -28,10 +28,7 @@ export const Note: FC<Props> = (props) => {
   }
 
   return (
-    <Card
-      key={`${note.id}/${note.content}`}
-      className={classNames(styles.note, { [styles.noteSingle]: single })}
-    >
+    <Card className={classNames(styles.note, { [styles.noteSingle]: single })}>
       <Box className={styles.noteInner}>
         <Textarea defaultValue={note.content} onChange={handleChange} />
       </Box>
