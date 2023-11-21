@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, useRef, useState } from 'react';
+import { FC, KeyboardEvent, useRef } from 'react';
 import { Task } from '@/domain/queries/tasks-query';
 import { Checkbox, Group, Stack, TextInput } from '@mantine/core';
 import { TaskStatus } from '@prisma/client';
@@ -14,12 +14,22 @@ type Props = {
 };
 
 export const TaskItem: FC<Props> = (props) => {
-  const { inputRef, task, checked, handleChange, handleFocus, handleEnter } =
-    useTaskItem(props);
+  const {
+    inputRef,
+    task,
+    isDone,
+    handleFocus,
+    handleStatusChange,
+    handleEnter,
+  } = useTaskItem(props);
 
   return (
     <Group py="md" align="flex-start" gap="xs" className={styles.taskItem}>
-      <Checkbox size="md" checked={checked} onChange={handleChange} />
+      <Checkbox
+        size="md"
+        defaultChecked={isDone}
+        onClick={handleStatusChange}
+      />
       <Stack gap={4} className={flexStyles['flex-1']} onClick={handleFocus}>
         <TextInput
           ref={inputRef}
@@ -28,7 +38,7 @@ export const TaskItem: FC<Props> = (props) => {
           defaultValue={task.title}
           classNames={{
             input: classNames(styles.input, {
-              [styles.inputDone]: checked,
+              [styles.inputDone]: isDone,
             }),
             wrapper: styles.inputWrapper,
           }}
@@ -46,14 +56,16 @@ export const TaskItem: FC<Props> = (props) => {
 function useTaskItem({ task, onEdit, onDelete }: Props) {
   const isDone = task.status === TaskStatus.DONE;
   const inputRef = useRef<HTMLInputElement>(null);
-  const [checked, setChecked] = useState(isDone);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setChecked(e.currentTarget.checked);
-  };
 
   const handleFocus = () => {
     inputRef.current?.focus();
+  };
+
+  const handleStatusChange = async () => {
+    await onEdit({
+      ...task,
+      status: isDone ? TaskStatus.TODO : TaskStatus.DONE,
+    });
   };
 
   const handleEnter = async (e: KeyboardEvent<HTMLInputElement>) => {
@@ -68,5 +80,12 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
     }
   };
 
-  return { inputRef, task, checked, handleChange, handleFocus, handleEnter };
+  return {
+    inputRef,
+    task,
+    isDone,
+    handleFocus,
+    handleStatusChange,
+    handleEnter,
+  };
 }

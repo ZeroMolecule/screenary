@@ -17,10 +17,10 @@ import { TaskStatus } from '@prisma/client';
 import { TasksList } from './tasks-list';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
+import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
-import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 
 export const TasksPage: FC = () => {
   const {
@@ -85,14 +85,14 @@ export const TasksPage: FC = () => {
             <Stack gap={46}>
               <TasksList
                 title={t('todo')}
-                tasks={todos}
+                tasks={todos ?? []}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />
               {!hideCompleted && (
                 <TasksList
                   title={t('done')}
-                  tasks={done}
+                  tasks={done ?? []}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                 />
