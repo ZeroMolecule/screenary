@@ -83,16 +83,18 @@ export const TasksPage: FC = () => {
             />
           ) : (
             <Stack gap={46}>
-              <TasksList
-                title={t('todo')}
-                tasks={todos ?? []}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-              {!hideCompleted && (
+              {todos && (
+                <TasksList
+                  title={t('todo')}
+                  tasks={todos}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              )}
+              {!hideCompleted && done && (
                 <TasksList
                   title={t('done')}
-                  tasks={done ?? []}
+                  tasks={done}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                 />
