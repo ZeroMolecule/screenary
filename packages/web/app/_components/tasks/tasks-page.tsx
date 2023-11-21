@@ -3,7 +3,15 @@
 import { FC, useState } from 'react';
 import Image from 'next/image';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
-import { ActionIcon, Box, Button, Card, Group, Stack } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Group,
+  Stack,
+} from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
 import { Title } from '../base/title';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -73,14 +81,17 @@ export const TasksPage: FC = () => {
             <IconPlus />
           </ActionIcon>
         </Group>
-        <Box className={overflowStyles['overflow-auto']}>
+        <Box h="100%" className={overflowStyles['overflow-auto']}>
           {isEmpty ? (
-            // TODO: fix aligning
-            <EmptyPlaceholder
-              title={t('empty.title')}
-              description={t('empty.description')}
-              image={<Image src={emptyIcon} width={140} height={140} alt="" />}
-            />
+            <Flex mih="100%" align="center">
+              <EmptyPlaceholder
+                title={t('empty.title')}
+                description={t('empty.description')}
+                image={
+                  <Image src={emptyIcon} width={140} height={140} alt="" />
+                }
+              />
+            </Flex>
           ) : (
             <Stack gap={46}>
               {todos && (
