@@ -9,6 +9,7 @@ import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
   task: Task;
+  onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 };
 
@@ -42,7 +43,7 @@ export const TaskItem: FC<Props> = (props) => {
   );
 };
 
-function useTaskItem({ task, onDelete }: Props) {
+function useTaskItem({ task, onEdit, onDelete }: Props) {
   const isDone = task.status === TaskStatus.DONE;
   const inputRef = useRef<HTMLInputElement>(null);
   const [checked, setChecked] = useState(isDone);
@@ -60,6 +61,8 @@ function useTaskItem({ task, onDelete }: Props) {
       const value = inputRef.current?.value;
       if (!value) {
         await onDelete(task.id);
+      } else {
+        await onEdit({ ...task, title: value });
       }
       inputRef.current?.blur();
     }

@@ -20,6 +20,7 @@ import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
+import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 
 export const TasksPage: FC = () => {
   const {
@@ -33,6 +34,7 @@ export const TasksPage: FC = () => {
     hideCompleted,
     handleHideCompleted,
     handleChange,
+    handleEdit,
     handleDelete,
   } = useTasksPage();
 
@@ -84,12 +86,14 @@ export const TasksPage: FC = () => {
               <TasksList
                 title={t('todo')}
                 tasks={todos}
+                onEdit={handleEdit}
                 onDelete={handleDelete}
               />
               {!hideCompleted && (
                 <TasksList
                   title={t('done')}
                   tasks={done}
+                  onEdit={handleEdit}
                   onDelete={handleDelete}
                 />
               )}
@@ -106,6 +110,7 @@ function useTasksPage() {
   const [hideCompleted, setHideCompleted] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
+  const onSaved = useNotificationSuccess('saved');
   const onDelete = useNotificationSuccess('deleted');
 
   const { data, refetch } = useQuery<Data<Task[]>>({
@@ -115,6 +120,13 @@ function useTasksPage() {
   const tasks = data?.data ?? [];
   const results = groupBy(tasks, 'status');
 
+  const { mutateAsync: editTask } = useMutation({
+    mutationFn: editTaskMutation.fnc,
+    onSuccess: async () => {
+      await refetch();
+      onSaved();
+    },
+  });
   const { mutateAsync: deleteTask } = useMutation({
     mutationFn: deleteTaskMutation.fnc,
     onSuccess: async () => {
@@ -125,6 +137,10 @@ function useTasksPage() {
 
   const handleHideCompleted = () => {
     setHideCompleted(!hideCompleted);
+  };
+
+  const handleEdit = async ({ id, projectId, title, status }: Task) => {
+    await editTask({ id, projectId, title, status }).catch(() => null);
   };
 
   const handleDelete = async (id: string) => {
@@ -144,6 +160,7 @@ function useTasksPage() {
     hideCompleted,
     handleHideCompleted,
     handleChange,
+    handleEdit,
     handleDelete,
   };
 }
