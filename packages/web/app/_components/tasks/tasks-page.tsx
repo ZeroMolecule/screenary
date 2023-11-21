@@ -6,7 +6,7 @@ import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { ActionIcon, Box, Button, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
 import { Title } from '../base/title';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { IconEye, IconEyeOff, IconPlus } from '@tabler/icons-react';
@@ -15,6 +15,8 @@ import { useTranslations } from 'next-intl';
 import { groupBy } from 'lodash';
 import { TaskStatus } from '@prisma/client';
 import { TasksList } from './tasks-list';
+import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
+import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
@@ -31,6 +33,7 @@ export const TasksPage: FC = () => {
     hideCompleted,
     handleHideCompleted,
     handleChange,
+    handleDelete,
   } = useTasksPage();
 
   return (
@@ -78,8 +81,18 @@ export const TasksPage: FC = () => {
             />
           ) : (
             <Stack gap={46}>
-              <TasksList title={t('todo')} tasks={todos} />
-              {!hideCompleted && <TasksList title={t('done')} tasks={done} />}
+              <TasksList
+                title={t('todo')}
+                tasks={todos}
+                onDelete={handleDelete}
+              />
+              {!hideCompleted && (
+                <TasksList
+                  title={t('done')}
+                  tasks={done}
+                  onDelete={handleDelete}
+                />
+              )}
             </Stack>
           )}
         </Box>
@@ -93,16 +106,31 @@ function useTasksPage() {
   const [hideCompleted, setHideCompleted] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
+  const onDelete = useNotificationSuccess('deleted');
 
-  const { data } = useQuery<Data<Task[]>>({
+  const { data, refetch } = useQuery<Data<Task[]>>({
     queryKey: tasksQuery.key(projectId!),
     enabled: !!projectId,
   });
   const tasks = data?.data ?? [];
   const results = groupBy(tasks, 'status');
 
+  const { mutateAsync: deleteTask } = useMutation({
+    mutationFn: deleteTaskMutation.fnc,
+    onSuccess: async () => {
+      await refetch();
+      onDelete();
+    },
+  });
+
   const handleHideCompleted = () => {
     setHideCompleted(!hideCompleted);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (projectId) {
+      await deleteTask({ id, projectId }).catch(() => null);
+    }
   };
 
   return {
@@ -116,5 +144,6 @@ function useTasksPage() {
     hideCompleted,
     handleHideCompleted,
     handleChange,
+    handleDelete,
   };
 }

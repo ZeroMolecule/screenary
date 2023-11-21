@@ -7,12 +7,13 @@ import { TaskItem } from './task-item';
 type Props = {
   title: string;
   tasks: Task[];
+  onDelete: (id: string) => Promise<void>;
 };
 
-export const TasksList: FC<Props> = (props) => {
-  const { title, tasks } = useTasksList(props);
-
-  const renderTask = (task: Task) => <TaskItem key={task.id} task={task} />;
+export const TasksList: FC<Props> = ({ title, tasks, onDelete }) => {
+  const renderTask = (task: Task) => (
+    <TaskItem key={task.id} task={task} onDelete={onDelete} />
+  );
 
   return (
     <Box>
@@ -23,7 +24,3 @@ export const TasksList: FC<Props> = (props) => {
     </Box>
   );
 };
-
-function useTasksList({ title, tasks }: Props) {
-  return { title, tasks };
-}
