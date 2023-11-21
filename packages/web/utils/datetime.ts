@@ -8,6 +8,7 @@ dayjs.extend(advancedFormat);
 
 const DATE_TIME_FORMAT = {
   dateWithLongDayMonthWithoutYear: 'dddd, MMMM Do',
+  dateTimeWithLongDayMonthWithoutYear: 'dddd, MMMM Do, h:mm A',
   timeWith12HourClock: 'h:mm A',
   dateAndTime: 'MM/DD/YYYY h:mm A',
 };

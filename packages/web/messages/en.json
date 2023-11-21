@@ -115,6 +115,15 @@
     "hideAction": "Hide Completed",
     "showAction": "Show Completed"
   },
+  "task": {
+    "dueDate": {
+      "message": "{day}, {time}",
+      "day": {
+        "today": "Today",
+        "tomorrow": "Tomorrow"
+      }
+    }
+  },
   "calendar": {
     "title": "Calendar"
   }

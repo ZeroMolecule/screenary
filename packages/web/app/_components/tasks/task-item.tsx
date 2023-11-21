@@ -1,7 +1,10 @@
-import { FC, KeyboardEvent, useRef } from 'react';
-import { Task } from '@/domain/queries/tasks-query';
+import { FC, KeyboardEvent, useCallback, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { Checkbox, Group, Stack, TextInput } from '@mantine/core';
+import { Task } from '@/domain/queries/tasks-query';
 import { TaskStatus } from '@prisma/client';
+import dayjs from 'dayjs';
+import { formatDate } from '@/utils/datetime';
 import { Text } from '../base/text';
 import classNames from 'classnames';
 import flexStyles from '@/styles/utils/flex.module.scss';
@@ -18,6 +21,7 @@ export const TaskItem: FC<Props> = (props) => {
     inputRef,
     task,
     isDone,
+    date,
     handleFocus,
     handleStatusChange,
     handleEnter,
@@ -45,8 +49,7 @@ export const TaskItem: FC<Props> = (props) => {
           onKeyDown={handleEnter}
         />
         <Text ff="secondary" size="sm" c="primary.8">
-          {/* TODO: add date */}
-          Today, 2:00 PM
+          {date}
         </Text>
       </Stack>
     </Group>
@@ -54,8 +57,28 @@ export const TaskItem: FC<Props> = (props) => {
 };
 
 function useTaskItem({ task, onEdit, onDelete }: Props) {
+  const t = useTranslations('task');
   const isDone = task.status === TaskStatus.DONE;
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const formatDateMessage = useCallback(() => {
+    if (!task.dueDate) {
+      return '';
+    }
+    const dueDate = dayjs(task.dueDate);
+    const today = dueDate.isSame(dayjs(), 'day');
+    const tomorrow = dueDate.isSame(dayjs().add(1, 'day'), 'day');
+    if (!today && !tomorrow) {
+      return formatDate(
+        dueDate.toDate(),
+        'dateTimeWithLongDayMonthWithoutYear'
+      );
+    }
+    return t('dueDate.message', {
+      day: t(`dueDate.day.${today ? 'today' : 'tomorrow'}`),
+      time: formatDate(dueDate.toDate(), 'timeWith12HourClock'),
+    });
+  }, [t, task.dueDate]);
 
   const handleFocus = () => {
     inputRef.current?.focus();
@@ -84,6 +107,7 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
     inputRef,
     task,
     isDone,
+    date: formatDateMessage(),
     handleFocus,
     handleStatusChange,
     handleEnter,
