@@ -1,0 +1,32 @@
+.popover {
+  z-index: 1;
+  border-radius: rem(24);
+  box-shadow: 0px 40px 35px -20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
+}
+
+.popoverHeader {
+  border-bottom: 1px solid var(--mantine-color-neutral-7);
+}
+
+.popoverActions {
+  border-top: 1px solid var(--mantine-color-neutral-7);
+}
+
+.input {
+  padding: 0 !important;
+  color: var(--mantine-color-white);
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--mantine-color-primary-5);
+  border-radius: 0 !important;
+}
+
+.inputDateTime {
+  padding-left: rem(28) !important;
+  border-bottom: 1px solid var(--mantine-color-neutral-7);
+}
+
+.sectionDateTime {
+  width: unset;
+}

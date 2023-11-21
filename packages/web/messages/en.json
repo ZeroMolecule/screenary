@@ -116,6 +116,15 @@
     "showAction": "Show Completed"
   },
   "task": {
+    "form": {
+      "title": "New Task",
+      "titlePlaceholder": "Title",
+      "dateTime": "Date & Time",
+      "datePlaceholder": "MM/DD/YYYY",
+      "timePlaceholder": "HH:MM",
+      "cancelAction": "Cancel",
+      "applyAction": "Apply"
+    },
     "dueDate": {
       "message": "{day}, {time}",
       "day": {

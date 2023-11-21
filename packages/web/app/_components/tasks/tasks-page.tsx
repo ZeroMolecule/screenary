@@ -3,21 +3,12 @@
 import { FC, useState } from 'react';
 import Image from 'next/image';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Card,
-  Flex,
-  Group,
-  Stack,
-} from '@mantine/core';
+import { Box, Button, Card, Flex, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
-import { Title } from '../base/title';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
-import { IconEye, IconEyeOff, IconPlus } from '@tabler/icons-react';
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import { EmptyPlaceholder } from '../empty-placeholder';
 import { useTranslations } from 'next-intl';
 import { groupBy } from 'lodash';
@@ -26,6 +17,7 @@ import { TasksList } from './tasks-list';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
+import { TasksHeader } from './tasks-header';
 import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
@@ -70,17 +62,7 @@ export const TasksPage: FC = () => {
         </Button>
       </Group>
       <Card h="100%" radius={24} className={styles.tasks}>
-        <Group justify="space-between">
-          <Title order={3} fw={600}>
-            {projectName}
-          </Title>
-          <ActionIcon
-            variant="transparent"
-            color="var(--mantine-color-neutral-9)"
-          >
-            <IconPlus />
-          </ActionIcon>
-        </Group>
+        <TasksHeader projectName={projectName ?? ''} />
         <Box h="100%" className={overflowStyles['overflow-auto']}>
           {isEmpty ? (
             <Flex mih="100%" align="center">
