@@ -1,28 +1,22 @@
 'use client';
 
 import { FC, useState } from 'react';
-import Image from 'next/image';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
-import { Box, Button, Card, Flex, Group, Stack } from '@mantine/core';
+import { Button, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
-import { EmptyPlaceholder } from '../empty-placeholder';
 import { useTranslations } from 'next-intl';
-import { groupBy } from 'lodash';
-import { TaskStatus } from '@prisma/client';
-import { TasksList } from './tasks-list';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { TasksHeader } from './tasks-header';
-import emptyIcon from '@/public/images/check-icon.svg';
-import overflowStyles from '@/styles/utils/overflow.module.scss';
-import styles from '@/styles/components/tasks.module.scss';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { AddTaskData } from '@/domain/types/task-data';
+import { TasksBody } from './tasks-body';
+import styles from '@/styles/components/tasks.module.scss';
 
 export const TasksPage: FC = () => {
   const {
@@ -30,9 +24,7 @@ export const TasksPage: FC = () => {
     projectId,
     projectName,
     tabs,
-    todos,
-    done,
-    isEmpty,
+    tasks,
     hideCompleted,
     handleHideCompleted,
     handleChange,
@@ -66,38 +58,12 @@ export const TasksPage: FC = () => {
       </Group>
       <Card h="100%" radius={24} className={styles.tasks}>
         <TasksHeader projectName={projectName ?? ''} onCreate={handleCreate} />
-        <Box h="100%" className={overflowStyles['overflow-auto']}>
-          {isEmpty ? (
-            <Flex mih="100%" align="center">
-              <EmptyPlaceholder
-                title={t('empty.title')}
-                description={t('empty.description')}
-                image={
-                  <Image src={emptyIcon} width={140} height={140} alt="" />
-                }
-              />
-            </Flex>
-          ) : (
-            <Stack gap={46}>
-              {todos && (
-                <TasksList
-                  title={t('todo')}
-                  tasks={todos}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              )}
-              {!hideCompleted && done && (
-                <TasksList
-                  title={t('done')}
-                  tasks={done}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              )}
-            </Stack>
-          )}
-        </Box>
+        <TasksBody
+          tasks={tasks}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          hideCompleted={hideCompleted}
+        />
       </Card>
     </Stack>
   );
@@ -117,7 +83,6 @@ function useTasksPage() {
     enabled: !!projectId,
   });
   const tasks = data?.data ?? [];
-  const results = groupBy(tasks, 'status');
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
@@ -169,9 +134,7 @@ function useTasksPage() {
     projectId,
     projectName,
     tabs,
-    todos: results[TaskStatus.TODO],
-    done: results[TaskStatus.DONE],
-    isEmpty: !tasks.length,
+    tasks,
     hideCompleted,
     handleHideCompleted,
     handleChange,
