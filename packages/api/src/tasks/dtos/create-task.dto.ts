@@ -4,7 +4,7 @@ import { TaskStatus } from '@prisma/client';
 export const createTaskSchema = z.object({
   title: z.string(),
   status: z.nativeEnum(TaskStatus).default(TaskStatus.TODO),
-  dueDate: z.date().nullish(),
+  dueDate: z.coerce.date().nullish(),
   content: z.string().nullish(),
 });
 
