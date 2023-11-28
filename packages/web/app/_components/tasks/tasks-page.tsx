@@ -16,6 +16,7 @@ import { TasksHeader } from './tasks-header';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { AddTaskData } from '@/domain/types/task-data';
 import { TasksBody } from './tasks-body';
+import { useDisclosure } from '@mantine/hooks';
 import styles from '@/styles/components/tasks.module.scss';
 
 export const TasksPage: FC = () => {
@@ -26,6 +27,9 @@ export const TasksPage: FC = () => {
     tabs,
     tasks,
     hideCompleted,
+    isPopoverOpen,
+    openPopover,
+    closePopover,
     handleHideCompleted,
     handleChange,
     handleCreate,
@@ -57,7 +61,13 @@ export const TasksPage: FC = () => {
         </Button>
       </Group>
       <Card h="100%" radius={24} className={styles.tasks}>
-        <TasksHeader projectName={projectName ?? ''} onCreate={handleCreate} />
+        <TasksHeader
+          projectName={projectName ?? ''}
+          onCreate={handleCreate}
+          isPopoverOpen={isPopoverOpen}
+          onOpenPopover={openPopover}
+          onClosePopover={closePopover}
+        />
         <TasksBody
           tasks={tasks}
           onEdit={handleEdit}
@@ -74,6 +84,9 @@ function useTasksPage() {
   const [hideCompleted, setHideCompleted] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
+  const [isPopoverOpen, { open: openPopover, close: closePopover }] =
+    useDisclosure(false);
+
   const onCreated = useNotificationSuccess('created');
   const onSaved = useNotificationSuccess('saved');
   const onDeleted = useNotificationSuccess('deleted');
@@ -89,6 +102,7 @@ function useTasksPage() {
     onSuccess: async () => {
       await refetch();
       onCreated();
+      closePopover();
     },
   });
   const { mutateAsync: editTask } = useMutation({
@@ -115,7 +129,7 @@ function useTasksPage() {
     dueDate,
   }: Pick<AddTaskData, 'title' | 'dueDate'>) => {
     if (projectId) {
-      await createTask({ projectId, title, dueDate });
+      await createTask({ projectId, title, dueDate }).catch(() => null);
     }
   };
 
@@ -136,6 +150,9 @@ function useTasksPage() {
     tabs,
     tasks,
     hideCompleted,
+    isPopoverOpen,
+    openPopover,
+    closePopover,
     handleHideCompleted,
     handleChange,
     handleCreate,
