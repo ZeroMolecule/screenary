@@ -4,13 +4,15 @@ import { IconPlus } from '@tabler/icons-react';
 import { Title } from '../base/title';
 import { TaskPopover } from './task-popover';
 import { useDisclosure } from '@mantine/hooks';
+import { AddTaskData } from '@/domain/types/task-data';
 
 type Props = {
   projectName: string;
+  onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
 };
 
 export const TasksHeader: FC<Props> = (props) => {
-  const { projectName, isPopoverOpen, openPopover, closePopover } =
+  const { projectName, isPopoverOpen, openPopover, closePopover, onCreate } =
     useTasksHeader(props);
 
   return (
@@ -25,14 +27,16 @@ export const TasksHeader: FC<Props> = (props) => {
       >
         <IconPlus />
       </ActionIcon>
-      {isPopoverOpen && <TaskPopover onClose={closePopover} />}
+      {isPopoverOpen && (
+        <TaskPopover onClose={closePopover} onCreate={onCreate} />
+      )}
     </Group>
   );
 };
 
-function useTasksHeader({ projectName }: Props) {
+function useTasksHeader({ projectName, onCreate }: Props) {
   const [isPopoverOpen, { open: openPopover, close: closePopover }] =
     useDisclosure(false);
 
-  return { projectName, isPopoverOpen, openPopover, closePopover };
+  return { projectName, isPopoverOpen, openPopover, closePopover, onCreate };
 }

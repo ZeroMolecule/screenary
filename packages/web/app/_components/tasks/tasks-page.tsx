@@ -21,6 +21,8 @@ import { TasksHeader } from './tasks-header';
 import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
+import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
+import { AddTaskData } from '@/domain/types/task-data';
 
 export const TasksPage: FC = () => {
   const {
@@ -34,6 +36,7 @@ export const TasksPage: FC = () => {
     hideCompleted,
     handleHideCompleted,
     handleChange,
+    handleCreate,
     handleEdit,
     handleDelete,
   } = useTasksPage();
@@ -62,7 +65,7 @@ export const TasksPage: FC = () => {
         </Button>
       </Group>
       <Card h="100%" radius={24} className={styles.tasks}>
-        <TasksHeader projectName={projectName ?? ''} />
+        <TasksHeader projectName={projectName ?? ''} onCreate={handleCreate} />
         <Box h="100%" className={overflowStyles['overflow-auto']}>
           {isEmpty ? (
             <Flex mih="100%" align="center">
@@ -105,8 +108,9 @@ function useTasksPage() {
   const [hideCompleted, setHideCompleted] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
+  const onCreated = useNotificationSuccess('created');
   const onSaved = useNotificationSuccess('saved');
-  const onDelete = useNotificationSuccess('deleted');
+  const onDeleted = useNotificationSuccess('deleted');
 
   const { data, refetch } = useQuery<Data<Task[]>>({
     queryKey: tasksQuery.key(projectId!),
@@ -115,6 +119,13 @@ function useTasksPage() {
   const tasks = data?.data ?? [];
   const results = groupBy(tasks, 'status');
 
+  const { mutateAsync: createTask } = useMutation({
+    mutationFn: addTaskMutation.fnc,
+    onSuccess: async () => {
+      await refetch();
+      onCreated();
+    },
+  });
   const { mutateAsync: editTask } = useMutation({
     mutationFn: editTaskMutation.fnc,
     onSuccess: async () => {
@@ -126,12 +137,21 @@ function useTasksPage() {
     mutationFn: deleteTaskMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onDelete();
+      onDeleted();
     },
   });
 
   const handleHideCompleted = () => {
     setHideCompleted(!hideCompleted);
+  };
+
+  const handleCreate = async ({
+    title,
+    dueDate,
+  }: Pick<AddTaskData, 'title' | 'dueDate'>) => {
+    if (projectId) {
+      await createTask({ projectId, title, dueDate });
+    }
   };
 
   const handleEdit = async ({ id, projectId, title, status }: Task) => {
@@ -155,6 +175,7 @@ function useTasksPage() {
     hideCompleted,
     handleHideCompleted,
     handleChange,
+    handleCreate,
     handleEdit,
     handleDelete,
   };

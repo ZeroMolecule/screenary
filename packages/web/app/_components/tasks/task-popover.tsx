@@ -8,14 +8,17 @@ import { useTranslations } from 'next-intl';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Text } from '../base/text';
-import { DateInput, TimeInput } from '@mantine/dates';
+import { FormDateInput } from '../base/form/date-input';
+import { FormTimeInput } from '../base/form/time-input';
 import classNames from 'classnames';
 import styles from '@/styles/components/task-popover.module.scss';
-
-// TODO: date and time - zod-date, custom picker. remove string type validation
+import dayjs from 'dayjs';
+import { DATE_TIME_FORMAT } from '@/utils/datetime';
+import { AddTaskData } from '@/domain/types/task-data';
 
 type Props = {
   onClose: () => void;
+  onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
 };
 
 export const TaskPopover: FC<Props> = (props) => {
@@ -57,7 +60,7 @@ export const TaskPopover: FC<Props> = (props) => {
                 {t('dateTime')}
               </Text>
               <Group gap="xs" grow>
-                <DateInput
+                <FormDateInput
                   name="date"
                   placeholder={t('datePlaceholder')}
                   leftSection={
@@ -71,7 +74,7 @@ export const TaskPopover: FC<Props> = (props) => {
                     section: styles.sectionDateTime,
                   }}
                 />
-                <TimeInput
+                <FormTimeInput
                   name="time"
                   leftSection={
                     <IconClock
@@ -106,7 +109,7 @@ export const TaskPopover: FC<Props> = (props) => {
   );
 };
 
-function useTaskPopover({ onClose }: Props) {
+function useTaskPopover({ onClose, onCreate }: Props) {
   const t = useTranslations('task.form');
 
   const taskForm = useForm<TaskFormValues>({
@@ -114,7 +117,7 @@ function useTaskPopover({ onClose }: Props) {
     values: {
       title: '',
       date: undefined,
-      time: undefined,
+      time: '',
     },
   });
   const {
@@ -122,8 +125,17 @@ function useTaskPopover({ onClose }: Props) {
     formState: { isSubmitting },
   } = taskForm;
 
-  const handleSubmit = (values: TaskFormValues) => {
-    console.log(values);
+  const handleSubmit = async ({ title, date, time }: TaskFormValues) => {
+    const [hour, minute] = time?.split(':') ?? [];
+    const parsedDate = dayjs(date)
+      .hour(Number(hour ?? 0))
+      .minute(Number(minute ?? 0));
+
+    const dueDate = date
+      ? parsedDate.format(DATE_TIME_FORMAT.dueDateTime)
+      : null;
+
+    await onCreate({ title, dueDate });
   };
 
   return {
@@ -138,6 +150,6 @@ function useTaskPopover({ onClose }: Props) {
 export type TaskFormValues = z.infer<typeof taskSchema>;
 const taskSchema = z.object({
   title: z.string().min(1),
-  date: z.string().optional(),
+  date: z.date().optional(),
   time: z.string().optional(),
 });

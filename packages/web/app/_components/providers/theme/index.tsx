@@ -2,7 +2,6 @@
 
 import { FC, ReactNode } from 'react';
 import '@mantine/core/styles.css';
-// TODO: remove if not needed
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';

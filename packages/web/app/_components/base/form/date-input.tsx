@@ -2,8 +2,6 @@ import { FC } from 'react';
 import { useController } from 'react-hook-form';
 import { DateInput, DateInputProps } from '@mantine/dates';
 
-// TODO: remove if not needed. alongside @mantine/dates library
-
 type Props = DateInputProps & {
   name: string;
 };
