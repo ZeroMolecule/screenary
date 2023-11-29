@@ -4,7 +4,12 @@ import { FC, useState } from 'react';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { Button, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
-import { UseQueryResult, useMutation, useQueries } from '@tanstack/react-query';
+import {
+  UseQueryResult,
+  useMutation,
+  useQueries,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
@@ -28,7 +33,6 @@ export const TasksPage: FC = () => {
     tabs,
     todos,
     done,
-    isFetchingTasks,
     hideCompleted,
     isPopoverOpen,
     openPopover,
@@ -74,7 +78,6 @@ export const TasksPage: FC = () => {
         <TasksWrapper
           todos={todos}
           done={done}
-          isLoading={isFetchingTasks}
           onEdit={handleEdit}
           onDelete={handleDelete}
           hideCompleted={hideCompleted}
@@ -86,6 +89,7 @@ export const TasksPage: FC = () => {
 
 function useTasksPage() {
   const t = useTranslations('tasks');
+  const qc = useQueryClient();
   const [hideCompleted, setHideCompleted] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
@@ -97,8 +101,8 @@ function useTasksPage() {
   const onDeleted = useNotificationSuccess('deleted');
 
   const [
-    { data: todoData, refetch: refetchTodos, isLoading: isLoadingTodos },
-    { data: doneData, refetch: refetchDone, isLoading: isLoadingDone },
+    { data: todoData, refetch: refetchTodos },
+    { data: doneData, refetch: refetchDone },
   ]: Array<UseQueryResult<Data<Task[]>>> = useQueries({
     queries: [
       {
@@ -115,7 +119,6 @@ function useTasksPage() {
   });
   const todos = todoData?.data ?? [];
   const done = doneData?.data ?? [];
-  const isFetchingTasks = isLoadingTodos || isLoadingDone;
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
@@ -128,8 +131,7 @@ function useTasksPage() {
   const { mutateAsync: editTask } = useMutation({
     mutationFn: editTaskMutation.fnc,
     onSuccess: async () => {
-      await refetchTodos();
-      await refetchDone();
+      await Promise.all([refetchTodos(), refetchDone()]);
       onSaved();
     },
   });
@@ -175,7 +177,6 @@ function useTasksPage() {
     tabs,
     todos,
     done,
-    isFetchingTasks,
     hideCompleted,
     isPopoverOpen,
     openPopover,

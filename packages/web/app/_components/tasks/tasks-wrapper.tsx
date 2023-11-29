@@ -11,7 +11,6 @@ import overflowStyles from '@/styles/utils/overflow.module.scss';
 type Props = {
   todos: Task[];
   done: Task[];
-  isLoading: boolean;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   hideCompleted: boolean;
@@ -58,13 +57,12 @@ export const TasksWrapper: FC<Props> = (props) => {
 function useTasksWrapper({
   todos,
   done,
-  isLoading,
   onEdit,
   onDelete,
   hideCompleted,
 }: Props) {
   const t = useTranslations('tasks');
-  const isEmpty = !todos.length && !done.length && !isLoading;
+  const isEmpty = !todos.length && !done.length;
 
   return { t, isEmpty, todos, done, onEdit, onDelete, hideCompleted };
 }
