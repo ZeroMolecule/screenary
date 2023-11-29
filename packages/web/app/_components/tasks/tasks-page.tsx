@@ -15,7 +15,7 @@ import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { TasksHeader } from './tasks-header';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { AddTaskData } from '@/domain/types/task-data';
-import { TasksWrapper } from './tasks-body';
+import { TasksWrapper } from './tasks-wrapper';
 import { useDisclosure } from '@mantine/hooks';
 import styles from '@/styles/components/tasks.module.scss';
 
