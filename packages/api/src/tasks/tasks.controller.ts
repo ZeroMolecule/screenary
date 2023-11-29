@@ -59,7 +59,7 @@ export class TasksController {
     @AuthUser() user: User,
     @PaginationQuery pagination: PaginationQuery
   ) {
-    const { list, count } = await this.tasksService.findMany(
+    const { list, total } = await this.tasksService.findMany(
       project.id,
       user.id,
       pagination
@@ -68,7 +68,7 @@ export class TasksController {
       data: list,
       pagination: {
         ...pagination,
-        count,
+        total,
       },
     };
   }
