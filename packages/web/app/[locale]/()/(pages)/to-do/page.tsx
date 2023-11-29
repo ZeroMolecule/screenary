@@ -6,7 +6,7 @@ import { getQueryClient } from '@/domain/queries/server-query-client';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { TasksPage as ClientTasksPage } from '@/app/_components/tasks/tasks-page';
 import { Data } from '@/domain/remote/response/data';
-import { Project } from '@prisma/client';
+import { Project, TaskStatus } from '@prisma/client';
 import { tasksQuery } from '@/domain/queries/tasks-query';
 
 type Props = {
@@ -38,9 +38,18 @@ async function useTasksPage({ searchParams }: Props) {
   const { data: projects } = await queryClient.fetchQuery<Data<Project[]>>({
     queryKey: projectsQuery.key,
   });
-  await queryClient.prefetchQuery({
-    queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id),
-  });
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
+        status: TaskStatus.TODO,
+      }),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
+        status: TaskStatus.DONE,
+      }),
+    }),
+  ]);
   const dehydratedState = dehydrate(queryClient);
 
   return { dehydratedState };

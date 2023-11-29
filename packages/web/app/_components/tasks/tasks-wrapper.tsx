@@ -2,8 +2,6 @@ import { FC } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Box, Flex, Stack } from '@mantine/core';
-import { TaskStatus } from '@prisma/client';
-import { groupBy } from 'lodash';
 import { Task } from '@/domain/queries/tasks-query';
 import { EmptyPlaceholder } from '../empty-placeholder';
 import { TasksList } from './tasks-list';
@@ -11,7 +9,9 @@ import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 
 type Props = {
-  tasks: Task[];
+  todos: Task[];
+  done: Task[];
+  isLoading: boolean;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   hideCompleted: boolean;
@@ -33,7 +33,7 @@ export const TasksWrapper: FC<Props> = (props) => {
         </Flex>
       ) : (
         <Stack gap={46}>
-          {todos && (
+          {!!todos.length && (
             <TasksList
               title={t('todo')}
               tasks={todos}
@@ -41,7 +41,7 @@ export const TasksWrapper: FC<Props> = (props) => {
               onDelete={onDelete}
             />
           )}
-          {!hideCompleted && done && (
+          {!hideCompleted && !!done.length && (
             <TasksList
               title={t('done')}
               tasks={done}
@@ -55,13 +55,16 @@ export const TasksWrapper: FC<Props> = (props) => {
   );
 };
 
-function useTasksWrapper({ tasks, onEdit, onDelete, hideCompleted }: Props) {
+function useTasksWrapper({
+  todos,
+  done,
+  isLoading,
+  onEdit,
+  onDelete,
+  hideCompleted,
+}: Props) {
   const t = useTranslations('tasks');
-
-  const isEmpty = !tasks.length;
-  const results = groupBy(tasks, 'status');
-  const todos = results[TaskStatus.TODO];
-  const done = results[TaskStatus.DONE];
+  const isEmpty = !todos.length && !done.length && !isLoading;
 
   return { t, isEmpty, todos, done, onEdit, onDelete, hideCompleted };
 }

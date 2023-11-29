@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { Button, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { UseQueryResult, useMutation, useQueries } from '@tanstack/react-query';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
@@ -17,6 +17,7 @@ import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { AddTaskData } from '@/domain/types/task-data';
 import { TasksWrapper } from './tasks-wrapper';
 import { useDisclosure } from '@mantine/hooks';
+import { TaskStatus } from '@prisma/client';
 import styles from '@/styles/components/tasks.module.scss';
 
 export const TasksPage: FC = () => {
@@ -25,7 +26,9 @@ export const TasksPage: FC = () => {
     projectId,
     projectName,
     tabs,
-    tasks,
+    todos,
+    done,
+    isFetchingTasks,
     hideCompleted,
     isPopoverOpen,
     openPopover,
@@ -69,7 +72,9 @@ export const TasksPage: FC = () => {
           onClosePopover={closePopover}
         />
         <TasksWrapper
-          tasks={tasks}
+          todos={todos}
+          done={done}
+          isLoading={isFetchingTasks}
           onEdit={handleEdit}
           onDelete={handleDelete}
           hideCompleted={hideCompleted}
@@ -91,16 +96,31 @@ function useTasksPage() {
   const onSaved = useNotificationSuccess('saved');
   const onDeleted = useNotificationSuccess('deleted');
 
-  const { data, refetch } = useQuery<Data<Task[]>>({
-    queryKey: tasksQuery.key(projectId!),
-    enabled: !!projectId,
+  const [
+    { data: todoData, refetch: refetchTodos, isLoading: isLoadingTodos },
+    { data: doneData, refetch: refetchDone, isLoading: isLoadingDone },
+  ]: Array<UseQueryResult<Data<Task[]>>> = useQueries({
+    queries: [
+      {
+        queryKey: tasksQuery.key(projectId!, {
+          status: TaskStatus.TODO,
+        }),
+      },
+      {
+        queryKey: tasksQuery.key(projectId!, {
+          status: TaskStatus.DONE,
+        }),
+      },
+    ],
   });
-  const tasks = data?.data ?? [];
+  const todos = todoData?.data ?? [];
+  const done = doneData?.data ?? [];
+  const isFetchingTasks = isLoadingTodos || isLoadingDone;
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
     onSuccess: async () => {
-      await refetch();
+      await refetchTodos();
       onCreated();
       closePopover();
     },
@@ -108,14 +128,19 @@ function useTasksPage() {
   const { mutateAsync: editTask } = useMutation({
     mutationFn: editTaskMutation.fnc,
     onSuccess: async () => {
-      await refetch();
+      await refetchTodos();
+      await refetchDone();
       onSaved();
     },
   });
   const { mutateAsync: deleteTask } = useMutation({
     mutationFn: deleteTaskMutation.fnc,
-    onSuccess: async () => {
-      await refetch();
+    onSuccess: async (data) => {
+      if (data.status === TaskStatus.TODO) {
+        await refetchTodos();
+      } else {
+        await refetchDone();
+      }
       onDeleted();
     },
   });
@@ -148,7 +173,9 @@ function useTasksPage() {
     projectId,
     projectName,
     tabs,
-    tasks,
+    todos,
+    done,
+    isFetchingTasks,
     hideCompleted,
     isPopoverOpen,
     openPopover,
