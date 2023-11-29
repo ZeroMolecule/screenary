@@ -93,7 +93,7 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
 
   const handleEnter = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const value = inputRef.current?.value;
+      const value = e.currentTarget.value;
       if (!value) {
         await onDelete(task.id);
       } else {
