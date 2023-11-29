@@ -1,4 +1,4 @@
-import { FC, KeyboardEvent, useCallback, useRef } from 'react';
+import { FC, KeyboardEvent, useMemo, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Checkbox, Group, Stack, TextInput } from '@mantine/core';
 import { Task } from '@/domain/queries/tasks-query';
@@ -61,7 +61,7 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
   const isDone = task.status === TaskStatus.DONE;
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const formatDateMessage = useCallback(() => {
+  const formatDateMessage = useMemo(() => {
     if (!task.dueDate) {
       return '';
     }
@@ -107,7 +107,7 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
     inputRef,
     task,
     isDone,
-    date: formatDateMessage(),
+    date: formatDateMessage,
     handleFocus,
     handleStatusChange,
     handleEnter,
