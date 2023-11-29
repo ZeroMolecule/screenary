@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ProjectGuard } from '../shared/guards/project.guard';
@@ -70,7 +71,7 @@ export class DirectoriesController {
     @Project() project: Project,
     @AuthUser() user: User,
     @PaginationQuery pagination: PaginationQuery,
-    @Body(new ZodValidationPipe(findManyDirectorySchema))
+    @Query(new ZodValidationPipe(findManyDirectorySchema))
     where: FindManyDirectoryDto
   ) {
     const { list, total } = await this.directoriesService.findMany(
