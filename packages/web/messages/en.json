@@ -18,6 +18,12 @@
   },
   "shared": {
     "logoAlt": "Screenary logo",
+    "component": {
+      "dateTime": {
+        "label": "Date & Time",
+        "datePlaceholder": "MM/DD/YYYY"
+      }
+    },
     "welcomeMessage": {
       "base": "Good {time}, {username}",
       "fallback": "Welcome back",
@@ -119,9 +125,6 @@
     "form": {
       "title": "New Task",
       "titlePlaceholder": "Title",
-      "dateTime": "Date & Time",
-      "datePlaceholder": "MM/DD/YYYY",
-      "timePlaceholder": "HH:MM",
       "cancelAction": "Cancel",
       "applyAction": "Apply"
     },

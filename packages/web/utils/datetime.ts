@@ -11,7 +11,6 @@ export const DATE_TIME_FORMAT = {
   dateTimeWithLongDayMonthWithoutYear: 'dddd, MMMM Do, h:mm A',
   timeWith12HourClock: 'h:mm A',
   dateAndTime: 'MM/DD/YYYY h:mm A',
-  dueDateTime: 'YYYY-MM-DDTHH:mm:ssZ',
 };
 export type DateTimeFormat = keyof typeof DATE_TIME_FORMAT;
 

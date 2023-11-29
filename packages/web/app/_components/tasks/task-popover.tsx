@@ -1,20 +1,16 @@
 import { FC } from 'react';
-import { ActionIcon, Button, Group, Stack } from '@mantine/core';
-import { IconCalendar, IconClock, IconX } from '@tabler/icons-react';
-import { Title } from '../base/title';
-import { FormTextInput } from '../base/form/text-input';
-import { z } from 'zod';
 import { useTranslations } from 'next-intl';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Text } from '../base/text';
-import { FormDateInput } from '../base/form/date-input';
-import { FormTimeInput } from '../base/form/time-input';
-import classNames from 'classnames';
-import styles from '@/styles/components/task-popover.module.scss';
-import dayjs from 'dayjs';
-import { DATE_TIME_FORMAT } from '@/utils/datetime';
+import { z } from 'zod';
+import { ActionIcon, Button, Group, Stack } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
+import { Title } from '../base/title';
+import { FormTextInput } from '../base/form/text-input';
 import { AddTaskData } from '@/domain/types/task-data';
+import { FormDateTimeInput } from '../base/form/date-time-input';
+import inputStyles from '@/styles/components/input.module.scss';
+import styles from '@/styles/components/task-popover.module.scss';
 
 type Props = {
   onClose: () => void;
@@ -53,42 +49,9 @@ export const TaskPopover: FC<Props> = (props) => {
             <FormTextInput
               name="title"
               placeholder={t('titlePlaceholder')}
-              classNames={{ input: styles.input }}
+              classNames={{ input: inputStyles.input }}
             />
-            <Stack gap={0}>
-              <Text size="sm" c="white" fw={500}>
-                {t('dateTime')}
-              </Text>
-              <Group gap="xs" grow>
-                <FormDateInput
-                  name="date"
-                  placeholder={t('datePlaceholder')}
-                  leftSection={
-                    <IconCalendar
-                      size={20}
-                      color="var(--mantine-color-primary-3)"
-                    />
-                  }
-                  classNames={{
-                    input: classNames(styles.input, styles.inputDateTime),
-                    section: styles.sectionDateTime,
-                  }}
-                />
-                <FormTimeInput
-                  name="time"
-                  leftSection={
-                    <IconClock
-                      size={20}
-                      color="var(--mantine-color-primary-3)"
-                    />
-                  }
-                  classNames={{
-                    input: classNames(styles.input, styles.inputDateTime),
-                    section: styles.sectionDateTime,
-                  }}
-                />
-              </Group>
-            </Stack>
+            <FormDateTimeInput name="dateTime" />
           </Stack>
           <Group p="lg" justify="center" grow className={styles.popoverActions}>
             <Button bg="neutral.5" fw={500} onClick={onClose}>
@@ -116,8 +79,7 @@ function useTaskPopover({ onClose, onCreate }: Props) {
     resolver: zodResolver(taskSchema),
     values: {
       title: '',
-      date: undefined,
-      time: '',
+      dateTime: undefined,
     },
   });
   const {
@@ -125,17 +87,8 @@ function useTaskPopover({ onClose, onCreate }: Props) {
     formState: { isSubmitting },
   } = taskForm;
 
-  const handleSubmit = async ({ title, date, time }: TaskFormValues) => {
-    const [hour, minute] = time?.split(':') ?? [];
-    const parsedDate = dayjs(date)
-      .hour(Number(hour ?? 0))
-      .minute(Number(minute ?? 0));
-
-    const dueDate = date
-      ? parsedDate.format(DATE_TIME_FORMAT.dueDateTime)
-      : null;
-
-    await onCreate({ title, dueDate });
+  const handleSubmit = async ({ title, dateTime }: TaskFormValues) => {
+    await onCreate({ title, dueDate: dateTime ?? null });
   };
 
   return {
@@ -150,6 +103,5 @@ function useTaskPopover({ onClose, onCreate }: Props) {
 export type TaskFormValues = z.infer<typeof taskSchema>;
 const taskSchema = z.object({
   title: z.string().min(1),
-  date: z.date().optional(),
-  time: z.string().optional(),
+  dateTime: z.date().optional(),
 });
