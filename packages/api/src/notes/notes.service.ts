@@ -54,7 +54,7 @@ export class NotesService {
       userId: user.id,
     };
 
-    const [list, count] = await Promise.all([
+    const [list, total] = await Promise.all([
       this.prismaService.note.findMany({
         where,
         ...pagination,
@@ -65,7 +65,7 @@ export class NotesService {
       this.prismaService.note.count({ where }),
     ]);
 
-    return { list, count };
+    return { list, total };
   }
 
   async remove(id: string, projectId: string, user: User) {

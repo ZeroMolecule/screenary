@@ -1,39 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../shared/services/prisma.service';
-import { CreateTaskDto } from './dtos/create-task.dto';
-import { UpdateTaskDto } from './dtos/update-task.dto';
+import { CreateQuickLinkDto } from './dtos/create-quick-link.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
-import { TaskStatus } from '@prisma/client';
+import { UpdateQuickLinkDto } from './dtos/update-quick-link.dto';
+import { FindManyQuickLinkDto } from './dtos/find-many-quick-link.dto';
 
 @Injectable()
-export class TasksService {
+export class QuickLinksService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(dto: CreateTaskDto, projectId: string, userId: string) {
-    return this.prismaService.task.create({
+  async create(dto: CreateQuickLinkDto, projectId: string, userId: string) {
+    return this.prismaService.quickLink.create({
       data: {
         ...dto,
-        project: {
-          connect: {
-            id: projectId,
-          },
-        },
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
+        projectId,
+        userId,
       },
     });
   }
 
   async update(
     id: string,
-    dto: UpdateTaskDto,
+    dto: UpdateQuickLinkDto,
     projectId: string,
     userId: string
   ) {
-    return this.prismaService.task.update({
+    return this.prismaService.quickLink.update({
       where: {
         id,
         projectId,
@@ -44,7 +36,7 @@ export class TasksService {
   }
 
   async findOne(id: string, projectId: string, userId: string) {
-    return this.prismaService.task.findFirst({
+    return this.prismaService.quickLink.findFirst({
       where: {
         id,
         projectId,
@@ -57,26 +49,20 @@ export class TasksService {
     projectId: string,
     userId: string,
     pagination: PaginationQuery,
-    statuses?: TaskStatus[]
+    whereDto: FindManyQuickLinkDto
   ) {
-    // todo: include DTOs for constructing where clause later on
     const where = {
       projectId,
       userId,
-      status: {
-        in: statuses,
-      },
+      ...whereDto,
     };
 
     const [list, total] = await Promise.all([
-      this.prismaService.task.findMany({
+      this.prismaService.quickLink.findMany({
         where,
         ...pagination,
-        orderBy: {
-          order: 'asc',
-        },
       }),
-      this.prismaService.task.count({ where }),
+      this.prismaService.quickLink.count({ where }),
     ]);
 
     return {
@@ -86,7 +72,7 @@ export class TasksService {
   }
 
   async remove(id: string, projectId: string, userId: string) {
-    return this.prismaService.task.delete({
+    return this.prismaService.quickLink.delete({
       where: {
         id,
         projectId,
