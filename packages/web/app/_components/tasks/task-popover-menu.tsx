@@ -17,9 +17,9 @@ type Props = {
   onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
 };
 
-export const TaskPopover: FC<Props> = (props) => {
+export const TaskPopoverMenu: FC<Props> = (props) => {
   const { t, taskForm, isSubmitting, onClose, onSubmit } =
-    useTaskPopover(props);
+    useTaskPopoverMenu(props);
 
   return (
     <Stack
@@ -29,14 +29,14 @@ export const TaskPopover: FC<Props> = (props) => {
       top={0}
       p={0}
       bg="var(--mantine-glass-color)"
-      className={styles.popover}
+      className={styles.popoverMenu}
     >
       <FormProvider {...taskForm}>
         <form onSubmit={onSubmit}>
           <Group
             p="lg"
             justify="space-between"
-            className={styles.popoverHeader}
+            className={styles.popoverMenuHeader}
           >
             <Title order={6} fw={600} c="white">
               {t('title')}
@@ -53,7 +53,12 @@ export const TaskPopover: FC<Props> = (props) => {
             />
             <FormDateTimeInput name="dateTime" />
           </Stack>
-          <Group p="lg" justify="center" grow className={styles.popoverActions}>
+          <Group
+            p="lg"
+            justify="center"
+            grow
+            className={styles.popoverMenuActions}
+          >
             <Button bg="neutral.5" fw={500} onClick={onClose}>
               {t('cancelAction')}
             </Button>
@@ -72,7 +77,7 @@ export const TaskPopover: FC<Props> = (props) => {
   );
 };
 
-function useTaskPopover({ onClose, onCreate }: Props) {
+function useTaskPopoverMenu({ onClose, onCreate }: Props) {
   const t = useTranslations('task.form');
 
   const taskForm = useForm<TaskFormValues>({

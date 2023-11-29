@@ -1,40 +1,55 @@
-import { FC } from 'react';
-import { ActionIcon, Group } from '@mantine/core';
+import { Dispatch, FC, SetStateAction } from 'react';
+import {
+  ActionIcon,
+  Group,
+  Popover,
+  PopoverDropdown,
+  PopoverTarget,
+} from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { Title } from '../base/title';
-import { TaskPopover } from './task-popover';
+import { TaskPopoverMenu } from './task-popover-menu';
 import { AddTaskData } from '@/domain/types/task-data';
 
 type Props = {
   projectName: string;
   onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
   isPopoverOpen: boolean;
-  onOpenPopover: () => void;
-  onClosePopover: () => void;
+  onPopoverChange: Dispatch<SetStateAction<boolean>>;
 };
 
 export const TasksHeader: FC<Props> = ({
   projectName,
   onCreate,
   isPopoverOpen,
-  onOpenPopover,
-  onClosePopover,
+  onPopoverChange,
 }) => {
   return (
     <Group justify="space-between">
       <Title order={3} fw={600}>
         {projectName}
       </Title>
-      <ActionIcon
-        variant="transparent"
-        color="var(--mantine-color-neutral-9)"
-        onClick={onOpenPopover}
+      <Popover
+        opened={isPopoverOpen}
+        onChange={onPopoverChange}
+        withinPortal={false}
       >
-        <IconPlus />
-      </ActionIcon>
-      {isPopoverOpen && (
-        <TaskPopover onClose={onClosePopover} onCreate={onCreate} />
-      )}
+        <PopoverTarget>
+          <ActionIcon
+            variant="transparent"
+            color="var(--mantine-color-neutral-9)"
+            onClick={() => onPopoverChange(true)}
+          >
+            <IconPlus />
+          </ActionIcon>
+        </PopoverTarget>
+        <PopoverDropdown w="auto" pos="absolute" top={0} right={0}>
+          <TaskPopoverMenu
+            onClose={() => onPopoverChange(false)}
+            onCreate={onCreate}
+          />
+        </PopoverDropdown>
+      </Popover>
     </Group>
   );
 };

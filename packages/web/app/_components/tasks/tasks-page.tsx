@@ -4,12 +4,7 @@ import { FC, useState } from 'react';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { Button, Card, Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
-import {
-  UseQueryResult,
-  useMutation,
-  useQueries,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { UseQueryResult, useMutation, useQueries } from '@tanstack/react-query';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
@@ -21,7 +16,6 @@ import { TasksHeader } from './tasks-header';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { AddTaskData } from '@/domain/types/task-data';
 import { TasksWrapper } from './tasks-wrapper';
-import { useDisclosure } from '@mantine/hooks';
 import { TaskStatus } from '@prisma/client';
 import styles from '@/styles/components/tasks.module.scss';
 
@@ -34,9 +28,8 @@ export const TasksPage: FC = () => {
     todos,
     done,
     hideCompleted,
-    isPopoverOpen,
-    openPopover,
-    closePopover,
+    popoverOpen,
+    setPopoverOpen,
     handleHideCompleted,
     handleChange,
     handleCreate,
@@ -71,9 +64,8 @@ export const TasksPage: FC = () => {
         <TasksHeader
           projectName={projectName ?? ''}
           onCreate={handleCreate}
-          isPopoverOpen={isPopoverOpen}
-          onOpenPopover={openPopover}
-          onClosePopover={closePopover}
+          isPopoverOpen={popoverOpen}
+          onPopoverChange={setPopoverOpen}
         />
         <TasksWrapper
           todos={todos}
@@ -89,12 +81,10 @@ export const TasksPage: FC = () => {
 
 function useTasksPage() {
   const t = useTranslations('tasks');
-  const qc = useQueryClient();
   const [hideCompleted, setHideCompleted] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
-  const [isPopoverOpen, { open: openPopover, close: closePopover }] =
-    useDisclosure(false);
 
   const onCreated = useNotificationSuccess('created');
   const onSaved = useNotificationSuccess('saved');
@@ -125,7 +115,7 @@ function useTasksPage() {
     onSuccess: async () => {
       await refetchTodos();
       onCreated();
-      closePopover();
+      setPopoverOpen(false);
     },
   });
   const { mutateAsync: editTask } = useMutation({
@@ -178,9 +168,8 @@ function useTasksPage() {
     todos,
     done,
     hideCompleted,
-    isPopoverOpen,
-    openPopover,
-    closePopover,
+    popoverOpen,
+    setPopoverOpen,
     handleHideCompleted,
     handleChange,
     handleCreate,

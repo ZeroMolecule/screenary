@@ -34,6 +34,7 @@ export const FormDateTimeInput: FC<Props> = (props) => {
             section: styles.sectionDateTime,
           }}
           onChange={handleDate}
+          popoverProps={{ withinPortal: false }}
         />
         <TimeInput
           leftSection={
