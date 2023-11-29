@@ -17,9 +17,9 @@ type Props = {
   hideCompleted: boolean;
 };
 
-export const TasksBody: FC<Props> = (props) => {
+export const TasksWrapper: FC<Props> = (props) => {
   const { t, isEmpty, todos, done, onEdit, onDelete, hideCompleted } =
-    useTasksBody(props);
+    useTasksWrapper(props);
 
   return (
     <Box h="100%" className={overflowStyles['overflow-auto']}>
@@ -55,7 +55,7 @@ export const TasksBody: FC<Props> = (props) => {
   );
 };
 
-function useTasksBody({ tasks, onEdit, onDelete, hideCompleted }: Props) {
+function useTasksWrapper({ tasks, onEdit, onDelete, hideCompleted }: Props) {
   const t = useTranslations('tasks');
 
   const isEmpty = !tasks.length;

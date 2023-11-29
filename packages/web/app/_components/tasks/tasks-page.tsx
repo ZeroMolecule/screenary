@@ -15,7 +15,7 @@ import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { TasksHeader } from './tasks-header';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { AddTaskData } from '@/domain/types/task-data';
-import { TasksBody } from './tasks-body';
+import { TasksWrapper } from './tasks-body';
 import { useDisclosure } from '@mantine/hooks';
 import styles from '@/styles/components/tasks.module.scss';
 
@@ -68,7 +68,7 @@ export const TasksPage: FC = () => {
           onOpenPopover={openPopover}
           onClosePopover={closePopover}
         />
-        <TasksBody
+        <TasksWrapper
           tasks={tasks}
           onEdit={handleEdit}
           onDelete={handleDelete}
