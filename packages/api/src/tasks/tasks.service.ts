@@ -4,6 +4,7 @@ import { CreateTaskDto } from './dtos/create-task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { TaskStatus } from '@prisma/client';
+import { flattenDeep, isArray, uniq } from 'lodash';
 
 @Injectable()
 export class TasksService {
@@ -57,8 +58,9 @@ export class TasksService {
     projectId: string,
     userId: string,
     pagination: PaginationQuery,
-    statuses?: TaskStatus[]
+    status?: TaskStatus[]
   ) {
+    const statuses = status ? uniq(flattenDeep([status])) : undefined;
     // todo: include DTOs for constructing where clause later on
     const where = {
       projectId,
