@@ -24,6 +24,10 @@ import {
 } from './dtos/update-directory.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import {
+  FindManyDirectoryDto,
+  findManyDirectorySchema,
+} from './dtos/find-many-directory.dto';
 
 @Controller('directories')
 @UseGuards(ProjectGuard)
@@ -65,12 +69,15 @@ export class DirectoriesController {
   async findMany(
     @Project() project: Project,
     @AuthUser() user: User,
-    @PaginationQuery pagination: PaginationQuery
+    @PaginationQuery pagination: PaginationQuery,
+    @Body(new ZodValidationPipe(findManyDirectorySchema))
+    where: FindManyDirectoryDto
   ) {
     const { list, total } = await this.directoriesService.findMany(
       project.id,
       user.id,
-      pagination
+      pagination,
+      where
     );
 
     return {

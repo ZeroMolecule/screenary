@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { QuickLinksService } from './quick-links.service';
@@ -24,6 +25,10 @@ import {
 } from './dtos/update-quick-link.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import {
+  FindManyQuickLinkDto,
+  findManyQuickLinkSchema,
+} from './dtos/find-many-quick-link.dto';
 
 @Controller('quick-links')
 @UseGuards(ProjectGuard)
@@ -65,12 +70,15 @@ export class QuickLinksController {
   async findMany(
     @Project() project: Project,
     @AuthUser() user: User,
-    @PaginationQuery pagination: PaginationQuery
+    @PaginationQuery pagination: PaginationQuery,
+    @Query(new ZodValidationPipe(findManyQuickLinkSchema))
+    query: FindManyQuickLinkDto
   ) {
     const { list, total } = await this.quickLinksService.findMany(
       project.id,
       user.id,
-      pagination
+      pagination,
+      query
     );
     return {
       data: list,

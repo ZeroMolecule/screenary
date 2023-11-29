@@ -3,6 +3,7 @@ import { PrismaService } from '../shared/services/prisma.service';
 import { CreateDirectoryDto } from './dtos/create-directory.dto';
 import { UpdateDirectoryDto } from './dtos/update-directory.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import { FindManyDirectoryDto } from './dtos/find-many-directory.dto';
 
 @Injectable()
 export class DirectoriesService {
@@ -47,11 +48,13 @@ export class DirectoriesService {
   async findMany(
     projectId: string,
     userId: string,
-    pagination: PaginationQuery
+    pagination: PaginationQuery,
+    whereDto: FindManyDirectoryDto
   ) {
     const where = {
       projectId,
       userId,
+      ...whereDto,
     };
     const [list, total] = await Promise.all([
       this.prismaService.directory.findMany({

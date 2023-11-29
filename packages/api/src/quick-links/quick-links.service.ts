@@ -3,6 +3,7 @@ import { PrismaService } from '../shared/services/prisma.service';
 import { CreateQuickLinkDto } from './dtos/create-quick-link.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { UpdateQuickLinkDto } from './dtos/update-quick-link.dto';
+import { FindManyQuickLinkDto } from './dtos/find-many-quick-link.dto';
 
 @Injectable()
 export class QuickLinksService {
@@ -47,11 +48,13 @@ export class QuickLinksService {
   async findMany(
     projectId: string,
     userId: string,
-    pagination: PaginationQuery
+    pagination: PaginationQuery,
+    whereDto: FindManyQuickLinkDto
   ) {
     const where = {
       projectId,
       userId,
+      ...whereDto,
     };
 
     const [list, total] = await Promise.all([
