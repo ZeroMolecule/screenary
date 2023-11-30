@@ -12,15 +12,17 @@ import inputStyles from '@/styles/components/input.module.scss';
 
 type Props = {
   name: string;
+  label: string;
 };
 
 export const FormDateTimeInput: FC<Props> = (props) => {
-  const { t, field, handleDate, handleTime } = useFormDateTimeInput(props);
+  const { t, label, field, handleDate, handleTime } =
+    useFormDateTimeInput(props);
 
   return (
     <Stack gap={0}>
       <Text size="sm" c="white" fw={500}>
-        {t('label')}
+        {label}
       </Text>
       <Group gap="xs" grow>
         <DateInput
@@ -51,7 +53,7 @@ export const FormDateTimeInput: FC<Props> = (props) => {
   );
 };
 
-function useFormDateTimeInput({ name }: Props) {
+function useFormDateTimeInput({ name, label }: Props) {
   const t = useTranslations('shared.component.dateTime');
   const [time, setTime] = useState<string | undefined>(undefined);
 
@@ -85,5 +87,5 @@ function useFormDateTimeInput({ name }: Props) {
     onChange(formatDateTime(date, timeValue));
   };
 
-  return { t, field: restField, handleDate, handleTime };
+  return { t, label, field: restField, handleDate, handleTime };
 }

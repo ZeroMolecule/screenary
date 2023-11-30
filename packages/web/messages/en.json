@@ -20,7 +20,6 @@
     "logoAlt": "Screenary logo",
     "component": {
       "dateTime": {
-        "label": "Date & Time",
         "datePlaceholder": "MM/DD/YYYY"
       }
     },
@@ -125,6 +124,7 @@
     "form": {
       "title": "New Task",
       "titlePlaceholder": "Title",
+      "dateTimeLabel": "Date & Time",
       "cancelAction": "Cancel",
       "applyAction": "Apply"
     },
