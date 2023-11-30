@@ -82,7 +82,7 @@ function useTaskPopoverMenu({ onClose, onCreate }: Props) {
 
   const taskForm = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
-    values: {
+    defaultValues: {
       title: '',
       dateTime: undefined,
     },

@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { Text } from '../text';
 import styles from '@/styles/components/date-time-input.module.scss';
+import { extractTimeFromDate } from '@/utils/datetime';
 import inputStyles from '@/styles/components/input.module.scss';
 
 type Props = {
@@ -16,7 +17,7 @@ type Props = {
 };
 
 export const FormDateTimeInput: FC<Props> = (props) => {
-  const { t, label, field, handleDate, handleTime } =
+  const { t, label, field, time, handleDate, handleTime } =
     useFormDateTimeInput(props);
 
   return (
@@ -46,6 +47,7 @@ export const FormDateTimeInput: FC<Props> = (props) => {
             input: classNames(inputStyles.input, styles.inputDateTime),
             section: styles.sectionDateTime,
           }}
+          value={time}
           onChange={handleTime}
         />
       </Group>
@@ -55,13 +57,15 @@ export const FormDateTimeInput: FC<Props> = (props) => {
 
 function useFormDateTimeInput({ name, label }: Props) {
   const t = useTranslations('shared.component.dateTime');
-  const [time, setTime] = useState<string | undefined>(undefined);
 
   const controller = useController({ name });
   const {
     field: { onChange, ...restField },
   } = controller;
   const date = controller.field.value;
+  const [time, setTime] = useState<string>(
+    extractTimeFromDate(date)?.slice(0, 2).join(':') ?? ''
+  );
 
   const formatDateTime = useCallback(
     (dateValue?: DateValue, timeValue?: string) => {
@@ -82,10 +86,10 @@ function useFormDateTimeInput({ name, label }: Props) {
   };
 
   const handleTime = (e: ChangeEvent<HTMLInputElement>) => {
-    const timeValue = e.target.value || undefined;
+    const timeValue = e.target.value || '';
     setTime(timeValue);
     onChange(formatDateTime(date, timeValue));
   };
 
-  return { t, label, field: restField, handleDate, handleTime };
+  return { t, label, field: restField, time, handleDate, handleTime };
 }
