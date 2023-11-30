@@ -46,7 +46,7 @@ export const ProjectPage: FC = () => {
         gutter="xs"
         styles={{ inner: { height: '100%' } }}
       >
-        <GridCol span={1}>
+        <GridCol span={1} h="100%">
           {/* TODO: embedded pages */}
           <div
             style={{
@@ -63,10 +63,10 @@ export const ProjectPage: FC = () => {
             EMBEDDED PAGES
           </div>
         </GridCol>
-        <GridCol span={8}>
+        <GridCol span={8} h="100%">
           <Tasks projectId={id} />
         </GridCol>
-        <GridCol span={3}>
+        <GridCol span={3} h="100%">
           <Stack h="100%" pos="relative" gap="xs">
             <Notes projectId={id} />
             {/* TODO: quick links */}

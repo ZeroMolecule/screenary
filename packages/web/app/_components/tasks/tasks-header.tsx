@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import {
   ActionIcon,
   Group,
@@ -7,28 +7,25 @@ import {
   PopoverTarget,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
-import { Title } from '../base/title';
 import { TaskPopoverMenu } from './task-popover-menu';
 import { AddTaskData } from '@/domain/types/task-data';
 
 type Props = {
-  projectName: string;
+  title: ReactNode;
   onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
   isPopoverOpen: boolean;
   onPopoverChange: Dispatch<SetStateAction<boolean>>;
 };
 
 export const TasksHeader: FC<Props> = ({
-  projectName,
+  title,
   onCreate,
   isPopoverOpen,
   onPopoverChange,
 }) => {
   return (
     <Group justify="space-between">
-      <Title order={3} fw={600}>
-        {projectName}
-      </Title>
+      {title}
       <Popover
         opened={isPopoverOpen}
         onChange={onPopoverChange}

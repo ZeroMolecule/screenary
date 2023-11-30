@@ -5,10 +5,10 @@ import { Text } from '../base/text';
 import { TaskItem } from './task-item';
 
 type Props = {
-  title: string;
   tasks: Task[];
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  title?: string;
 };
 
 export const TasksList: FC<Props> = ({ title, tasks, onEdit, onDelete }) => {
