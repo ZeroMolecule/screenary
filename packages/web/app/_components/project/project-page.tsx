@@ -1,11 +1,14 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Project, projectQuery } from '@/domain/queries/project-query';
 import { Data } from '@/domain/remote/response/data';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
+import {
+  NOTIFICATION_WIDGET_CONTAINER_ID,
+  NOTIFICATION_WIDGET_TITLE_ID,
+} from '@/utils/constants';
 import { Grid, GridCol, Group, Portal, Stack } from '@mantine/core';
 import { ProjectMenu } from './project-menu';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
@@ -148,6 +151,13 @@ function useProjectPage() {
   const handleDelete = async () => {
     await deleteProject(id).catch(() => null);
   };
+
+  useEffect(() => {
+    const element = document.getElementById(NOTIFICATION_WIDGET_TITLE_ID);
+    if (element) {
+      element.textContent = project?.data.name ?? '';
+    }
+  }, [project?.data.name]);
 
   return {
     t,

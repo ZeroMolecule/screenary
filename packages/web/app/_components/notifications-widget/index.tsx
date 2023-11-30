@@ -5,8 +5,10 @@ import { DateTimeBlock } from '../datetime-block';
 import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
 import { Title } from '../base/title';
-import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
-import styles from '@/styles/components/notifications-widget.module.scss';
+import {
+  NOTIFICATION_WIDGET_CONTAINER_ID,
+  NOTIFICATION_WIDGET_TITLE_ID,
+} from '@/utils/constants';
 import stylesFlex from '@/styles/utils/flex.module.scss';
 
 type Props = {
@@ -26,7 +28,12 @@ export const NotificationsWidget: FC<Props> = (props) => {
           className={stylesFlex['flex-1']}
         >
           <Group gap="md">
-            <Title fz={44} fw={700} c="neutral.1">
+            <Title
+              id={NOTIFICATION_WIDGET_TITLE_ID}
+              fz={44}
+              fw={700}
+              c="neutral.1"
+            >
               {message}
             </Title>
             <div id={NOTIFICATION_WIDGET_CONTAINER_ID} />
