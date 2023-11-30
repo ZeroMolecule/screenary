@@ -55,9 +55,10 @@ export const components: MantineThemeComponents = {
       input: {
         backgroundColor: 'transparent',
         borderRadius: '100%',
+        borderColor: 'var(--mantine-color-primary-8)',
       },
       icon: {
-        color: 'var(--mantine-color-destructive-5)',
+        color: 'var(--mantine-color-primary-8)',
       },
     },
   }),
