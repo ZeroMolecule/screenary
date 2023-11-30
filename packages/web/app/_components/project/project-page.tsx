@@ -6,7 +6,7 @@ import { Data } from '@/domain/remote/response/data';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
-import { Group, Portal } from '@mantine/core';
+import { Grid, GridCol, Group, Portal, Stack } from '@mantine/core';
 import { ProjectMenu } from './project-menu';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
 import { useDisclosure } from '@mantine/hooks';
@@ -19,6 +19,7 @@ import { paths } from '@/navigation/paths';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useTranslations } from 'next-intl';
 import { Notes } from './notes';
+import { Tasks } from './tasks';
 
 // TODO: custom modal hook
 
@@ -39,9 +40,53 @@ export const ProjectPage: FC = () => {
 
   return (
     <Group h="100%" justify="space-between" align="flex-start">
-      <h1>{project?.name}</h1>
-      <Notes projectId={id} />
-
+      <Grid
+        h="100%"
+        w="100%"
+        gutter="xs"
+        styles={{ inner: { height: '100%' } }}
+      >
+        <GridCol span={1}>
+          {/* TODO: embedded pages */}
+          <div
+            style={{
+              height: '100%',
+              borderRadius: '24px',
+              border: '1px solid #DCD5C7',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+              backgroundColor: 'white',
+            }}
+          >
+            EMBEDDED PAGES
+          </div>
+        </GridCol>
+        <GridCol span={8}>
+          <Tasks projectId={id} />
+        </GridCol>
+        <GridCol span={3}>
+          <Stack h="100%" pos="relative" gap="xs">
+            <Notes projectId={id} />
+            {/* TODO: quick links */}
+            <div
+              style={{
+                height: '100%',
+                borderRadius: '24px',
+                border: '1px solid #DCD5C7',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+                backgroundColor: 'white',
+              }}
+            >
+              QUICK LINKS
+            </div>
+          </Stack>
+        </GridCol>
+      </Grid>
       <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>
         <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
       </Portal>
