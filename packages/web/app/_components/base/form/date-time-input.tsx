@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useCallback, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Group, Stack } from '@mantine/core';
 import { DateInput, DateValue, TimeInput } from '@mantine/dates';
@@ -57,15 +57,13 @@ export const FormDateTimeInput: FC<Props> = (props) => {
 
 function useFormDateTimeInput({ name, label }: Props) {
   const t = useTranslations('shared.component.dateTime');
+  const [time, setTime] = useState<string>('');
 
   const controller = useController({ name });
   const {
     field: { onChange, ...restField },
   } = controller;
   const date = controller.field.value;
-  const [time, setTime] = useState<string>(
-    extractTimeFromDate(date)?.slice(0, 2).join(':') ?? ''
-  );
 
   const formatDateTime = useCallback(
     (dateValue?: DateValue, timeValue?: string) => {
@@ -90,6 +88,10 @@ function useFormDateTimeInput({ name, label }: Props) {
     setTime(timeValue);
     onChange(formatDateTime(date, timeValue));
   };
+
+  useEffect(() => {
+    setTime(extractTimeFromDate(date)?.slice(0, 2).join(':') ?? '');
+  }, [date]);
 
   return { t, label, field: restField, time, handleDate, handleTime };
 }
