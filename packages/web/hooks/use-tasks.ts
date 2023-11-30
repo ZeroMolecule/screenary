@@ -44,7 +44,7 @@ export const useTasks = (
   });
   const todos = todoData?.data ?? [];
   const done = doneData?.data ?? [];
-  const results = [...todos, ...done];
+  const results = [...done, ...todos];
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
