@@ -51,7 +51,7 @@ export const TaskPopoverMenu: FC<Props> = (props) => {
               placeholder={t('titlePlaceholder')}
               classNames={{ input: inputStyles.input }}
             />
-            <FormDateTimeInput name="dateTime" />
+            <FormDateTimeInput name="dateTime" label={t('dateTimeLabel')} />
           </Stack>
           <Group
             p="lg"
@@ -82,7 +82,7 @@ function useTaskPopoverMenu({ onClose, onCreate }: Props) {
 
   const taskForm = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
-    values: {
+    defaultValues: {
       title: '',
       dateTime: undefined,
     },

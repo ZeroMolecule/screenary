@@ -29,3 +29,11 @@ export const getTimeOfTheDay = (date: Date): TimeOfTheDay => {
   }
   return 'evening';
 };
+
+export const extractTimeFromDate = (value: Date | string) => {
+  if (!value) {
+    return;
+  }
+  const date = typeof value === 'string' ? new Date(value) : value;
+  return [date.getHours(), date.getMinutes(), date.getSeconds()];
+};
