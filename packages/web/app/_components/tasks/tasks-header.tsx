@@ -40,7 +40,7 @@ export const TasksHeader: FC<Props> = ({
             <IconPlus />
           </ActionIcon>
         </PopoverTarget>
-        <PopoverDropdown w="auto" pos="absolute" top={0} right={0}>
+        <PopoverDropdown w="auto" pos="absolute" top={0} right={0} left="unset">
           <TaskPopoverMenu
             onClose={() => onPopoverChange(false)}
             onCreate={onCreate}
