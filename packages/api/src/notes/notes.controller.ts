@@ -59,7 +59,7 @@ export class NotesController {
     @AuthUser() user: User,
     @PaginationQuery pagination: PaginationQuery
   ) {
-    const { list, count } = await this.notesService.findMany(
+    const { list, total } = await this.notesService.findMany(
       project.id,
       user,
       pagination
@@ -68,7 +68,7 @@ export class NotesController {
       data: list,
       pagination: {
         ...pagination,
-        count,
+        total,
       },
     };
   }

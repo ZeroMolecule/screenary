@@ -9,40 +9,51 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { QuickLinksService } from './quick-links.service';
+import { ProjectGuard } from '../shared/guards/project.guard';
+import {
+  CreateQuickLinkDto,
+  createQuickLinkSchema,
+} from './dtos/create-quick-link.dto';
 import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
-import { CreateTaskDto, createTaskSchema } from './dtos/create-task.dto';
 import { Project } from '../shared/decorators/project.decorator';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
-import { TaskStatus, User } from '@prisma/client';
-import { TasksService } from './tasks.service';
-import { UpdateTaskDto, updateTaskSchema } from './dtos/update-task.dto';
+import { User } from '@prisma/client';
+import {
+  UpdateQuickLinkDto,
+  updateQuickLinkSchema,
+} from './dtos/update-quick-link.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
-import { ProjectGuard } from '../shared/guards/project.guard';
-import { flattenDeep, isArray, uniq } from 'lodash';
+import {
+  FindManyQuickLinkDto,
+  findManyQuickLinkSchema,
+} from './dtos/find-many-quick-link.dto';
 
-@Controller('tasks')
+@Controller('quick-links')
 @UseGuards(ProjectGuard)
-export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+export class QuickLinksController {
+  constructor(private quickLinksService: QuickLinksService) {}
 
   @Post()
   async create(
-    @Body(new ZodValidationPipe(createTaskSchema)) data: CreateTaskDto,
+    @Body(new ZodValidationPipe(createQuickLinkSchema))
+    data: CreateQuickLinkDto,
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.tasksService.create(data, project.id, user.id);
+    return this.quickLinksService.create(data, project.id, user.id);
   }
 
   @Put(':id')
   async update(
-    @Body(new ZodValidationPipe(updateTaskSchema)) data: UpdateTaskDto,
+    @Body(new ZodValidationPipe(updateQuickLinkSchema))
+    data: UpdateQuickLinkDto,
     @Param('id') id: string,
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.tasksService.update(id, data, project.id, user.id);
+    return this.quickLinksService.update(id, data, project.id, user.id);
   }
 
   @Get(':id')
@@ -51,7 +62,7 @@ export class TasksController {
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.tasksService.findOne(id, project.id, user.id);
+    return this.quickLinksService.findOne(id, project.id, user.id);
   }
 
   @Get()
@@ -60,13 +71,14 @@ export class TasksController {
     @Project() project: Project,
     @AuthUser() user: User,
     @PaginationQuery pagination: PaginationQuery,
-    @Query() query: { status: TaskStatus[] }
+    @Query(new ZodValidationPipe(findManyQuickLinkSchema))
+    query: FindManyQuickLinkDto
   ) {
-    const { list, total } = await this.tasksService.findMany(
+    const { list, total } = await this.quickLinksService.findMany(
       project.id,
       user.id,
       pagination,
-      query.status
+      query
     );
     return {
       data: list,
@@ -83,6 +95,6 @@ export class TasksController {
     @Project() project: Project,
     @AuthUser() user: User
   ) {
-    return this.tasksService.remove(id, project.id, user.id);
+    return this.quickLinksService.remove(id, project.id, user.id);
   }
 }
