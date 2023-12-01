@@ -110,6 +110,9 @@
       "deleteTitle": "Delete Note",
       "emptyShortText": "Empty.",
       "emptyLongText": "There is no notes. Try adding some."
+    },
+    "quickLinks": {
+      "title": "Quick Links"
     }
   },
   "tasks": {

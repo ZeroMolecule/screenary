@@ -3,9 +3,7 @@ import { useTranslations } from 'next-intl';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconArrowsMaximize, IconInbox, IconPlus } from '@tabler/icons-react';
-import { Text } from '../base/text';
-import { NotesExpanded } from './notes-expanded';
+import { IconArrowsMaximize } from '@tabler/icons-react';
 import { Note } from './note';
 import { notesQuery } from '@/domain/queries/notes-query';
 import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
@@ -15,6 +13,7 @@ import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
 import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
 import { Note as NoteModel } from '@prisma/client';
 import { Data } from '@/domain/remote/response/data';
+import { NotesHeader } from './notes-header';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
@@ -25,9 +24,8 @@ export const Notes: FC<Props> = (props) => {
   const {
     t,
     notes,
-    isExpanded,
-    expand,
-    fold,
+    expanded,
+    setExpanded,
     isModalOpen,
     handleOpenModal,
     handleCloseModal,
@@ -40,30 +38,15 @@ export const Notes: FC<Props> = (props) => {
     <Box>
       <Card radius={24} pos="unset" className={styles.notesCard}>
         <Stack>
-          <Group justify="space-between">
-            <Group gap="xs">
-              <IconInbox size={24} color="var(--mantine-color-primary-8)" />
-              <Text size="lg" fw={600}>
-                {t('title')}
-              </Text>
-            </Group>
-            <ActionIcon
-              variant="transparent"
-              color="var(--mantine-color-neutral-9)"
-              onClick={handleCreate}
-            >
-              <IconPlus />
-            </ActionIcon>
-          </Group>
-          {isExpanded ? (
-            <NotesExpanded
-              notes={notes}
-              onClose={fold}
-              onOpenDelete={handleOpenModal}
-              onCreate={handleCreate}
-              onEdit={handleEdit}
-            />
-          ) : (
+          <NotesHeader
+            notes={notes}
+            expanded={expanded}
+            setExpanded={setExpanded}
+            onOpenDelete={handleOpenModal}
+            onCreate={handleCreate}
+            onEdit={handleEdit}
+          />
+          {expanded ? null : (
             <Note
               key={notes[0]?.id}
               note={notes[0]}
@@ -76,7 +59,7 @@ export const Notes: FC<Props> = (props) => {
             <ActionIcon
               variant="transparent"
               color="neutral.5"
-              onClick={expand}
+              onClick={() => setExpanded(true)}
             >
               <IconArrowsMaximize />
             </ActionIcon>
@@ -97,7 +80,7 @@ function useNotes({ projectId }: Props) {
   const t = useTranslations('project.notes');
   const qc = useQueryClient();
   const [noteId, setNotedId] = useState<string | null>(null);
-  const [isExpanded, { open: expand, close: fold }] = useDisclosure(false);
+  const [expanded, setExpanded] = useState(false);
   const [isModalOpen, { open: openModal, close: closeModal }] =
     useDisclosure(false);
   const onCreated = useNotificationSuccess('created');
@@ -167,9 +150,8 @@ function useNotes({ projectId }: Props) {
   return {
     t,
     notes: notes?.data ?? [],
-    isExpanded,
-    expand,
-    fold,
+    expanded,
+    setExpanded,
     isModalOpen,
     handleOpenModal,
     handleCloseModal,
