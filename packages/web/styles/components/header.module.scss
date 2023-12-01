@@ -1,0 +1,10 @@
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-nav {
+  display: flex;
+  gap: var(--mantine-spacing-lg);
+}

@@ -2,8 +2,8 @@
 
 import { FC, ReactNode } from 'react';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
-import '@/styles/index.css';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { colors } from './colors';
@@ -31,7 +31,7 @@ export const ThemeProvider: FC<Props> = ({ children }) => {
       cssVariablesResolver={resolver}
       defaultColorScheme="light"
     >
-      <Notifications position="top-right" />
+      <Notifications position="top-right" containerWidth={300} limit={3} />
       {children}
     </MantineProvider>
   );

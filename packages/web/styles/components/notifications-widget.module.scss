@@ -1,0 +1,34 @@
+.notifications-widget {
+  &__button {
+    border-left: 1px solid var(--mantine-color-neutral-7);
+
+    &:hover {
+      background-color: var(--mantine-color-neutral-8);
+    }
+  }
+
+  &__button-icon {
+    color: var(--mantine-color-neutral-3);
+  }
+
+  &__popover {
+    &-header {
+      border-bottom: 1px solid var(--mantine-color-neutral-7);
+    }
+
+    &-body {
+      flex: 1;
+      overflow: auto;
+    }
+
+    &-item {
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--mantine-color-neutral-7);
+      }
+    }
+
+    &-actions {
+      border-top: 1px solid var(--mantine-color-neutral-7);
+    }
+  }
+}

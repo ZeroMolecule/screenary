@@ -1,5 +1,6 @@
 {
   "cSpell.words": [
+    "datetime",
     "nestjs",
     "NEXTAUTH",
     "nextjs",
@@ -7,6 +8,7 @@
     "Screenary",
     "svgr",
     "tabler",
-    "tanstack"
+    "tanstack",
+    "todos"
   ]
 }

@@ -5,11 +5,12 @@ import { useTranslations } from 'next-intl';
 import { signIn } from 'next-auth/react';
 import { Button, DefaultMantineColor, useMantineTheme } from '@mantine/core';
 import { capitalize } from 'lodash';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { AppleIcon } from '../icons/apple-icon';
 import { FacebookIcon } from '../icons/facebook-icon';
 import { GoogleIcon } from '../icons/google-icon';
 import { paths } from '@/navigation/paths';
+import styles from '@/styles/components/social-button.module.scss';
 
 type ButtonStyles = {
   icon: ReactElement;
@@ -28,13 +29,17 @@ export const SocialButton: FC<Props> = (props) => {
 
   return (
     <Button
+      size="sm"
       justify="flex-start"
       c={buttonStyles.color}
       bg={buttonStyles.backgroundColor}
       fw={500}
       radius={6}
       leftSection={buttonStyles.icon}
-      className={classnames({ 'social-button--google': provider === 'google' })}
+      className={classNames({
+        [styles['social-button--google']]: provider === 'google',
+      })}
+      classNames={{ inner: styles['social-button__inner'] }}
       onClick={() => signIn(provider, { callbackUrl: paths.home() })}
     >
       {label}

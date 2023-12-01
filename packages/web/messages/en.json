@@ -7,6 +7,8 @@
   },
   "notification": {
     "success": {
+      "added": "Added!",
+      "created": "Created!",
       "saved": "Saved!",
       "deleted": "Deleted!"
     },
@@ -14,12 +16,28 @@
       "somethingWentWrong": "Something went wrong."
     }
   },
+  "shared": {
+    "logoAlt": "Screenary logo",
+    "component": {
+      "dateTime": {
+        "datePlaceholder": "MM/DD/YYYY"
+      }
+    },
+    "welcomeMessage": {
+      "base": "Good {time}, {username}",
+      "fallback": "Welcome back",
+      "time": {
+        "morning": "morning",
+        "afternoon": "afternoon",
+        "evening": "evening"
+      }
+    }
+  },
   "modal": {
     "profile": {
       "accountSettings": "Account Settings",
       "deleteTitle": "Delete Profile",
       "deleteDescription": "Are you sure you want to delete your profile?",
-      "deleteIconAlt": "Delete icon",
       "profileImgAlt": "{user} profile photo",
       "nameLabel": "Name",
       "namePlaceholder": "Enter your name",
@@ -29,10 +47,96 @@
       "cancelAction": "Cancel",
       "saveAction": "Save",
       "deleteAction": "Delete"
+    },
+    "project": {
+      "title": "Project Settings",
+      "nameLabel": "Project Name",
+      "namePlaceholder": "Name",
+      "emailLabel": "Email URL",
+      "emailPlaceholder": "https://",
+      "calendarLabel": "Calendar URL",
+      "calendarPlaceholder": "https://",
+      "cancelAction": "Cancel",
+      "saveAction": "Save"
+    },
+    "delete": {
+      "title": "Delete",
+      "description": "Are you sure?",
+      "deleteIconAlt": "Delete icon",
+      "cancelAction": "Cancel",
+      "deleteAction": "Delete"
     }
   },
   "auth": {
-    "logoAlt": "Screenary logo",
+    "login": "Login",
     "socialAction": "Continue with {provider}"
+  },
+  "header": {
+    "logoAlt": "Screenary logo",
+    "navigation": {
+      "home": "Home",
+      "todo": "To Do",
+      "inbox": "Inbox",
+      "calendar": "Calendar"
+    },
+    "userMenu": {
+      "avatarAlt": "Avatar placeholder",
+      "profile": "Profile",
+      "logout": "Log out"
+    }
+  },
+  "notificationsWidget": {
+    "popover": {
+      "title": "Notifications"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "addAction": "Add Project",
+    "empty": {
+      "title": "Nothing Here Yet",
+      "description": "Click ‘Add Project’ to start organizing your work on Screenary"
+    }
+  },
+  "project": {
+    "deleteTitle": "Delete Project",
+    "deleteDescription": "Are you sure you want to delete {projectName} project?",
+    "notes": {
+      "title": "Notes",
+      "addAction": "Add Note",
+      "deleteTitle": "Delete Note",
+      "emptyShortText": "Empty.",
+      "emptyLongText": "There is no notes. Try adding some."
+    }
+  },
+  "tasks": {
+    "title": "To Do",
+    "empty": {
+      "title": "Nothing Here Yet",
+      "description": "Click the plus button in the corner to start adding Tasks to your To Do list."
+    },
+    "todo": "To-Do",
+    "done": "Completed",
+    "hideAction": "Hide Completed",
+    "showAction": "Show Completed"
+  },
+  "task": {
+    "form": {
+      "title": "New Task",
+      "titlePlaceholder": "Title",
+      "dateTimeLabel": "Date & Time",
+      "cancelAction": "Cancel",
+      "applyAction": "Apply"
+    },
+    "dueDate": {
+      "message": "{day}, {time}",
+      "day": {
+        "today": "Today",
+        "tomorrow": "Tomorrow"
+      }
+    }
+  },
+  "calendar": {
+    "title": "Calendar"
   }
 }

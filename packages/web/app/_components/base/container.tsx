@@ -3,7 +3,8 @@ import {
   Container as MantineContainer,
   ContainerProps as MantineContainerProps,
 } from '@mantine/core';
-import classnames from 'classnames';
+import classNames from 'classnames';
+import styles from '@/styles/components/container.module.scss';
 
 type Props = MantineContainerProps;
 
@@ -11,7 +12,7 @@ export const Container: FC<Props> = ({ children, className, ...restProps }) => {
   return (
     <MantineContainer
       {...restProps}
-      className={classnames('container', className)}
+      className={classNames(styles.container, className)}
     >
       {children}
     </MantineContainer>
