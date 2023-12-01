@@ -18,6 +18,11 @@
   },
   "shared": {
     "logoAlt": "Screenary logo",
+    "component": {
+      "dateTime": {
+        "datePlaceholder": "MM/DD/YYYY"
+      }
+    },
     "welcomeMessage": {
       "base": "Good {time}, {username}",
       "fallback": "Welcome back",
@@ -102,6 +107,33 @@
       "deleteTitle": "Delete Note",
       "emptyShortText": "Empty.",
       "emptyLongText": "There is no notes. Try adding some."
+    }
+  },
+  "tasks": {
+    "title": "To Do",
+    "empty": {
+      "title": "Nothing Here Yet",
+      "description": "Click the plus button in the corner to start adding Tasks to your To Do list."
+    },
+    "todo": "To-Do",
+    "done": "Completed",
+    "hideAction": "Hide Completed",
+    "showAction": "Show Completed"
+  },
+  "task": {
+    "form": {
+      "title": "New Task",
+      "titlePlaceholder": "Title",
+      "dateTimeLabel": "Date & Time",
+      "cancelAction": "Cancel",
+      "applyAction": "Apply"
+    },
+    "dueDate": {
+      "message": "{day}, {time}",
+      "day": {
+        "today": "Today",
+        "tomorrow": "Tomorrow"
+      }
     }
   },
   "calendar": {

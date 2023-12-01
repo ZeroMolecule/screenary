@@ -6,12 +6,13 @@ import {
   Modal,
   TextInput,
   rem,
-  Popover,
   Menu,
   Textarea,
   Tabs,
+  Checkbox,
 } from '@mantine/core';
 import tabStyles from '@/styles/base/tabs.module.scss';
+import { IconCircleFilled } from '@tabler/icons-react';
 
 export const components: MantineThemeComponents = {
   TextInput: TextInput.extend({
@@ -46,6 +47,20 @@ export const components: MantineThemeComponents = {
       },
     },
   }),
+  Checkbox: Checkbox.extend({
+    defaultProps: {
+      icon: IconCircleFilled,
+    },
+    styles: {
+      input: {
+        backgroundColor: 'transparent',
+        borderRadius: '100%',
+      },
+      icon: {
+        color: 'var(--mantine-color-destructive-5)',
+      },
+    },
+  }),
   Button: Button.extend({
     defaultProps: {
       radius: rem(6),
@@ -76,19 +91,6 @@ export const components: MantineThemeComponents = {
         borderRadius: 'var(--mantine-radius-xl)',
         boxShadow: '0px 40px 35px -20px rgba(0, 0, 0, 0.20)',
         backdropFilter: 'blur(30px)',
-      },
-    },
-  }),
-  Popover: Popover.extend({
-    defaultProps: {
-      radius: rem(24),
-    },
-    styles: {
-      dropdown: {
-        maxWidth: rem(350),
-        backgroundColor: 'var(--mantine-glass-color)',
-        boxShadow: '0px 40px 35px -20px rgba(0, 0, 0, 0.20)',
-        backdropFilter: 'blur(6px)',
       },
     },
   }),

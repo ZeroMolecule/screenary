@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { padStart } from 'lodash';
 
 // be sure to update intl.js if new value is added here
 type TimeOfTheDay = 'morning' | 'afternoon' | 'evening';
 
 dayjs.extend(advancedFormat);
 
-const DATE_TIME_FORMAT = {
+export const DATE_TIME_FORMAT = {
   dateWithLongDayMonthWithoutYear: 'dddd, MMMM Do',
+  dateTimeWithLongDayMonthWithoutYear: 'dddd, MMMM Do, h:mm A',
   timeWith12HourClock: 'h:mm A',
   dateAndTime: 'MM/DD/YYYY h:mm A',
 };
@@ -27,4 +29,17 @@ export const getTimeOfTheDay = (date: Date): TimeOfTheDay => {
     return 'afternoon';
   }
   return 'evening';
+};
+
+export const extractTimeFromDate = (value: Date | string) => {
+  if (!value) {
+    return;
+  }
+  const date = typeof value === 'string' ? new Date(value) : value;
+  const startWithZero = (value: number) => padStart(value.toString(), 2, '0');
+  return [
+    startWithZero(date.getHours()),
+    startWithZero(date.getMinutes()),
+    startWithZero(date.getSeconds()),
+  ];
 };

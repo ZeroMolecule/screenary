@@ -6,18 +6,20 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
 import { CreateTaskDto, createTaskSchema } from './dtos/create-task.dto';
 import { Project } from '../shared/decorators/project.decorator';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
-import { User } from '@prisma/client';
+import { TaskStatus, User } from '@prisma/client';
 import { TasksService } from './tasks.service';
 import { UpdateTaskDto, updateTaskSchema } from './dtos/update-task.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { ProjectGuard } from '../shared/guards/project.guard';
+import { flattenDeep, isArray, uniq } from 'lodash';
 
 @Controller('tasks')
 @UseGuards(ProjectGuard)
@@ -57,12 +59,14 @@ export class TasksController {
   async findMany(
     @Project() project: Project,
     @AuthUser() user: User,
-    @PaginationQuery pagination: PaginationQuery
+    @PaginationQuery pagination: PaginationQuery,
+    @Query() query: { status: TaskStatus[] }
   ) {
     const { list, total } = await this.tasksService.findMany(
       project.id,
       user.id,
-      pagination
+      pagination,
+      query.status
     );
     return {
       data: list,

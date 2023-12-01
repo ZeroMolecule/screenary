@@ -1,10 +1,10 @@
 'use client';
 
 import { FC } from 'react';
+import Image from 'next/image';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Group, Portal } from '@mantine/core';
 import { Project, projectsQuery } from '@/domain/queries/projects-query';
-import { ProjectsEmptyPlaceholder } from './projects-empty-placeholder';
 import { ProjectItem } from './project-item';
 import { HEADER_CONTAINER_ID } from '@/utils/constants';
 import { IconCirclePlus } from '@tabler/icons-react';
@@ -14,6 +14,8 @@ import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { useTranslations } from 'next-intl';
+import { EmptyPlaceholder } from '../empty-placeholder';
+import emptyIcon from '@/public/images/folder-icon.svg';
 import styles from '@/styles/components/projects.module.scss';
 
 export const ProjectsPage: FC = () => {
@@ -28,11 +30,12 @@ export const ProjectsPage: FC = () => {
     <Group h="100%">
       <Portal target={`#${HEADER_CONTAINER_ID}`}>
         <Button
+          size="sm"
           variant="subtle"
           bg="white"
           c="neutral.7"
           radius={6}
-          leftSection={<IconCirclePlus />}
+          leftSection={<IconCirclePlus size={20} />}
           className={styles['add-project-button']}
           onClick={open}
         >
@@ -41,7 +44,11 @@ export const ProjectsPage: FC = () => {
       </Portal>
       <ProjectModal opened={isOpen} onClose={close} onSubmit={handleSubmit} />
       {!projects?.length ? (
-        <ProjectsEmptyPlaceholder />
+        <EmptyPlaceholder
+          title={t('empty.title')}
+          description={t('empty.description')}
+          image={<Image src={emptyIcon} width={138} height={108} alt="" />}
+        />
       ) : (
         <div className={styles['projects-grid']}>
           {projects.map(renderProjectItem)}

@@ -1,0 +1,28 @@
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+  border: 1px solid var(--mantine-color-neutral-3);
+}
+
+.taskItem {
+  border-bottom: 1px solid var(--mantine-color-neutral-3);
+}
+
+.hideButton {
+  border: 1px solid var(--mantine-color-neutral-3);
+}
+
+.inputWrapper {
+  --_input-height: unset;
+}
+
+.input {
+  padding: 0 !important;
+  border: 0;
+}
+
+.inputDone {
+  text-decoration: line-through 2px solid var(--mantine-color-destructive-5);
+  color: var(--mantine-color-neutral-4);
+}
