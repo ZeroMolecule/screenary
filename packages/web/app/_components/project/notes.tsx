@@ -3,8 +3,9 @@ import { useTranslations } from 'next-intl';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconArrowsMaximize } from '@tabler/icons-react';
+import { IconInbox, IconPlus } from '@tabler/icons-react';
 import { Note } from './note';
+import { Text } from '../base/text';
 import { notesQuery } from '@/domain/queries/notes-query';
 import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
@@ -13,7 +14,7 @@ import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
 import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
 import { Note as NoteModel } from '@prisma/client';
 import { Data } from '@/domain/remote/response/data';
-import { NotesHeader } from './notes-header';
+import { NotesFooter } from './notes-footer';
 import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
@@ -38,14 +39,21 @@ export const Notes: FC<Props> = (props) => {
     <Box>
       <Card radius={24} pos="unset" className={styles.notesCard}>
         <Stack>
-          <NotesHeader
-            notes={notes}
-            expanded={expanded}
-            setExpanded={setExpanded}
-            onOpenDelete={handleOpenModal}
-            onCreate={handleCreate}
-            onEdit={handleEdit}
-          />
+          <Group justify="space-between">
+            <Group gap="xs">
+              <IconInbox size={24} color="var(--mantine-color-primary-8)" />
+              <Text size="lg" fw={600}>
+                {t('title')}
+              </Text>
+            </Group>
+            <ActionIcon
+              variant="transparent"
+              color="var(--mantine-color-neutral-9)"
+              onClick={handleCreate}
+            >
+              <IconPlus />
+            </ActionIcon>
+          </Group>
           {expanded ? null : (
             <Note
               key={notes[0]?.id}
@@ -55,15 +63,14 @@ export const Notes: FC<Props> = (props) => {
               single
             />
           )}
-          <Group justify="flex-end">
-            <ActionIcon
-              variant="transparent"
-              color="neutral.5"
-              onClick={() => setExpanded(true)}
-            >
-              <IconArrowsMaximize />
-            </ActionIcon>
-          </Group>
+          <NotesFooter
+            notes={notes}
+            expanded={expanded}
+            setExpanded={setExpanded}
+            onOpenDelete={handleOpenModal}
+            onCreate={handleCreate}
+            onEdit={handleEdit}
+          />
         </Stack>
       </Card>
       <ConfirmDeleteModal

@@ -23,6 +23,7 @@ import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useTranslations } from 'next-intl';
 import { Notes } from './notes';
 import { Tasks } from './tasks';
+import { QuickLinks } from './quick-links';
 
 // TODO: custom modal hook
 
@@ -72,21 +73,7 @@ export const ProjectPage: FC = () => {
         <GridCol span={3} h="100%">
           <Stack h="100%" pos="relative" gap="xs">
             <Notes projectId={id} />
-            {/* TODO: quick links */}
-            <div
-              style={{
-                height: '100%',
-                borderRadius: '24px',
-                border: '1px solid #DCD5C7',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-                backgroundColor: 'white',
-              }}
-            >
-              QUICK LINKS
-            </div>
+            <QuickLinks projectId={id} />
           </Stack>
         </GridCol>
       </Grid>
