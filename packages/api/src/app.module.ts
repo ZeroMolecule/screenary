@@ -12,8 +12,15 @@ import { PrismaExceptionInterceptor } from './shared/interceptors/prisma-excepti
 import { NotesModule } from './notes/notes.module';
 import { ProjectsModule } from './projects/projects.module';
 import { TasksModule } from './tasks/tasks.module';
+import { QuickLinksModule } from './quick-links/quick-links.module';
+import { DirectoriesModule } from './directories/directories.module';
 
-const projectModules = [NotesModule, TasksModule];
+const projectModules = [
+  NotesModule,
+  TasksModule,
+  QuickLinksModule,
+  DirectoriesModule,
+];
 
 @Module({
   imports: [
@@ -32,6 +39,8 @@ const projectModules = [NotesModule, TasksModule];
     ProjectsModule,
     TasksModule,
     NotesModule,
+    QuickLinksModule,
+    DirectoriesModule,
     RouterModule.register([
       {
         path: '',

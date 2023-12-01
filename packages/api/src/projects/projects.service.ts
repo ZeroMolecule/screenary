@@ -58,7 +58,7 @@ export class ProjectsService {
       },
     };
 
-    const [list, count] = await Promise.all([
+    const [list, total] = await Promise.all([
       this.prismaService.project.findMany({
         where,
         ...pagination,
@@ -83,7 +83,7 @@ export class ProjectsService {
     ]);
     return {
       list,
-      count,
+      total,
     };
   }
 
