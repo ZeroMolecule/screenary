@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useCallback, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Group, Stack } from '@mantine/core';
 import { DateInput, DateValue, TimeInput } from '@mantine/dates';
@@ -7,8 +7,8 @@ import { useController } from 'react-hook-form';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { Text } from '../text';
-import styles from '@/styles/components/date-time-input.module.scss';
 import { extractTimeFromDate } from '@/utils/datetime';
+import styles from '@/styles/components/date-time-input.module.scss';
 import inputStyles from '@/styles/components/input.module.scss';
 
 type Props = {
@@ -69,14 +69,15 @@ function useFormDateTimeInput({ name, label }: Props) {
     field: { onChange, ...restField },
   } = controller;
   const date = controller.field.value;
-  const [time, setTime] = useState<string>(
+  const timeRef = useRef(
     extractTimeFromDate(date)?.slice(0, 2).join(':') ?? ''
   );
+  timeRef.current = extractTimeFromDate(date)?.slice(0, 2).join(':') ?? '';
 
   const formatDateTime = useCallback(
     (dateValue?: DateValue, timeValue?: string) => {
       const dateData = dateValue ?? date;
-      const timeData = timeValue ?? time;
+      const timeData = timeValue ?? timeRef.current;
 
       const [hour, minute] = timeData?.split(':') ?? [];
       return dayjs(dateData)
@@ -84,18 +85,25 @@ function useFormDateTimeInput({ name, label }: Props) {
         .minute(Number(minute ?? 0))
         .toDate();
     },
-    [date, time]
+    [date]
   );
 
   const handleDate = (value: DateValue) => {
-    onChange(formatDateTime(value, time));
+    onChange(formatDateTime(value, timeRef.current));
   };
 
   const handleTime = (e: ChangeEvent<HTMLInputElement>) => {
     const timeValue = e.target.value || '';
-    setTime(timeValue);
+    timeRef.current = timeValue;
     onChange(formatDateTime(date, timeValue));
   };
 
-  return { t, label, field: restField, time, handleDate, handleTime };
+  return {
+    t,
+    label,
+    field: restField,
+    time: timeRef.current,
+    handleDate,
+    handleTime,
+  };
 }

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { padStart } from 'lodash';
 
 // be sure to update intl.js if new value is added here
 type TimeOfTheDay = 'morning' | 'afternoon' | 'evening';
@@ -35,5 +36,10 @@ export const extractTimeFromDate = (value: Date | string) => {
     return;
   }
   const date = typeof value === 'string' ? new Date(value) : value;
-  return [date.getHours(), date.getMinutes(), date.getSeconds()];
+  const startWithZero = (value: number) => padStart(value.toString(), 2, '0');
+  return [
+    startWithZero(date.getHours()),
+    startWithZero(date.getMinutes()),
+    startWithZero(date.getSeconds()),
+  ];
 };
