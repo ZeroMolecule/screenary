@@ -1,12 +1,10 @@
 import { FC } from 'react';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Box, Flex, Stack } from '@mantine/core';
 import { Task } from '@/domain/queries/tasks-query';
-import { EmptyPlaceholder } from '../empty-placeholder';
 import { TasksList } from './tasks-list';
-import emptyIcon from '@/public/images/check-icon.svg';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
+import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
 
 type Props = {
   todos: Task[];
@@ -24,11 +22,7 @@ export const TasksWrapper: FC<Props> = (props) => {
     <Box h="100%" className={overflowStyles['overflow-auto']}>
       {isEmpty ? (
         <Flex mih="100%" align="center">
-          <EmptyPlaceholder
-            title={t('empty.title')}
-            description={t('empty.description')}
-            image={<Image src={emptyIcon} width={140} height={140} alt="" />}
-          />
+          <TasksEmptyPlaceholder />
         </Flex>
       ) : (
         <Stack gap={46}>

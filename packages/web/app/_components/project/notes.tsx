@@ -37,7 +37,7 @@ export const Notes: FC<Props> = (props) => {
   } = useNotes(props);
 
   return (
-    <Box h="100%" pos="relative" miw={322} mih={306}>
+    <Box>
       <Card radius={24} pos="unset" className={styles.notesCard}>
         <Stack>
           <Group justify="space-between">

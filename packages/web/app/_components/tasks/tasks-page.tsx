@@ -1,22 +1,15 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { useProjectsTabs } from '@/hooks/use-projects-tabs';
-import { Button, Card, Group, Stack } from '@mantine/core';
-import { ProjectsTabs } from '../projects-tabs';
-import { UseQueryResult, useMutation, useQueries } from '@tanstack/react-query';
-import { Task, tasksQuery } from '@/domain/queries/tasks-query';
-import { Data } from '@/domain/remote/response/data';
-import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
-import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
-import { useNotificationSuccess } from '@/hooks/use-notification-success';
-import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
+import { Button, Card, Group, Stack } from '@mantine/core';
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
+import { useProjectsTabs } from '@/hooks/use-projects-tabs';
+import { useTasks } from '@/hooks/use-tasks';
+import { ProjectsTabs } from '../projects-tabs';
 import { TasksHeader } from './tasks-header';
-import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
-import { AddTaskData } from '@/domain/types/task-data';
 import { TasksWrapper } from './tasks-wrapper';
-import { TaskStatus } from '@prisma/client';
+import { Title } from '../base/title';
 import styles from '@/styles/components/tasks.module.scss';
 
 export const TasksPage: FC = () => {
@@ -32,10 +25,16 @@ export const TasksPage: FC = () => {
     setPopoverOpen,
     handleHideCompleted,
     handleChange,
-    handleCreate,
-    handleEdit,
-    handleDelete,
+    onCreate,
+    onEdit,
+    onDelete,
   } = useTasksPage();
+
+  const headerTitle = (
+    <Title order={3} fw={600}>
+      {projectName}
+    </Title>
+  );
 
   return (
     <Stack h="100%" gap={8}>
@@ -62,16 +61,16 @@ export const TasksPage: FC = () => {
       </Group>
       <Card h="100%" radius={24} className={styles.tasks}>
         <TasksHeader
-          projectName={projectName ?? ''}
-          onCreate={handleCreate}
+          title={headerTitle}
+          onCreate={onCreate}
           isPopoverOpen={popoverOpen}
           onPopoverChange={setPopoverOpen}
         />
         <TasksWrapper
           todos={todos}
           done={done}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+          onEdit={onEdit}
+          onDelete={onDelete}
           hideCompleted={hideCompleted}
         />
       </Card>
@@ -85,79 +84,13 @@ function useTasksPage() {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
-
-  const onCreated = useNotificationSuccess('created');
-  const onSaved = useNotificationSuccess('saved');
-  const onDeleted = useNotificationSuccess('deleted');
-
-  const [
-    { data: todoData, refetch: refetchTodos },
-    { data: doneData, refetch: refetchDone },
-  ]: Array<UseQueryResult<Data<Task[]>>> = useQueries({
-    queries: [
-      {
-        queryKey: tasksQuery.key(projectId!, {
-          status: TaskStatus.TODO,
-        }),
-      },
-      {
-        queryKey: tasksQuery.key(projectId!, {
-          status: TaskStatus.DONE,
-        }),
-      },
-    ],
-  });
-  const todos = todoData?.data ?? [];
-  const done = doneData?.data ?? [];
-
-  const { mutateAsync: createTask } = useMutation({
-    mutationFn: addTaskMutation.fnc,
-    onSuccess: async () => {
-      await refetchTodos();
-      onCreated();
-      setPopoverOpen(false);
-    },
-  });
-  const { mutateAsync: editTask } = useMutation({
-    mutationFn: editTaskMutation.fnc,
-    onSuccess: async () => {
-      await Promise.all([refetchTodos(), refetchDone()]);
-      onSaved();
-    },
-  });
-  const { mutateAsync: deleteTask } = useMutation({
-    mutationFn: deleteTaskMutation.fnc,
-    onSuccess: async (data) => {
-      if (data.status === TaskStatus.TODO) {
-        await refetchTodos();
-      } else {
-        await refetchDone();
-      }
-      onDeleted();
-    },
-  });
+  const [{ todos, done }, { onCreate, onEdit, onDelete }] = useTasks(
+    projectId!,
+    () => setPopoverOpen(false)
+  );
 
   const handleHideCompleted = () => {
     setHideCompleted(!hideCompleted);
-  };
-
-  const handleCreate = async ({
-    title,
-    dueDate,
-  }: Pick<AddTaskData, 'title' | 'dueDate'>) => {
-    if (projectId) {
-      await createTask({ projectId, title, dueDate }).catch(() => null);
-    }
-  };
-
-  const handleEdit = async ({ id, projectId, title, status }: Task) => {
-    await editTask({ id, projectId, title, status }).catch(() => null);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (projectId) {
-      await deleteTask({ id, projectId }).catch(() => null);
-    }
   };
 
   return {
@@ -172,8 +105,8 @@ function useTasksPage() {
     setPopoverOpen,
     handleHideCompleted,
     handleChange,
-    handleCreate,
-    handleEdit,
-    handleDelete,
+    onCreate,
+    onEdit,
+    onDelete,
   };
 }

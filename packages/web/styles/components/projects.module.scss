@@ -3,6 +3,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: calc(50% - var(--mantine-spacing-sm));
   gap: var(--mantine-spacing-sm);
   overflow: auto;
 }

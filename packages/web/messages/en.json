@@ -101,6 +101,9 @@
   "project": {
     "deleteTitle": "Delete Project",
     "deleteDescription": "Are you sure you want to delete {projectName} project?",
+    "tasks": {
+      "title": "To-Do"
+    },
     "notes": {
       "title": "Notes",
       "addAction": "Add Note",

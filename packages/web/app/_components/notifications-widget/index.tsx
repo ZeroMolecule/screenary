@@ -1,16 +1,21 @@
+'use client';
+
 import { FC } from 'react';
 import { Card, Group } from '@mantine/core';
 import { useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
 import { DateTimeBlock } from '../datetime-block';
 import { generateFirstName } from '@/domain/util/user';
 import { getTimeOfTheDay } from '@/utils/datetime';
 import { Title } from '../base/title';
 import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
-import styles from '@/styles/components/notifications-widget.module.scss';
+import { Project, projectQuery } from '@/domain/queries/project-query';
+import { Data } from '@/domain/remote/response/data';
 import stylesFlex from '@/styles/utils/flex.module.scss';
 
 type Props = {
   username?: string | null;
+  projectId?: string;
 };
 
 export const NotificationsWidget: FC<Props> = (props) => {
@@ -43,15 +48,23 @@ export const NotificationsWidget: FC<Props> = (props) => {
   );
 };
 
-function useNotificationsWidget({ username }: Props) {
+function useNotificationsWidget({ username, projectId }: Props) {
   const t = useTranslations('shared.welcomeMessage');
 
-  const message = username
-    ? t('base', {
-        time: t(`time.${getTimeOfTheDay(new Date())}`),
-        username: generateFirstName(username),
-      })
-    : t('fallback');
+  const { data: project } = useQuery<Data<Project>>({
+    queryKey: projectQuery.key(projectId!),
+    enabled: !!projectId,
+  });
+  const projectName = project?.data?.name;
+
+  const message =
+    projectName ??
+    (username
+      ? t('base', {
+          time: t(`time.${getTimeOfTheDay(new Date())}`),
+          username: generateFirstName(username),
+        })
+      : t('fallback'));
 
   return { message };
 }

@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: var(--mantine-spacing-md);
   border: 1px solid var(--mantine-color-neutral-3);
+  overflow: auto;
 }
 
 .taskItem {
@@ -23,6 +24,6 @@
 }
 
 .inputDone {
-  text-decoration: line-through 2px solid var(--mantine-color-destructive-5);
+  text-decoration: line-through 2px solid var(--mantine-color-black);
   color: var(--mantine-color-neutral-4);
 }
