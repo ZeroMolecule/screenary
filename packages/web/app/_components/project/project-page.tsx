@@ -23,6 +23,7 @@ import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useTranslations } from 'next-intl';
 import { Notes } from './notes';
 import { Tasks } from './tasks';
+import styles from '@/styles/components/project.module.scss';
 
 // TODO: custom modal hook
 
@@ -49,7 +50,7 @@ export const ProjectPage: FC = () => {
         gutter="xs"
         styles={{ inner: { height: '100%' } }}
       >
-        <GridCol span={1} h="100%">
+        <GridCol h="100%" className={styles.embedGridCol}>
           {/* TODO: embedded pages */}
           <div
             style={{
@@ -66,7 +67,7 @@ export const ProjectPage: FC = () => {
             EMBEDDED PAGES
           </div>
         </GridCol>
-        <GridCol span={8} h="100%">
+        <GridCol span={9} h="100%" className={styles.tasksGridCol}>
           <Tasks projectId={id} />
         </GridCol>
         <GridCol span={3} h="100%">
