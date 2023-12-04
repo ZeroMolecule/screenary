@@ -14,8 +14,8 @@ import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
 import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
 import { Note as NoteModel } from '@prisma/client';
 import { Data } from '@/domain/remote/response/data';
-import { NotesFooter } from './notes-footer';
 import styles from '@/styles/components/notes.module.scss';
+import { NotesFooter } from './notes-footer';
 
 type Props = {
   projectId: string;
