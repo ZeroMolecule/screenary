@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
 import { getTranslator } from 'next-intl/server';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { projectsQuery } from '@/domain/queries/projects-query';
@@ -8,6 +9,9 @@ import { TasksPage as ClientTasksPage } from '@/app/_components/tasks/tasks-page
 import { Data } from '@/domain/remote/response/data';
 import { Project, TaskStatus } from '@prisma/client';
 import { tasksQuery } from '@/domain/queries/tasks-query';
+import { PageContainer } from '@/app/_components/page-container';
+import { authOptions } from '@/domain/auth';
+import { NotificationsWidget } from '@/app/_components/notifications-widget';
 
 type Props = {
   params: { locale: string };
@@ -24,16 +28,20 @@ export async function generateMetadata({
 }
 
 async function TasksPage(props: Props) {
-  const { dehydratedState } = await useTasksPage(props);
+  const { username, dehydratedState } = await useTasksPage(props);
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ClientTasksPage />
+      <PageContainer>
+        <ClientTasksPage />
+      </PageContainer>
+      <NotificationsWidget username={username} />
     </HydrationBoundary>
   );
 }
 
 async function useTasksPage({ searchParams }: Props) {
+  const session = await getServerSession(authOptions);
   const queryClient = getQueryClient();
   const { data: projects } = await queryClient.fetchQuery<Data<Project[]>>({
     queryKey: projectsQuery.key,
@@ -52,7 +60,7 @@ async function useTasksPage({ searchParams }: Props) {
   ]);
   const dehydratedState = dehydrate(queryClient);
 
-  return { dehydratedState };
+  return { username: session?.user?.name, dehydratedState };
 }
 
 export default withPrivatePage(TasksPage);

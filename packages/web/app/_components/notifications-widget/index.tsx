@@ -13,6 +13,7 @@ import stylesFlex from '@/styles/utils/flex.module.scss';
 
 type Props = {
   username?: string | null;
+  projectName?: string;
 };
 
 export const NotificationsWidget: FC<Props> = (props) => {
@@ -50,15 +51,17 @@ export const NotificationsWidget: FC<Props> = (props) => {
   );
 };
 
-function useNotificationsWidget({ username }: Props) {
+function useNotificationsWidget({ username, projectName }: Props) {
   const t = useTranslations('shared.welcomeMessage');
 
-  const message = username
-    ? t('base', {
-        time: t(`time.${getTimeOfTheDay(new Date())}`),
-        username: generateFirstName(username),
-      })
-    : t('fallback');
+  const message =
+    projectName ??
+    (username
+      ? t('base', {
+          time: t(`time.${getTimeOfTheDay(new Date())}`),
+          username: generateFirstName(username),
+        })
+      : t('fallback'));
 
   return { message };
 }
