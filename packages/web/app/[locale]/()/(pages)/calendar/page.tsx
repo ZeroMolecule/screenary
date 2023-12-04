@@ -37,9 +37,11 @@ async function CalendarPage() {
 }
 
 async function useCalendarPage() {
-  const session = await getServerSession(authOptions);
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({ queryKey: projectsQuery.key });
+  const [session] = await Promise.all([
+    getServerSession(authOptions),
+    queryClient.prefetchQuery({ queryKey: projectsQuery.key }),
+  ]);
   const dehydratedState = dehydrate(queryClient);
 
   return { username: session?.user?.name, dehydratedState };

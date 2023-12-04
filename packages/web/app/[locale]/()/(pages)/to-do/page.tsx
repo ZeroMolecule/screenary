@@ -41,11 +41,13 @@ async function TasksPage(props: Props) {
 }
 
 async function useTasksPage({ searchParams }: Props) {
-  const session = await getServerSession(authOptions);
   const queryClient = getQueryClient();
-  const { data: projects } = await queryClient.fetchQuery<Data<Project[]>>({
-    queryKey: projectsQuery.key,
-  });
+  const [session, { data: projects }] = await Promise.all([
+    getServerSession(authOptions),
+    queryClient.fetchQuery<Data<Project[]>>({
+      queryKey: projectsQuery.key,
+    }),
+  ]);
   await Promise.all([
     queryClient.prefetchQuery({
       queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
