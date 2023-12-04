@@ -33,7 +33,10 @@ export const FormDateTimeInput: FC<Props> = (props) => {
             <IconCalendar size={20} color="var(--mantine-color-primary-3)" />
           }
           classNames={{
-            input: classNames(inputStyles.input, styles.inputDateTime),
+            input: classNames(
+              inputStyles.inputTransparent,
+              styles.inputDateTime
+            ),
             section: styles.sectionDateTime,
           }}
           onChange={handleDate}
@@ -44,7 +47,10 @@ export const FormDateTimeInput: FC<Props> = (props) => {
             <IconClock size={20} color="var(--mantine-color-primary-3)" />
           }
           classNames={{
-            input: classNames(inputStyles.input, styles.inputDateTime),
+            input: classNames(
+              inputStyles.inputTransparent,
+              styles.inputDateTime
+            ),
             section: styles.sectionDateTime,
           }}
           value={time}

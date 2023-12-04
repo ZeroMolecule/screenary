@@ -21,6 +21,10 @@
     "component": {
       "dateTime": {
         "datePlaceholder": "MM/DD/YYYY"
+      },
+      "formPopover": {
+        "cancelAction": "Cancel",
+        "applyAction": "Apply"
       }
     },
     "welcomeMessage": {
@@ -112,7 +116,12 @@
       "emptyLongText": "There is no notes. Try adding some."
     },
     "quickLinks": {
-      "title": "Quick Links"
+      "title": "Quick Links",
+      "form": {
+        "title": "New Link",
+        "linkLabel": "New Quick Link",
+        "linkPlaceholder": "https://"
+      }
     }
   },
   "tasks": {
@@ -130,9 +139,7 @@
     "form": {
       "title": "New Task",
       "titlePlaceholder": "Title",
-      "dateTimeLabel": "Date & Time",
-      "cancelAction": "Cancel",
-      "applyAction": "Apply"
+      "dateTimeLabel": "Date & Time"
     },
     "dueDate": {
       "message": "{day}, {time}",

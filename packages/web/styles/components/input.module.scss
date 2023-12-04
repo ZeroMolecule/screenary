@@ -1,4 +1,11 @@
-.input {
+.inputDark {
+  color: var(--mantine-color-white);
+  background-color: transparent;
+  border: 1px solid var(--mantine-color-neutral-7);
+  border-radius: rem(6);
+}
+
+.inputTransparent {
   padding: 0 !important;
   color: var(--mantine-color-white);
   background-color: transparent;
