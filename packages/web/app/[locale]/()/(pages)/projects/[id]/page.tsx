@@ -6,6 +6,8 @@ import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { notesQuery } from '@/domain/queries/notes-query';
 import { tasksQuery } from '@/domain/queries/tasks-query';
 import { TaskStatus } from '@prisma/client';
+import { PageContainer } from '@/app/_components/page-container';
+import { NotificationsWidget } from '@/app/_components/notifications-widget';
 
 type Params = { locale: string; id: string };
 type Props = { params: Params };
@@ -15,7 +17,10 @@ async function ProjectPage({ params: { id } }: Props) {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ClientProjectPage />
+      <PageContainer>
+        <ClientProjectPage />
+      </PageContainer>
+      <NotificationsWidget projectId={id} />
     </HydrationBoundary>
   );
 }

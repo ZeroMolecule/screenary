@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction, useState } from 'react';
 import { UseQueryResult, useMutation, useQueries } from '@tanstack/react-query';
 import { TaskStatus } from '@prisma/client';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
@@ -10,17 +9,16 @@ import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
 
 export const useTasks = (
-  projectId: string
+  projectId: string,
+  onCreateSuccess: () => void
 ): [
-  { popoverOpen: boolean; results: Task[]; todos: Task[]; done: Task[] },
+  { results: Task[]; todos: Task[]; done: Task[] },
   {
-    setPopoverOpen: Dispatch<SetStateAction<boolean>>;
     onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
     onEdit: (task: Task) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
   }
 ] => {
-  const [popoverOpen, setPopoverOpen] = useState(false);
   const onCreated = useNotificationSuccess('created');
   const onSaved = useNotificationSuccess('saved');
   const onDeleted = useNotificationSuccess('deleted');
@@ -51,7 +49,7 @@ export const useTasks = (
     onSuccess: async () => {
       await refetchTodos();
       onCreated();
-      setPopoverOpen(false);
+      onCreateSuccess();
     },
   });
   const { mutateAsync: editTask } = useMutation({
@@ -77,9 +75,7 @@ export const useTasks = (
     title,
     dueDate,
   }: Pick<AddTaskData, 'title' | 'dueDate'>) => {
-    if (projectId) {
-      await createTask({ projectId, title, dueDate }).catch(() => null);
-    }
+    await createTask({ projectId, title, dueDate }).catch(() => null);
   };
 
   const handleEdit = async ({ id, projectId, title, status }: Task) => {
@@ -87,15 +83,12 @@ export const useTasks = (
   };
 
   const handleDelete = async (id: string) => {
-    if (projectId) {
-      await deleteTask({ id, projectId }).catch(() => null);
-    }
+    await deleteTask({ id, projectId }).catch(() => null);
   };
 
   return [
-    { popoverOpen, results, todos, done },
+    { results, todos, done },
     {
-      setPopoverOpen,
       onCreate: handleCreate,
       onEdit: handleEdit,
       onDelete: handleDelete,

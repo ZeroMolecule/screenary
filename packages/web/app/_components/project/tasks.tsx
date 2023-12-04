@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Group } from '@mantine/core';
 import { TasksHeader } from '../tasks/tasks-header';
@@ -54,10 +54,11 @@ export const Tasks: FC<Props> = (props) => {
 
 function useTasks({ projectId }: Props) {
   const t = useTranslations('project.tasks');
-  const [
-    { popoverOpen, results },
-    { setPopoverOpen, onCreate, onEdit, onDelete },
-  ] = useTasksHook(projectId);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [{ results }, { onCreate, onEdit, onDelete }] = useTasksHook(
+    projectId,
+    () => setPopoverOpen(false)
+  );
 
   return {
     t,

@@ -81,12 +81,13 @@ export const TasksPage: FC = () => {
 function useTasksPage() {
   const t = useTranslations('tasks');
   const [hideCompleted, setHideCompleted] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
-  const [
-    { popoverOpen, todos, done },
-    { setPopoverOpen, onCreate, onEdit, onDelete },
-  ] = useTasks(projectId!);
+  const [{ todos, done }, { onCreate, onEdit, onDelete }] = useTasks(
+    projectId!,
+    () => setPopoverOpen(false)
+  );
 
   const handleHideCompleted = () => {
     setHideCompleted(!hideCompleted);
