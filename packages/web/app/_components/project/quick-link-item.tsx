@@ -21,6 +21,7 @@ export const QuickLinkItem: FC<Props> = (props) => {
       target="_blank"
       variant="transparent"
       w="100%"
+      p="xs"
       c="neutral.9"
       bg="neutral.0"
       fw={400}
