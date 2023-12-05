@@ -117,9 +117,16 @@
     },
     "quickLinks": {
       "title": "Quick Links",
+      "deleteTitle": "Delete Quick Link",
       "form": {
-        "title": "New Link",
-        "linkLabel": "New Quick Link",
+        "create": {
+          "title": "New Link",
+          "linkLabel": "New Quick Link"
+        },
+        "edit": {
+          "title": "Edit Link",
+          "linkLabel": "Edit Quick Link"
+        },
         "linkPlaceholder": "https://"
       }
     }

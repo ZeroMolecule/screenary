@@ -5,20 +5,22 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { PopoverMenuForm } from '../popover-menu-form';
 import { FormTextInput } from '../base/form/text-input';
+import { QuickLink } from '@prisma/client';
 import styles from '@/styles/components/input.module.scss';
 
 type Props = {
   onClose: () => void;
-  onCreate: (values: QuickLinkFormValues) => Promise<void>;
+  onSubmit: (values: QuickLinkFormValues) => Promise<void>;
+  item?: QuickLink;
 };
 
 export const QuickLinksPopoverMenu: FC<Props> = (props) => {
-  const { t, quickLinkForm, isSubmitting, onClose, onSubmit } =
+  const { t, formType, quickLinkForm, isSubmitting, onClose, onSubmit } =
     useQuickLinksPopoverMenu(props);
 
   return (
     <PopoverMenuForm
-      title={t('title')}
+      title={t(`${formType}.title`)}
       form={quickLinkForm}
       isSubmitting={isSubmitting}
       onClose={onClose}
@@ -27,7 +29,7 @@ export const QuickLinksPopoverMenu: FC<Props> = (props) => {
     >
       <FormTextInput
         name="url"
-        label={t('linkLabel')}
+        label={t(`${formType}.linkLabel`)}
         placeholder={t('linkPlaceholder')}
         c="white"
         classNames={{ input: styles.inputDark }}
@@ -36,13 +38,14 @@ export const QuickLinksPopoverMenu: FC<Props> = (props) => {
   );
 };
 
-function useQuickLinksPopoverMenu({ onClose, onCreate }: Props) {
+function useQuickLinksPopoverMenu({ onClose, onSubmit, item }: Props) {
   const t = useTranslations('project.quickLinks.form');
+  const formType = item ? 'edit' : 'create';
 
   const quickLinkForm = useForm<QuickLinkFormValues>({
     resolver: zodResolver(quickLinkSchema),
     defaultValues: {
-      url: '',
+      url: item?.url ?? '',
     },
   });
   const {
@@ -52,10 +55,11 @@ function useQuickLinksPopoverMenu({ onClose, onCreate }: Props) {
 
   return {
     t,
+    formType,
     quickLinkForm,
     isSubmitting,
     onClose,
-    onSubmit: handleSubmit(onCreate),
+    onSubmit: handleSubmit(onSubmit),
   };
 }
 

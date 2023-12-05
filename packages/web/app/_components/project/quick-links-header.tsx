@@ -13,15 +13,18 @@ import {
   QuickLinkFormValues,
   QuickLinksPopoverMenu,
 } from './quick-link-popover-menu';
+import { QuickLink } from '@prisma/client';
 
 type Props = {
   popoverOpen: boolean;
   setPopoverOpen: Dispatch<SetStateAction<boolean>>;
-  onCreate: (values: QuickLinkFormValues) => Promise<void>;
+  onClose: () => void;
+  onSubmit: (values: QuickLinkFormValues) => Promise<void>;
+  item?: QuickLink;
 };
 
 export const QuickLinksHeader: FC<Props> = (props) => {
-  const { t, popoverOpen, setPopoverOpen, onCreate } =
+  const { t, popoverOpen, setPopoverOpen, onClose, onSubmit, item } =
     useQuickLinksHeader(props);
 
   return (
@@ -32,6 +35,7 @@ export const QuickLinksHeader: FC<Props> = (props) => {
       <Popover
         opened={popoverOpen}
         onChange={setPopoverOpen}
+        onClose={onClose}
         withinPortal={false}
         radius={24}
       >
@@ -54,7 +58,8 @@ export const QuickLinksHeader: FC<Props> = (props) => {
         >
           <QuickLinksPopoverMenu
             onClose={() => setPopoverOpen(false)}
-            onCreate={onCreate}
+            onSubmit={onSubmit}
+            item={item}
           />
         </PopoverDropdown>
       </Popover>
@@ -62,8 +67,14 @@ export const QuickLinksHeader: FC<Props> = (props) => {
   );
 };
 
-function useQuickLinksHeader({ popoverOpen, setPopoverOpen, onCreate }: Props) {
+function useQuickLinksHeader({
+  popoverOpen,
+  setPopoverOpen,
+  onClose,
+  onSubmit,
+  item,
+}: Props) {
   const t = useTranslations('project.quickLinks');
 
-  return { t, popoverOpen, setPopoverOpen, onCreate };
+  return { t, popoverOpen, setPopoverOpen, onClose, onSubmit, item };
 }
