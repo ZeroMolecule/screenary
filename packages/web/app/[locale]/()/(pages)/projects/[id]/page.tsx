@@ -8,6 +8,7 @@ import { tasksQuery } from '@/domain/queries/tasks-query';
 import { TaskStatus } from '@prisma/client';
 import { PageContainer } from '@/app/_components/page-container';
 import { NotificationsWidget } from '@/app/_components/notifications-widget';
+import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 
 type Params = { locale: string; id: string };
 type Props = { params: Params };
@@ -40,6 +41,7 @@ async function useProjectPage(id: string) {
         status: TaskStatus.DONE,
       }),
     }),
+    queryClient.prefetchQuery({ queryKey: quickLinksQuery.key(id) }),
   ]);
   const dehydratedState = dehydrate(queryClient);
 
