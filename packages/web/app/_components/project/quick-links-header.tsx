@@ -9,15 +9,20 @@ import {
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { Text } from '../base/text';
-import { QuickLinksPopoverMenu } from './quick-link-popover-menu';
+import {
+  QuickLinkFormValues,
+  QuickLinksPopoverMenu,
+} from './quick-link-popover-menu';
 
 type Props = {
   popoverOpen: boolean;
   setPopoverOpen: Dispatch<SetStateAction<boolean>>;
+  onCreate: (values: QuickLinkFormValues) => Promise<void>;
 };
 
 export const QuickLinksHeader: FC<Props> = (props) => {
-  const { t, popoverOpen, setPopoverOpen } = useQuickLinksHeader(props);
+  const { t, popoverOpen, setPopoverOpen, onCreate } =
+    useQuickLinksHeader(props);
 
   return (
     <Group justify="space-between">
@@ -47,15 +52,18 @@ export const QuickLinksHeader: FC<Props> = (props) => {
           left={0}
           bottom={0}
         >
-          <QuickLinksPopoverMenu onClose={() => setPopoverOpen(false)} />
+          <QuickLinksPopoverMenu
+            onClose={() => setPopoverOpen(false)}
+            onCreate={onCreate}
+          />
         </PopoverDropdown>
       </Popover>
     </Group>
   );
 };
 
-function useQuickLinksHeader({ popoverOpen, setPopoverOpen }: Props) {
+function useQuickLinksHeader({ popoverOpen, setPopoverOpen, onCreate }: Props) {
   const t = useTranslations('project.quickLinks');
 
-  return { t, popoverOpen, setPopoverOpen };
+  return { t, popoverOpen, setPopoverOpen, onCreate };
 }

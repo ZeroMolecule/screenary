@@ -1,8 +1,12 @@
 import { FC, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useMutation } from '@tanstack/react-query';
 import { Box, Card, MantineStyleProps, Stack } from '@mantine/core';
 import { QuickLinksHeader } from './quick-links-header';
 import { ExpandedPopover } from './expanded-popover';
+import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation';
+import { QuickLinkFormValues } from './quick-link-popover-menu';
+import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import styles from '@/styles/components/quick-links.module.scss';
 
 type Props = {
@@ -10,8 +14,15 @@ type Props = {
 };
 
 export const QuickLinks: FC<Props> = (props) => {
-  const { t, popoverOpen, setPopoverOpen, expanded, setExpanded, position } =
-    useQuickLinks(props);
+  const {
+    t,
+    popoverOpen,
+    setPopoverOpen,
+    expanded,
+    setExpanded,
+    handleCreate,
+    position,
+  } = useQuickLinks(props);
 
   return (
     <Box h="100%">
@@ -25,6 +36,7 @@ export const QuickLinks: FC<Props> = (props) => {
           <QuickLinksHeader
             popoverOpen={popoverOpen}
             setPopoverOpen={setPopoverOpen}
+            onCreate={handleCreate}
           />
           <div style={{ flex: 1 }}>BODY</div>
           <ExpandedPopover
@@ -44,8 +56,22 @@ function useQuickLinks({ projectId }: Props) {
   const t = useTranslations('project.quickLinks');
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const positionRef = useRef<MantineStyleProps['pos']>('relative');
 
+  const onCreated = useNotificationSuccess('created');
+
+  const { mutateAsync: createQuickLink } = useMutation({
+    mutationFn: addQuickLinkMutation.fnc,
+    onSuccess: async () => {
+      onCreated();
+      setPopoverOpen(false);
+    },
+  });
+
+  const handleCreate = async (values: QuickLinkFormValues) => {
+    await createQuickLink({ ...values, projectId });
+  };
+
+  const positionRef = useRef<MantineStyleProps['pos']>('relative');
   const updatedPosition = useMemo(() => {
     if (expanded) {
       positionRef.current = 'unset';
@@ -63,6 +89,7 @@ function useQuickLinks({ projectId }: Props) {
     setPopoverOpen,
     expanded,
     setExpanded,
+    handleCreate,
     position: updatedPosition,
   };
 }

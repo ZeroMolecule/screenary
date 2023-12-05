@@ -9,6 +9,7 @@ import styles from '@/styles/components/input.module.scss';
 
 type Props = {
   onClose: () => void;
+  onCreate: (values: QuickLinkFormValues) => Promise<void>;
 };
 
 export const QuickLinksPopoverMenu: FC<Props> = (props) => {
@@ -25,7 +26,7 @@ export const QuickLinksPopoverMenu: FC<Props> = (props) => {
       stackProps={{ w: '100%', h: '100%' }}
     >
       <FormTextInput
-        name="title"
+        name="url"
         label={t('linkLabel')}
         placeholder={t('linkPlaceholder')}
         c="white"
@@ -35,34 +36,30 @@ export const QuickLinksPopoverMenu: FC<Props> = (props) => {
   );
 };
 
-function useQuickLinksPopoverMenu({ onClose }: Props) {
+function useQuickLinksPopoverMenu({ onClose, onCreate }: Props) {
   const t = useTranslations('project.quickLinks.form');
 
   const quickLinkForm = useForm<QuickLinkFormValues>({
     resolver: zodResolver(quickLinkSchema),
     defaultValues: {
-      title: '',
+      url: '',
     },
   });
   const {
-    handleSubmit: formHandleSubmit,
+    handleSubmit,
     formState: { isSubmitting },
   } = quickLinkForm;
-
-  const handleSubmit = async ({ title }: QuickLinkFormValues) => {
-    console.log(title);
-  };
 
   return {
     t,
     quickLinkForm,
     isSubmitting,
     onClose,
-    onSubmit: formHandleSubmit(handleSubmit),
+    onSubmit: handleSubmit(onCreate),
   };
 }
 
 export type QuickLinkFormValues = z.infer<typeof quickLinkSchema>;
 const quickLinkSchema = z.object({
-  title: z.string().url().min(1),
+  url: z.string().url().min(1),
 });
