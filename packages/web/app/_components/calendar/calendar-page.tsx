@@ -1,7 +1,7 @@
 'use client';
 
 import { FC } from 'react';
-import { Stack } from '@mantine/core';
+import { Group, Stack } from '@mantine/core';
 import { ProjectsTabs } from '../projects-tabs';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { Calendar } from './calendar';
@@ -11,11 +11,13 @@ export const CalendarPage: FC = () => {
 
   return (
     <Stack h="100%" gap="sm">
-      <ProjectsTabs
-        defaultTab={projectId}
-        tabs={tabs}
-        onChange={handleChange}
-      />
+      <Group>
+        <ProjectsTabs
+          defaultTab={projectId}
+          tabs={tabs}
+          onChange={handleChange}
+        />
+      </Group>
       <Calendar url={calendarUrl ?? ''} />
     </Stack>
   );

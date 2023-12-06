@@ -108,7 +108,7 @@
       "title": "Notes",
       "addAction": "Add Note",
       "deleteTitle": "Delete Note",
-      "emptyShortText": "Empty.",
+      "emptyShortText": "No Notes yet.",
       "emptyLongText": "There is no notes. Try adding some."
     }
   },

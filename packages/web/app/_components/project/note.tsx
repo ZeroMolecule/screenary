@@ -21,9 +21,13 @@ export const Note: FC<Props> = (props) => {
 
   if (!note) {
     return (
-      <Text ta="center" c="neutral.4">
-        {t('emptyShortText')}
-      </Text>
+      <Card
+        className={classNames(styles.note, styles.noteEmpty, styles.noteSingle)}
+      >
+        <Text ta="center" c="primary.9">
+          {t('emptyShortText')}
+        </Text>
+      </Card>
     );
   }
 
