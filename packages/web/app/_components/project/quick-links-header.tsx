@@ -24,7 +24,7 @@ type Props = {
 };
 
 export const QuickLinksHeader: FC<Props> = (props) => {
-  const { t, popoverOpen, setPopoverOpen, onClose, onSubmit, item } =
+  const { t, popoverOpen, setPopoverOpen, handleOnClose, onSubmit, item } =
     useQuickLinksHeader(props);
 
   return (
@@ -35,9 +35,10 @@ export const QuickLinksHeader: FC<Props> = (props) => {
       <Popover
         opened={popoverOpen}
         onChange={setPopoverOpen}
-        onClose={onClose}
+        onClose={handleOnClose}
         withinPortal={false}
         radius={24}
+        zIndex={2}
       >
         <PopoverTarget>
           <ActionIcon
@@ -51,9 +52,9 @@ export const QuickLinksHeader: FC<Props> = (props) => {
         <PopoverDropdown
           w="auto"
           pos="absolute"
-          top={0}
-          right={0}
           left={0}
+          right={0}
+          top={0}
           bottom={0}
         >
           <QuickLinksPopoverMenu
@@ -76,5 +77,22 @@ function useQuickLinksHeader({
 }: Props) {
   const t = useTranslations('project.quickLinks');
 
-  return { t, popoverOpen, setPopoverOpen, onClose, onSubmit, item };
+  const handleOnClose = () => {
+    if (item) {
+      setTimeout(() => {
+        onClose();
+      }, 250);
+    } else {
+      onClose();
+    }
+  };
+
+  return {
+    t,
+    popoverOpen,
+    setPopoverOpen,
+    handleOnClose,
+    onSubmit,
+    item,
+  };
 }

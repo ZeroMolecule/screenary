@@ -1,9 +1,8 @@
-import { FC, useMemo, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Box, Card, MantineStyleProps, Stack } from '@mantine/core';
+import { Box, Card, Stack } from '@mantine/core';
 import { QuickLinksHeader } from './quick-links-header';
-import { ExpandedPopover } from './expanded-popover';
 import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation';
 import { QuickLinkFormValues } from './quick-link-popover-menu';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
@@ -15,6 +14,8 @@ import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useDisclosure } from '@mantine/hooks';
 import { deleteQuickLinkMutation } from '@/domain/mutations/delete-quick-link-mutation';
 import { editQuickLinkMutation } from '@/domain/mutations/edit-quick-link-mutation';
+import { QuickLinksFooter } from './quick-links-footer';
+import { PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID } from '@/utils/constants';
 import classNames from 'classnames';
 import flexStyles from '@/styles/utils/flex.module.scss';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
@@ -40,7 +41,6 @@ export const QuickLinks: FC<Props> = (props) => {
     handleCloseDelete,
     handleSubmit,
     handleDelete,
-    position,
   } = useQuickLinks(props);
 
   const renderQuickLink = (item: QuickLink) => (
@@ -56,8 +56,8 @@ export const QuickLinks: FC<Props> = (props) => {
     <Box h="100%" className={overflowStyles['overflow-auto']}>
       <Card
         h="100%"
+        pos="relative"
         radius={24}
-        pos={position}
         className={styles.quickLinksCard}
       >
         <Stack h="100%">
@@ -76,15 +76,17 @@ export const QuickLinks: FC<Props> = (props) => {
           >
             {quickLinks.map(renderQuickLink)}
           </Stack>
-          <ExpandedPopover
-            title={t('title')}
+          <QuickLinksFooter
+            items={quickLinks}
             expanded={expanded}
             setExpanded={setExpanded}
-          >
-            this is a popover
-          </ExpandedPopover>
+            setPopoverOpen={setPopoverOpen}
+            onEditOpen={handleOpenEdit}
+            onDeleteOpen={handleOpenDelete}
+          />
         </Stack>
       </Card>
+      <div id={PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID} />
       <ConfirmDeleteModal
         opened={isDeleteOpen}
         onClose={handleCloseDelete}
@@ -170,18 +172,6 @@ function useQuickLinks({ projectId }: Props) {
     }
   };
 
-  const positionRef = useRef<MantineStyleProps['pos']>('relative');
-  const updatedPosition = useMemo(() => {
-    if (expanded) {
-      positionRef.current = 'unset';
-    } else {
-      setTimeout(() => {
-        positionRef.current = 'relative';
-      }, 250);
-    }
-    return positionRef.current;
-  }, [expanded]);
-
   return {
     t,
     quickLinks: quickLinks?.data ?? [],
@@ -197,6 +187,5 @@ function useQuickLinks({ projectId }: Props) {
     handleCloseDelete,
     handleSubmit,
     handleDelete,
-    position: updatedPosition,
   };
 }

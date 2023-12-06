@@ -6,6 +6,7 @@ import {
   Popover,
   PopoverDropdown,
   PopoverTarget,
+  Portal,
 } from '@mantine/core';
 import { IconArrowsMaximize, IconX } from '@tabler/icons-react';
 import { Title } from '../base/title';
@@ -16,6 +17,8 @@ type Props = {
   expanded: boolean;
   setExpanded: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
+  closeOnClickOutside?: boolean;
+  portalTarget?: string;
 };
 
 export const ExpandedPopover: FC<Props> = ({
@@ -23,7 +26,29 @@ export const ExpandedPopover: FC<Props> = ({
   expanded,
   setExpanded,
   children,
+  closeOnClickOutside = true,
+  portalTarget,
 }) => {
+  const dropdown = (
+    <PopoverDropdown w="100%" h="100%" pos="absolute" top={0} right={0}>
+      <Card className={styles.popoverContainer}>
+        <Group justify="space-between">
+          <Title order={5} c="white" fw={700}>
+            {title}
+          </Title>
+          <ActionIcon
+            variant="transparent"
+            color="white"
+            onClick={() => setExpanded(false)}
+          >
+            <IconX />
+          </ActionIcon>
+        </Group>
+        {children}
+      </Card>
+    </PopoverDropdown>
+  );
+
   return (
     <Group justify="flex-end">
       <Popover
@@ -31,6 +56,7 @@ export const ExpandedPopover: FC<Props> = ({
         onChange={setExpanded}
         withinPortal={false}
         radius={24}
+        closeOnClickOutside={closeOnClickOutside}
       >
         <PopoverTarget>
           <ActionIcon
@@ -41,23 +67,11 @@ export const ExpandedPopover: FC<Props> = ({
             <IconArrowsMaximize />
           </ActionIcon>
         </PopoverTarget>
-        <PopoverDropdown w="100%" h="100%" pos="absolute" top={0} right={0}>
-          <Card className={styles.popoverContainer}>
-            <Group justify="space-between">
-              <Title order={5} c="white" fw={700}>
-                {title}
-              </Title>
-              <ActionIcon
-                variant="transparent"
-                color="white"
-                onClick={() => setExpanded(false)}
-              >
-                <IconX />
-              </ActionIcon>
-            </Group>
-            {children}
-          </Card>
-        </PopoverDropdown>
+        {portalTarget ? (
+          <Portal target={`#${portalTarget}`}>{dropdown}</Portal>
+        ) : (
+          dropdown
+        )}
       </Popover>
     </Group>
   );

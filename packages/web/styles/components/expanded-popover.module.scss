@@ -6,6 +6,7 @@
   width: 100%;
   min-width: rem(800);
   background: var(--mantine-glass-color);
+  border-radius: rem(24);
   box-shadow: 0px 40px 35px -20px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(15px);
 }

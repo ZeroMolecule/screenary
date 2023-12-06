@@ -117,6 +117,8 @@
     },
     "quickLinks": {
       "title": "Quick Links",
+      "addLinkAction": "Add Link",
+      "addFolderAction": "New Folder",
       "deleteTitle": "Delete Quick Link",
       "form": {
         "create": {
