@@ -119,17 +119,31 @@
       "title": "Quick Links",
       "addLinkAction": "Add Link",
       "addFolderAction": "New Folder",
-      "deleteTitle": "Delete Quick Link",
+      "deleteLinkTitle": "Delete Quick Link",
+      "deleteFolderTitle": "Delete Folder",
       "form": {
-        "create": {
-          "title": "New Link",
-          "linkLabel": "New Quick Link"
+        "link": {
+          "create": {
+            "title": "New Link",
+            "urlLabel": "New Quick Link"
+          },
+          "edit": {
+            "title": "Edit Link",
+            "urlLabel": "Edit Quick Link"
+          },
+          "urlPlaceholder": "https://"
         },
-        "edit": {
-          "title": "Edit Link",
-          "linkLabel": "Edit Quick Link"
-        },
-        "linkPlaceholder": "https://"
+        "folder": {
+          "create": {
+            "title": "New Folder",
+            "nameLabel": "New Folder"
+          },
+          "edit": {
+            "title": "Edit Folder",
+            "nameLabel": "Edit Folder"
+          },
+          "namePlaceholder": "New Folder"
+        }
       }
     }
   },

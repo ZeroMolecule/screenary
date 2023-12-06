@@ -2,12 +2,12 @@ import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Box, Card, Stack } from '@mantine/core';
-import { QuickLinksHeader } from './quick-links-header';
+import { QuickLinksPopovers } from './quick-links-popovers';
 import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation';
 import { QuickLinkFormValues } from './quick-link-popover-menu';
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
-import { QuickLink } from '@prisma/client';
+import { Directory, QuickLink } from '@prisma/client';
 import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 import { QuickLinkItem } from './quick-link-item';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
@@ -20,6 +20,12 @@ import classNames from 'classnames';
 import flexStyles from '@/styles/utils/flex.module.scss';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/quick-links.module.scss';
+import { foldersQuery } from '@/domain/queries/folders-query';
+import { QuickLinkFolderItem } from './quick-link-folder-item';
+import { deleteFolderMutation } from '@/domain/mutations/delete-folder-mutation';
+import { addFolderMutation } from '@/domain/mutations/add-folder-mutation';
+import { editFolderMutation } from '@/domain/mutations/edit-folder-mutation';
+import { FolderFormValues } from './quick-link-folder-popover-menu';
 
 type Props = {
   projectId: string;
@@ -29,26 +35,46 @@ export const QuickLinks: FC<Props> = (props) => {
   const {
     t,
     quickLinks,
-    popoverOpen,
-    setPopoverOpen,
+    folders,
+    popoverLinkOpen,
+    setPopoverLinkOpen,
+    popoverFolderOpen,
+    setPopoverFolderOpen,
     expanded,
     setExpanded,
     editLink,
-    handleOpenEdit,
-    handleCloseEdit,
-    isDeleteOpen,
-    handleOpenDelete,
-    handleCloseDelete,
-    handleSubmit,
-    handleDelete,
+    handleLinkOpenEdit,
+    handleLinkCloseEdit,
+    editFolder,
+    handleFolderOpenEdit,
+    handleFolderCloseEdit,
+    isLinkDeleteOpen,
+    handleLinkOpenDelete,
+    handleLinkCloseDelete,
+    handleLinkSubmit,
+    handleLinkDelete,
+    isFolderDeleteOpen,
+    handleFolderOpenDelete,
+    handleFolderCloseDelete,
+    handleFolderSubmit,
+    handleFolderDelete,
   } = useQuickLinks(props);
+
+  const renderFolder = (item: Directory) => (
+    <QuickLinkFolderItem
+      key={item.id}
+      item={item}
+      onEditOpen={handleFolderOpenEdit}
+      onDeleteOpen={handleFolderOpenDelete}
+    />
+  );
 
   const renderQuickLink = (item: QuickLink) => (
     <QuickLinkItem
       key={item.id}
       item={item}
-      onEditOpen={handleOpenEdit}
-      onDeleteOpen={handleOpenDelete}
+      onEditOpen={handleLinkOpenEdit}
+      onDeleteOpen={handleLinkOpenDelete}
     />
   );
 
@@ -61,12 +87,17 @@ export const QuickLinks: FC<Props> = (props) => {
         className={styles.quickLinksCard}
       >
         <Stack h="100%">
-          <QuickLinksHeader
-            popoverOpen={popoverOpen}
-            setPopoverOpen={setPopoverOpen}
-            onClose={handleCloseEdit}
-            onSubmit={handleSubmit}
-            item={editLink ?? undefined}
+          <QuickLinksPopovers
+            popoverLinkOpen={popoverLinkOpen}
+            setPopoverLinkOpen={setPopoverLinkOpen}
+            popoverFolderOpen={popoverFolderOpen}
+            setPopoverFolderOpen={setPopoverFolderOpen}
+            onLinkClose={handleLinkCloseEdit}
+            onLinkSubmit={handleLinkSubmit}
+            onFolderClose={handleFolderCloseEdit}
+            onFolderSubmit={handleFolderSubmit}
+            quickLink={editLink ?? undefined}
+            folder={editFolder ?? undefined}
           />
           <Stack
             className={classNames(
@@ -74,24 +105,35 @@ export const QuickLinks: FC<Props> = (props) => {
               overflowStyles['overflow-auto']
             )}
           >
+            {folders.map(renderFolder)}
             {quickLinks.map(renderQuickLink)}
           </Stack>
           <QuickLinksFooter
-            items={quickLinks}
+            quickLinks={quickLinks}
+            folders={folders}
             expanded={expanded}
             setExpanded={setExpanded}
-            setPopoverOpen={setPopoverOpen}
-            onEditOpen={handleOpenEdit}
-            onDeleteOpen={handleOpenDelete}
+            setPopoverLinkOpen={setPopoverLinkOpen}
+            setPopoverFolderOpen={setPopoverFolderOpen}
+            onLinkEditOpen={handleLinkOpenEdit}
+            onLinkDeleteOpen={handleLinkOpenDelete}
+            onFolderEditOpen={handleFolderOpenEdit}
+            onFolderDeleteOpen={handleFolderOpenDelete}
           />
         </Stack>
       </Card>
       <div id={PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID} />
       <ConfirmDeleteModal
-        opened={isDeleteOpen}
-        onClose={handleCloseDelete}
-        onSubmit={handleDelete}
-        title={t('deleteTitle')}
+        opened={isLinkDeleteOpen}
+        onClose={handleLinkCloseDelete}
+        onSubmit={handleLinkDelete}
+        title={t('deleteLinkTitle')}
+      />
+      <ConfirmDeleteModal
+        opened={isFolderDeleteOpen}
+        onClose={handleFolderCloseDelete}
+        onSubmit={handleFolderDelete}
+        title={t('deleteFolderTitle')}
       />
     </Box>
   );
@@ -101,62 +143,119 @@ function useQuickLinks({ projectId }: Props) {
   const t = useTranslations('project.quickLinks');
   const [editLink, setEditLink] = useState<QuickLink | null>(null);
   const [deleteLinkId, setDeleteLinkId] = useState<string | null>(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [popoverLinkOpen, setPopoverLinkOpen] = useState(false);
+  const [editFolder, setEditFolder] = useState<Directory | null>(null);
+  const [deleteFolderId, setDeleteFolderId] = useState<string | null>(null);
+  const [popoverFolderOpen, setPopoverFolderOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
+  const [isLinkDeleteOpen, { open: openLinkDelete, close: closeLinkDelete }] =
     useDisclosure(false);
+  const [
+    isFolderDeleteOpen,
+    { open: openFolderDelete, close: closeFolderDelete },
+  ] = useDisclosure(false);
 
   const onCreated = useNotificationSuccess('created');
   const onEdited = useNotificationSuccess('saved');
   const onDeleted = useNotificationSuccess('deleted');
 
-  const { data: quickLinks, refetch } = useQuery<Data<QuickLink[]>>({
+  const { data: quickLinks, refetch: refetchQuickLinks } = useQuery<
+    Data<QuickLink[]>
+  >({
     queryKey: quickLinksQuery.key(projectId),
   });
   const { mutateAsync: createQuickLink } = useMutation({
     mutationFn: addQuickLinkMutation.fnc,
     onSuccess: async () => {
-      await refetch();
+      await refetchQuickLinks();
       onCreated();
-      setPopoverOpen(false);
+      setPopoverLinkOpen(false);
     },
   });
   const { mutateAsync: editQuickLink } = useMutation({
     mutationFn: editQuickLinkMutation.fnc,
     onSuccess: async () => {
-      await refetch();
+      await refetchQuickLinks();
       onEdited();
-      setPopoverOpen(false);
+      setPopoverLinkOpen(false);
     },
   });
   const { mutateAsync: deleteQuickLink } = useMutation({
     mutationFn: deleteQuickLinkMutation.fnc,
     onSuccess: async () => {
-      await refetch();
+      await refetchQuickLinks();
       onDeleted();
-      handleCloseDelete();
+      handleLinkCloseDelete();
     },
   });
 
-  const handleOpenEdit = (link: QuickLink) => {
+  const { data: folders, refetch: refetchFolders } = useQuery<
+    Data<Directory[]>
+  >({
+    queryKey: foldersQuery.key(projectId),
+  });
+  const { mutateAsync: createFolder } = useMutation({
+    mutationFn: addFolderMutation.fnc,
+    onSuccess: async () => {
+      await refetchFolders();
+      onCreated();
+      setPopoverFolderOpen(false);
+    },
+  });
+  const { mutateAsync: editFolderItem } = useMutation({
+    mutationFn: editFolderMutation.fnc,
+    onSuccess: async () => {
+      await refetchFolders();
+      onEdited();
+      setPopoverFolderOpen(false);
+    },
+  });
+  const { mutateAsync: deleteFolder } = useMutation({
+    mutationFn: deleteFolderMutation.fnc,
+    onSuccess: async () => {
+      await refetchFolders();
+      onDeleted();
+      handleFolderCloseDelete();
+    },
+  });
+
+  const handleLinkOpenEdit = (link: QuickLink) => {
     setEditLink(link);
-    setPopoverOpen(true);
+    setPopoverLinkOpen(true);
   };
-  const handleCloseEdit = () => {
+  const handleLinkCloseEdit = () => {
     setEditLink(null);
-    setPopoverOpen(false);
+    setPopoverLinkOpen(false);
   };
 
-  const handleOpenDelete = (id: string) => {
+  const handleFolderOpenEdit = (folder: Directory) => {
+    setEditFolder(folder);
+    setPopoverFolderOpen(true);
+  };
+  const handleFolderCloseEdit = () => {
+    setEditFolder(null);
+    setPopoverFolderOpen(false);
+  };
+
+  const handleLinkOpenDelete = (id: string) => {
     setDeleteLinkId(id);
-    openDelete();
+    openLinkDelete();
   };
-  const handleCloseDelete = () => {
+  const handleLinkCloseDelete = () => {
     setDeleteLinkId(null);
-    closeDelete();
+    closeLinkDelete();
   };
 
-  const handleSubmit = async (values: QuickLinkFormValues) => {
+  const handleFolderOpenDelete = (id: string) => {
+    setDeleteFolderId(id);
+    openFolderDelete();
+  };
+  const handleFolderCloseDelete = () => {
+    setDeleteFolderId(null);
+    closeFolderDelete();
+  };
+
+  const handleLinkSubmit = async (values: QuickLinkFormValues) => {
     if (editLink) {
       await editQuickLink({ ...values, id: editLink.id, projectId }).catch(
         () => null
@@ -165,27 +264,52 @@ function useQuickLinks({ projectId }: Props) {
       await createQuickLink({ ...values, projectId }).catch(() => null);
     }
   };
-
-  const handleDelete = async () => {
+  const handleLinkDelete = async () => {
     if (deleteLinkId) {
       await deleteQuickLink({ id: deleteLinkId, projectId }).catch(() => null);
+    }
+  };
+
+  const handleFolderSubmit = async (values: FolderFormValues) => {
+    if (editFolder) {
+      await editFolderItem({ ...values, id: editFolder.id, projectId }).catch(
+        () => null
+      );
+    } else {
+      await createFolder({ ...values, projectId }).catch(() => null);
+    }
+  };
+  const handleFolderDelete = async () => {
+    if (deleteFolderId) {
+      await deleteFolder({ id: deleteFolderId, projectId }).catch(() => null);
     }
   };
 
   return {
     t,
     quickLinks: quickLinks?.data ?? [],
-    popoverOpen,
-    setPopoverOpen,
+    folders: folders?.data ?? [],
+    popoverLinkOpen,
+    setPopoverLinkOpen,
+    popoverFolderOpen,
+    setPopoverFolderOpen,
     expanded,
     setExpanded,
     editLink,
-    handleOpenEdit,
-    handleCloseEdit,
-    isDeleteOpen,
-    handleOpenDelete,
-    handleCloseDelete,
-    handleSubmit,
-    handleDelete,
+    handleLinkOpenEdit,
+    handleLinkCloseEdit,
+    editFolder,
+    handleFolderOpenEdit,
+    handleFolderCloseEdit,
+    isLinkDeleteOpen,
+    handleLinkOpenDelete,
+    handleLinkCloseDelete,
+    handleLinkSubmit,
+    handleLinkDelete,
+    isFolderDeleteOpen,
+    handleFolderOpenDelete,
+    handleFolderCloseDelete,
+    handleFolderSubmit,
+    handleFolderDelete,
   };
 }

@@ -3,34 +3,34 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Directory } from '@prisma/client';
 import { PopoverMenuForm } from '../popover-menu-form';
 import { FormTextInput } from '../base/form/text-input';
-import { QuickLink } from '@prisma/client';
 import styles from '@/styles/components/input.module.scss';
 
 type Props = {
   onClose: () => void;
-  onSubmit: (values: QuickLinkFormValues) => Promise<void>;
-  item?: QuickLink;
+  onSubmit: (values: FolderFormValues) => Promise<void>;
+  item?: Directory;
 };
 
-export const QuickLinkPopoverMenu: FC<Props> = (props) => {
-  const { t, formType, quickLinkForm, isSubmitting, onClose, onSubmit } =
-    useQuickLinkPopoverMenu(props);
+export const QuickLinkFolderPopoverMenu: FC<Props> = (props) => {
+  const { t, formType, folderForm, isSubmitting, onClose, onSubmit } =
+    useQuickLinkFolderPopoverMenu(props);
 
   return (
     <PopoverMenuForm
       title={t(`${formType}.title`)}
-      form={quickLinkForm}
+      form={folderForm}
       isSubmitting={isSubmitting}
       onClose={onClose}
       onSubmit={onSubmit}
       stackProps={{ w: '100%', h: '100%' }}
     >
       <FormTextInput
-        name="url"
-        label={t(`${formType}.urlLabel`)}
-        placeholder={t('urlPlaceholder')}
+        name="name"
+        label={t(`${formType}.nameLabel`)}
+        placeholder={t('namePlaceholder')}
         c="white"
         classNames={{ input: styles.inputDark }}
       />
@@ -38,32 +38,32 @@ export const QuickLinkPopoverMenu: FC<Props> = (props) => {
   );
 };
 
-function useQuickLinkPopoverMenu({ onClose, onSubmit, item }: Props) {
-  const t = useTranslations('project.quickLinks.form.link');
+function useQuickLinkFolderPopoverMenu({ onClose, onSubmit, item }: Props) {
+  const t = useTranslations('project.quickLinks.form.folder');
   const formType = item ? 'edit' : 'create';
 
-  const quickLinkForm = useForm<QuickLinkFormValues>({
-    resolver: zodResolver(quickLinkSchema),
+  const folderForm = useForm<FolderFormValues>({
+    resolver: zodResolver(folderSchema),
     defaultValues: {
-      url: item?.url ?? '',
+      name: item?.name ?? '',
     },
   });
   const {
     handleSubmit,
     formState: { isSubmitting },
-  } = quickLinkForm;
+  } = folderForm;
 
   return {
     t,
     formType,
-    quickLinkForm,
+    folderForm,
     isSubmitting,
     onClose,
     onSubmit: handleSubmit(onSubmit),
   };
 }
 
-export type QuickLinkFormValues = z.infer<typeof quickLinkSchema>;
-const quickLinkSchema = z.object({
-  url: z.string().url().min(1),
+export type FolderFormValues = z.infer<typeof folderSchema>;
+const folderSchema = z.object({
+  name: z.string().min(1),
 });
