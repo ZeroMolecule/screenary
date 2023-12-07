@@ -30,7 +30,7 @@ export const QuickLinkItem: FC<Props> = (props) => {
       c={inExpandedView ? 'white' : 'neutral.9'}
       bg={inExpandedView ? 'transparent' : 'neutral.0'}
       fw={400}
-      leftSection={<IconBrandMedium />}
+      leftSection={<IconBrandMedium color="var(--mantine-color-primary-3)" />}
       rightSection={
         <ProjectMenu
           openEditModal={handleEditOpen}

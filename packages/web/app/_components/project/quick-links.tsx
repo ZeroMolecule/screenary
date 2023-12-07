@@ -170,8 +170,10 @@ function useQuickLinks({ projectId }: Props) {
     openDelete();
   };
   const handleCloseDelete = () => {
-    setDeleteLinkId(null);
-    setDeleteFolderId(null);
+    setTimeout(() => {
+      setDeleteLinkId(null);
+      setDeleteFolderId(null);
+    }, 250);
     closeDelete();
   };
   const deleteModalTitle = deleteLinkId

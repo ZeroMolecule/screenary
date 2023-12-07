@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Button } from '@mantine/core';
-import { IconBrandMedium } from '@tabler/icons-react';
 import { Directory } from '@prisma/client';
 import { ProjectMenu } from './project-menu';
 import { QuickLinkType } from './quick-links';
+import { FolderIcon } from '../icons/folder-icon';
 import classNames from 'classnames';
 import styles from '@/styles/components/quick-links.module.scss';
 
@@ -28,7 +28,7 @@ export const QuickLinkFolderItem: FC<Props> = (props) => {
       c={inExpandedView ? 'white' : 'neutral.9'}
       bg={inExpandedView ? 'transparent' : 'neutral.0'}
       fw={400}
-      leftSection={<IconBrandMedium />}
+      leftSection={<FolderIcon />}
       rightSection={
         <ProjectMenu
           openEditModal={handleEditOpen}
