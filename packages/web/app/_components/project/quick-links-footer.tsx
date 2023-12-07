@@ -22,6 +22,7 @@ import { EmptyPlaceholder } from '../empty-placeholder';
 import emptyIcon from '@/public/images/link-icon.svg';
 import stylesOverflow from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/quick-links.module.scss';
+import { FolderIcon } from '../icons/folder-icon';
 
 type Props = {
   quickLinks: QuickLink[];
@@ -32,6 +33,7 @@ type Props = {
   onEditOpen: (item: QuickLink | Directory, type: QuickLinkType) => void;
   setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
   onClearFolderParams?: () => void;
+  selectedFolder?: Directory | null;
 };
 
 export const QuickLinksFooter: FC<Props> = (props) => {
@@ -45,6 +47,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
     onEditOpen,
     setPopoverOpen,
     onClearFolderParams,
+    selectedFolder,
   } = useQuickLinksFooter(props);
 
   const renderFolder = (item: Directory) => (
@@ -78,7 +81,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
       onTitleClick={onClearFolderParams}
     >
       <Stack h="100%" my="lg" className={stylesOverflow['overflow-auto']}>
-        {!!folders.length && (
+        {(!!folders.length || selectedFolder) && (
           <Stack>
             <Group gap="xs">
               <Box
@@ -87,10 +90,18 @@ export const QuickLinksFooter: FC<Props> = (props) => {
                 bg="neutral.2"
                 className={styles.quickLinkFolderIconBlock}
               >
-                <IconBookmark size={16} />
+                {selectedFolder ? (
+                  <FolderIcon
+                    width={16}
+                    height={16}
+                    fillColor="var(--mantine-color-neutral-9)"
+                  />
+                ) : (
+                  <IconBookmark size={16} />
+                )}
               </Box>
               <Text size="sm" c="white" fw={600}>
-                {t('foldersTitle')}
+                {selectedFolder ? selectedFolder.name : t('foldersTitle')}
               </Text>
             </Group>
             <Grid>{folders.map(renderFolder)}</Grid>
@@ -147,6 +158,7 @@ function useQuickLinksFooter({
   onEditOpen,
   setPopoverOpen,
   onClearFolderParams,
+  selectedFolder,
 }: Props) {
   const t = useTranslations('project.quickLinks');
 
@@ -160,5 +172,6 @@ function useQuickLinksFooter({
     onEditOpen,
     setPopoverOpen,
     onClearFolderParams,
+    selectedFolder,
   };
 }

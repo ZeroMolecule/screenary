@@ -10,6 +10,7 @@ import { editFolderMutation } from '@/domain/mutations/edit-folder-mutation';
 import { deleteFolderMutation } from '@/domain/mutations/delete-folder-mutation';
 import { FolderFormValues } from '@/app/_components/project/quick-link-folder-popover-menu';
 import { usePathname, useRouter } from '@/navigation';
+import { folderQuery } from '@/domain/queries/folder-query';
 
 const FOLDER_TAB_PARAMS_KEY = 'folder';
 
@@ -22,6 +23,7 @@ export const useFolders = (
     editItem: Directory | null;
     deleteId: string | null;
     selectedFolderId: string | null;
+    selectedFolder: Directory | null;
   },
   {
     onSubmit: (values: FolderFormValues) => Promise<void>;
@@ -48,6 +50,11 @@ export const useFolders = (
     queryKey: foldersQuery.key(projectId, {
       parentId: selectedFolderId ?? 'null',
     }),
+  });
+
+  const { data: folder } = useQuery<Data<Directory>>({
+    queryKey: folderQuery.key(selectedFolderId!, projectId),
+    enabled: !!selectedFolderId,
   });
   const { mutateAsync: createFolder } = useMutation({
     mutationFn: addFolderMutation.fnc,
@@ -106,7 +113,13 @@ export const useFolders = (
   };
 
   return [
-    { folders: folders?.data ?? [], editItem, deleteId, selectedFolderId },
+    {
+      folders: folders?.data ?? [],
+      editItem,
+      deleteId,
+      selectedFolderId,
+      selectedFolder: folder?.data ?? null,
+    },
     {
       onSubmit: handleSubmit,
       onDelete: handleDelete,

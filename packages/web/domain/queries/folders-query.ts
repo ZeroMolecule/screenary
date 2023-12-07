@@ -1,4 +1,4 @@
-const FOLDERS_QUERY_KEY = 'directories';
+export const FOLDERS_QUERY_KEY = 'directories';
 
 type FolderParams = {
   parentId?: string;

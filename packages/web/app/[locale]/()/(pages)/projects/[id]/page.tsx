@@ -10,6 +10,7 @@ import { PageContainer } from '@/app/_components/page-container';
 import { NotificationsWidget } from '@/app/_components/notifications-widget';
 import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 import { foldersQuery } from '@/domain/queries/folders-query';
+import { folderQuery } from '@/domain/queries/folder-query';
 
 type Params = { locale: string; id: string };
 type Props = {
@@ -51,6 +52,9 @@ async function useProjectPage({ params: { id }, searchParams }: Props) {
     }),
     queryClient.prefetchQuery({
       queryKey: foldersQuery.key(id, { parentId: folderParamsId }),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: folderQuery.key(folderParamsId, id),
     }),
   ]);
   const dehydratedState = dehydrate(queryClient);
