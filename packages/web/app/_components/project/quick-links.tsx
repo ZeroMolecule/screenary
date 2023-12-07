@@ -69,7 +69,7 @@ export const QuickLinks: FC<Props> = (props) => {
   );
 
   return (
-    <Box h="100%" className={overflowStyles['overflow-auto']}>
+    <Box h="100%" className={overflowStyles['overflow-auto']} mih={300}>
       <Card
         h="100%"
         pos="relative"
