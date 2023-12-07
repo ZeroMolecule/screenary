@@ -1,3 +1,13 @@
 .emptyPlaceholder {
   border: 1px solid var(--mantine-color-neutral-2);
 }
+
+.titleDark {
+  background: var(
+    --Sunrise,
+    linear-gradient(0deg, #dad1b1 0%, #c0c9c4 63.36%, #e3e6e3 81.1%)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

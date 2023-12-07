@@ -122,6 +122,11 @@
       "deleteLinkTitle": "Delete Quick Link",
       "deleteFolderTitle": "Delete Folder",
       "foldersTitle": "Folders",
+      "empty": {
+        "title": "Nothing Here Yet",
+        "description": " It seems like you haven't added any quick links yet. Click ‘Add Link’ to get started.",
+        "shortText": "No Links yet."
+      },
       "form": {
         "link": {
           "create": {

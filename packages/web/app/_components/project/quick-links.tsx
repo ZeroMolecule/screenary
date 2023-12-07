@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Box, Card, Stack } from '@mantine/core';
+import { Box, Card, Center, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Directory, QuickLink } from '@prisma/client';
 import classNames from 'classnames';
@@ -12,6 +12,7 @@ import { PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID } from '@/utils/constants';
 import { QuickLinkFolderItem } from './quick-link-folder-item';
 import { useQuickLinks as useQuickLinksHook } from '@/hooks/use-quick-links';
 import { useFolders } from '@/hooks/use-folders';
+import { Text } from '../base/text';
 import flexStyles from '@/styles/utils/flex.module.scss';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/quick-links.module.scss';
@@ -27,6 +28,7 @@ type Props = {
 
 export const QuickLinks: FC<Props> = (props) => {
   const {
+    t,
     quickLinks,
     folders,
     editLink,
@@ -89,7 +91,13 @@ export const QuickLinks: FC<Props> = (props) => {
             )}
           >
             {folders.map(renderFolder)}
-            {quickLinks.map(renderQuickLink)}
+            {!quickLinks.length && !folders.length ? (
+              <Center h="100%" className={styles.emptySmallBlock}>
+                <Text>{t('empty.shortText')}</Text>
+              </Center>
+            ) : (
+              quickLinks.map(renderQuickLink)
+            )}
           </Stack>
           <QuickLinksFooter
             quickLinks={quickLinks}
@@ -182,6 +190,7 @@ function useQuickLinks({ projectId }: Props) {
   const deleteModalOnSubmit = deleteLinkId ? onLinkDelete : onFolderDelete;
 
   return {
+    t,
     quickLinks,
     folders,
     editLink,
