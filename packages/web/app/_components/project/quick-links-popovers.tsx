@@ -2,6 +2,7 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
+  Box,
   Group,
   Popover,
   PopoverDropdown,
@@ -18,12 +19,11 @@ import {
   FolderFormValues,
   QuickLinkFolderPopoverMenu,
 } from './quick-link-folder-popover-menu';
+import { QuickLinkPopover } from './quick-links';
 
 type Props = {
-  popoverLinkOpen: boolean;
-  setPopoverLinkOpen: Dispatch<SetStateAction<boolean>>;
-  popoverFolderOpen: boolean;
-  setPopoverFolderOpen: Dispatch<SetStateAction<boolean>>;
+  popoverOpen: QuickLinkPopover;
+  setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
   onEditClose: () => void;
   onLinkSubmit: (values: QuickLinkFormValues) => Promise<void>;
   onFolderSubmit: (values: FolderFormValues) => Promise<void>;
@@ -34,11 +34,10 @@ type Props = {
 export const QuickLinksPopovers: FC<Props> = (props) => {
   const {
     t,
-    popoverLinkOpen,
-    setPopoverLinkOpen,
-    popoverFolderOpen,
-    setPopoverFolderOpen,
+    popoverOpen,
     handleOnClose,
+    handleLinkChange,
+    handleFolderChange,
     onLinkSubmit,
     onFolderSubmit,
     quickLink,
@@ -51,8 +50,8 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
         {t('title')}
       </Text>
       <Popover
-        opened={popoverLinkOpen}
-        onChange={setPopoverLinkOpen}
+        opened={popoverOpen.link}
+        onChange={handleLinkChange}
         onClose={handleOnClose}
         withinPortal={false}
         radius={24}
@@ -62,7 +61,7 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
           <ActionIcon
             variant="transparent"
             color="var(--mantine-color-neutral-9)"
-            onClick={() => setPopoverLinkOpen(true)}
+            onClick={() => handleLinkChange(true)}
           >
             <IconPlus />
           </ActionIcon>
@@ -76,20 +75,23 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
           bottom={0}
         >
           <QuickLinkPopoverMenu
-            onClose={() => setPopoverLinkOpen(false)}
+            onClose={() => handleLinkChange(false)}
             onSubmit={onLinkSubmit}
             item={quickLink}
           />
         </PopoverDropdown>
       </Popover>
       <Popover
-        opened={popoverFolderOpen}
-        onChange={setPopoverFolderOpen}
+        opened={popoverOpen.folder}
+        onChange={handleFolderChange}
         onClose={handleOnClose}
         withinPortal={false}
         radius={24}
         zIndex={2}
       >
+        <PopoverTarget>
+          <Box display="none" />
+        </PopoverTarget>
         <PopoverDropdown
           w="auto"
           pos="absolute"
@@ -99,7 +101,7 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
           bottom={0}
         >
           <QuickLinkFolderPopoverMenu
-            onClose={() => setPopoverFolderOpen(false)}
+            onClose={() => handleFolderChange(false)}
             onSubmit={onFolderSubmit}
             item={folder}
           />
@@ -110,10 +112,8 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
 };
 
 function useQuickLinksPopovers({
-  popoverLinkOpen,
-  setPopoverLinkOpen,
-  popoverFolderOpen,
-  setPopoverFolderOpen,
+  popoverOpen,
+  setPopoverOpen,
   onEditClose,
   onLinkSubmit,
   onFolderSubmit,
@@ -132,13 +132,19 @@ function useQuickLinksPopovers({
     }
   };
 
+  const handleLinkChange = (value: boolean) => {
+    setPopoverOpen((prev) => ({ ...prev, link: value }));
+  };
+  const handleFolderChange = (value: boolean) => {
+    setPopoverOpen((prev) => ({ ...prev, folder: value }));
+  };
+
   return {
     t,
-    popoverLinkOpen,
-    setPopoverLinkOpen,
-    popoverFolderOpen,
-    setPopoverFolderOpen,
+    popoverOpen,
     handleOnClose,
+    handleLinkChange,
+    handleFolderChange,
     onLinkSubmit,
     onFolderSubmit,
     quickLink,

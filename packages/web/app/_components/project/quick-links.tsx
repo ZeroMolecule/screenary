@@ -16,6 +16,9 @@ import flexStyles from '@/styles/utils/flex.module.scss';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/quick-links.module.scss';
 
+const popoverInitialState = { link: false, folder: false };
+export type QuickLinkPopover = typeof popoverInitialState;
+
 export type QuickLinkType = 'link' | 'folder';
 
 type Props = {
@@ -28,10 +31,8 @@ export const QuickLinks: FC<Props> = (props) => {
     folders,
     editLink,
     editFolder,
-    popoverLinkOpen,
-    setPopoverLinkOpen,
-    popoverFolderOpen,
-    setPopoverFolderOpen,
+    popoverOpen,
+    setPopoverOpen,
     expanded,
     setExpanded,
     onLinkSubmit,
@@ -73,10 +74,8 @@ export const QuickLinks: FC<Props> = (props) => {
       >
         <Stack h="100%">
           <QuickLinksPopovers
-            popoverLinkOpen={popoverLinkOpen}
-            setPopoverLinkOpen={setPopoverLinkOpen}
-            popoverFolderOpen={popoverFolderOpen}
-            setPopoverFolderOpen={setPopoverFolderOpen}
+            popoverOpen={popoverOpen}
+            setPopoverOpen={setPopoverOpen}
             onEditClose={handleEditClose}
             onLinkSubmit={onLinkSubmit}
             onFolderSubmit={onFolderSubmit}
@@ -99,8 +98,7 @@ export const QuickLinks: FC<Props> = (props) => {
             setExpanded={setExpanded}
             onDeleteOpen={handleOpenDelete}
             onEditOpen={handleEditOpen}
-            setPopoverLinkOpen={setPopoverLinkOpen}
-            setPopoverFolderOpen={setPopoverFolderOpen}
+            setPopoverOpen={setPopoverOpen}
           />
         </Stack>
       </Card>
@@ -117,8 +115,8 @@ export const QuickLinks: FC<Props> = (props) => {
 
 function useQuickLinks({ projectId }: Props) {
   const t = useTranslations('project.quickLinks');
-  const [popoverLinkOpen, setPopoverLinkOpen] = useState(false);
-  const [popoverFolderOpen, setPopoverFolderOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] =
+    useState<QuickLinkPopover>(popoverInitialState);
   const [expanded, setExpanded] = useState(false);
   const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
@@ -132,7 +130,7 @@ function useQuickLinks({ projectId }: Props) {
       onSubmit: onLinkSubmit,
     },
   ] = useQuickLinksHook(projectId, () => {
-    setPopoverLinkOpen(false);
+    setPopoverOpen(popoverInitialState);
     closeDelete();
   });
   const [
@@ -144,24 +142,23 @@ function useQuickLinks({ projectId }: Props) {
       onSubmit: onFolderSubmit,
     },
   ] = useFolders(projectId, () => {
-    setPopoverFolderOpen(false);
+    setPopoverOpen(popoverInitialState);
     closeDelete();
   });
 
   const handleEditOpen = (item: QuickLink | Directory, type: QuickLinkType) => {
     if (type === 'link') {
       setEditLink(item as QuickLink);
-      setPopoverLinkOpen(true);
+      setPopoverOpen((prev) => ({ ...prev, link: true }));
     } else {
       setEditFolder(item as Directory);
-      setPopoverFolderOpen(true);
+      setPopoverOpen((prev) => ({ ...prev, folder: true }));
     }
   };
   const handleEditClose = () => {
     setEditLink(null);
     setEditFolder(null);
-    setPopoverLinkOpen(false);
-    setPopoverFolderOpen(false);
+    setPopoverOpen(popoverInitialState);
   };
 
   const handleOpenDelete = (id: string, type: QuickLinkType) => {
@@ -187,10 +184,8 @@ function useQuickLinks({ projectId }: Props) {
     folders,
     editLink,
     editFolder,
-    popoverLinkOpen,
-    setPopoverLinkOpen,
-    popoverFolderOpen,
-    setPopoverFolderOpen,
+    popoverOpen,
+    setPopoverOpen,
     expanded,
     setExpanded,
     onLinkSubmit,

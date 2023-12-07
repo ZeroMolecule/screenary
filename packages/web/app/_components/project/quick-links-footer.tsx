@@ -7,7 +7,7 @@ import { Button, Group, Space, Stack } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID } from '@/utils/constants';
 import { QuickLinkFolderItem } from './quick-link-folder-item';
-import { QuickLinkType } from './quick-links';
+import { QuickLinkPopover, QuickLinkType } from './quick-links';
 
 type Props = {
   quickLinks: QuickLink[];
@@ -16,8 +16,7 @@ type Props = {
   setExpanded: Dispatch<SetStateAction<boolean>>;
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
   onEditOpen: (item: QuickLink | Directory, type: QuickLinkType) => void;
-  setPopoverLinkOpen: Dispatch<SetStateAction<boolean>>;
-  setPopoverFolderOpen: Dispatch<SetStateAction<boolean>>;
+  setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
 };
 
 export const QuickLinksFooter: FC<Props> = (props) => {
@@ -29,8 +28,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
     setExpanded,
     onDeleteOpen,
     onEditOpen,
-    setPopoverLinkOpen,
-    setPopoverFolderOpen,
+    setPopoverOpen,
   } = useQuickLinksFooter(props);
 
   const renderFolder = (item: Directory) => (
@@ -74,7 +72,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
           color="white"
           fw={400}
           leftSection={<IconPlus size={16} />}
-          onClick={() => setPopoverFolderOpen(true)}
+          onClick={() => setPopoverOpen((prev) => ({ ...prev, folder: true }))}
         >
           {t('addFolderAction')}
         </Button>
@@ -85,7 +83,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
           color="white"
           fw={400}
           leftSection={<IconPlus size={16} />}
-          onClick={() => setPopoverLinkOpen(true)}
+          onClick={() => setPopoverOpen((prev) => ({ ...prev, link: true }))}
         >
           {t('addLinkAction')}
         </Button>
@@ -101,8 +99,7 @@ function useQuickLinksFooter({
   setExpanded,
   onDeleteOpen,
   onEditOpen,
-  setPopoverLinkOpen,
-  setPopoverFolderOpen,
+  setPopoverOpen,
 }: Props) {
   const t = useTranslations('project.quickLinks');
 
@@ -114,7 +111,6 @@ function useQuickLinksFooter({
     setExpanded,
     onDeleteOpen,
     onEditOpen,
-    setPopoverLinkOpen,
-    setPopoverFolderOpen,
+    setPopoverOpen,
   };
 }
