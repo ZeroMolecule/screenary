@@ -79,6 +79,9 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
         </PopoverTarget>
         <PopoverDropdown
           w="auto"
+          maw={360}
+          mah={360}
+          ml="auto"
           pos="absolute"
           left={0}
           right={0}
@@ -105,6 +108,9 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
         </PopoverTarget>
         <PopoverDropdown
           w="auto"
+          maw={350}
+          mah={360}
+          ml="auto"
           pos="absolute"
           left={0}
           right={0}
