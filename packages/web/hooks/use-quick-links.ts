@@ -65,12 +65,18 @@ export const useQuickLinks = (
   });
 
   const handleSubmit = async (values: QuickLinkFormValues) => {
+    const directoryId = selectedFolderId ?? null;
     if (editItem) {
-      await editQuickLink({ ...values, id: editItem.id, projectId }).catch(
+      await editQuickLink({
+        ...values,
+        id: editItem.id,
+        projectId,
+        directoryId,
+      }).catch(() => null);
+    } else {
+      await createQuickLink({ ...values, projectId, directoryId }).catch(
         () => null
       );
-    } else {
-      await createQuickLink({ ...values, projectId }).catch(() => null);
     }
   };
   const handleDelete = async () => {

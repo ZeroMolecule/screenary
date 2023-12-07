@@ -82,12 +82,16 @@ export const useFolders = (
   });
 
   const handleSubmit = async (values: FolderFormValues) => {
+    const parentId = selectedFolderId ?? null;
     if (editItem) {
-      await editFolder({ ...values, id: editItem.id, projectId }).catch(
-        () => null
-      );
+      await editFolder({
+        ...values,
+        id: editItem.id,
+        projectId,
+        parentId,
+      }).catch(() => null);
     } else {
-      await createFolder({ ...values, projectId }).catch(() => null);
+      await createFolder({ ...values, projectId, parentId }).catch(() => null);
     }
   };
   const handleDelete = async () => {
