@@ -23,6 +23,7 @@ export const QuickLinkItem: FC<Props> = (props) => {
       component="a"
       href={url}
       target="_blank"
+      size="sm"
       variant="transparent"
       w="100%"
       p="xs"

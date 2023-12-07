@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Button } from '@mantine/core';
+import { Button, rgba } from '@mantine/core';
 import { Directory } from '@prisma/client';
 import { ProjectMenu } from './project-menu';
 import { QuickLinkType } from './quick-links';
@@ -21,12 +21,13 @@ export const QuickLinkFolderItem: FC<Props> = (props) => {
   return (
     <Button
       component="div"
+      size="sm"
       variant="transparent"
       w="100%"
       p="xs"
       radius="md"
       c={inExpandedView ? 'white' : 'neutral.9'}
-      bg={inExpandedView ? 'transparent' : 'neutral.0'}
+      bg={inExpandedView ? rgba('black', 0.1) : 'neutral.0'}
       fw={400}
       leftSection={<FolderIcon />}
       rightSection={
@@ -38,7 +39,7 @@ export const QuickLinkFolderItem: FC<Props> = (props) => {
         />
       }
       className={classNames(styles.quickLink, {
-        [styles.quickLinkExpandedView]: inExpandedView,
+        [styles.quickLinkFolderExpandedView]: inExpandedView,
       })}
       classNames={{ label: styles.quickLinkLabel }}
     >

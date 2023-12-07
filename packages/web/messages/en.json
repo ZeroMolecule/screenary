@@ -121,6 +121,7 @@
       "addFolderAction": "New Folder",
       "deleteLinkTitle": "Delete Quick Link",
       "deleteFolderTitle": "Delete Folder",
+      "foldersTitle": "Folders",
       "form": {
         "link": {
           "create": {

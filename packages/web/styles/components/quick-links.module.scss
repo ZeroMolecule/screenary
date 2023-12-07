@@ -12,6 +12,19 @@
   border-bottom: 1px solid var(--mantine-color-neutral-7);
 }
 
+.quickLinkFolderExpandedView {
+  &:hover {
+    background-color: var(--mantine-color-neutral-7) !important;
+  }
+}
+
 .quickLinkLabel {
   flex: 1;
+}
+
+.quickLinkFolderIconBlock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: rem(8);
 }

@@ -3,11 +3,13 @@ import { useTranslations } from 'next-intl';
 import { Directory, QuickLink } from '@prisma/client';
 import { ExpandedPopover } from './expanded-popover';
 import { QuickLinkItem } from './quick-link-item';
-import { Button, Group, Space, Stack } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
+import { Box, Button, Grid, GridCol, Group, Space, Stack } from '@mantine/core';
+import { IconBookmark, IconPlus } from '@tabler/icons-react';
 import { PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID } from '@/utils/constants';
 import { QuickLinkFolderItem } from './quick-link-folder-item';
 import { QuickLinkPopover, QuickLinkType } from './quick-links';
+import { Text } from '../base/text';
+import styles from '@/styles/components/quick-links.module.scss';
 
 type Props = {
   quickLinks: QuickLink[];
@@ -32,13 +34,14 @@ export const QuickLinksFooter: FC<Props> = (props) => {
   } = useQuickLinksFooter(props);
 
   const renderFolder = (item: Directory) => (
-    <QuickLinkFolderItem
-      key={item.id}
-      item={item}
-      onEditOpen={onEditOpen}
-      onDeleteOpen={onDeleteOpen}
-      inExpandedView
-    />
+    <GridCol key={item.id} span={4}>
+      <QuickLinkFolderItem
+        item={item}
+        onEditOpen={onEditOpen}
+        onDeleteOpen={onDeleteOpen}
+        inExpandedView
+      />
+    </GridCol>
   );
 
   const renderQuickLink = (item: QuickLink) => (
@@ -60,8 +63,24 @@ export const QuickLinksFooter: FC<Props> = (props) => {
       portalTarget={PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID}
     >
       <Stack my="lg">
-        {folders.map(renderFolder)}
-        <Space />
+        {!!folders.length && (
+          <Stack>
+            <Group gap="xs">
+              <Box
+                w={21}
+                h={21}
+                bg="neutral.2"
+                className={styles.quickLinkFolderIconBlock}
+              >
+                <IconBookmark size={16} />
+              </Box>
+              <Text size="sm" c="white" fw={600}>
+                {t('foldersTitle')}
+              </Text>
+            </Group>
+            <Grid>{folders.map(renderFolder)}</Grid>
+          </Stack>
+        )}
         {quickLinks.map(renderQuickLink)}
       </Stack>
       <Group mt="auto" gap="xs">
