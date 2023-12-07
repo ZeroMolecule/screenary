@@ -31,6 +31,7 @@ type Props = {
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
   onEditOpen: (item: QuickLink | Directory, type: QuickLinkType) => void;
   setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
+  onClearFolderParams?: () => void;
 };
 
 export const QuickLinksFooter: FC<Props> = (props) => {
@@ -43,6 +44,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
     onDeleteOpen,
     onEditOpen,
     setPopoverOpen,
+    onClearFolderParams,
   } = useQuickLinksFooter(props);
 
   const renderFolder = (item: Directory) => (
@@ -73,6 +75,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
       setExpanded={setExpanded}
       closeOnClickOutside={false}
       portalTarget={PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID}
+      onTitleClick={onClearFolderParams}
     >
       <Stack h="100%" my="lg" className={stylesOverflow['overflow-auto']}>
         {!!folders.length && (
@@ -143,6 +146,7 @@ function useQuickLinksFooter({
   onDeleteOpen,
   onEditOpen,
   setPopoverOpen,
+  onClearFolderParams,
 }: Props) {
   const t = useTranslations('project.quickLinks');
 
@@ -155,5 +159,6 @@ function useQuickLinksFooter({
     onDeleteOpen,
     onEditOpen,
     setPopoverOpen,
+    onClearFolderParams,
   };
 }

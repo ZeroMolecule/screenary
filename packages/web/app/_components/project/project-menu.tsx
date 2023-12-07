@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, MouseEvent } from 'react';
 import {
   ActionIcon,
   Divider,
@@ -25,6 +25,7 @@ export const ProjectMenu: FC<Props> = (props) => {
     isOpen,
     toggle,
     close,
+    handleTargetClick,
     handleOpenEditModal,
     handleOpenDeleteModal,
   } = useProjectMenu(props);
@@ -36,7 +37,7 @@ export const ProjectMenu: FC<Props> = (props) => {
           size={small ? 'md' : 'xl'}
           variant="subtle"
           color="neutral.5"
-          onClick={(e) => e.preventDefault()}
+          onClick={handleTargetClick}
         >
           <IconDots size={small ? 24 : 32} />
         </ActionIcon>
@@ -82,11 +83,18 @@ function useProjectMenu({
 }: Props) {
   const [isOpen, { toggle, close }] = useDisclosure(false);
 
-  const handleOpenEditModal = () => {
+  const handleTargetClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleOpenEditModal = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     close();
     openEditModal();
   };
-  const handleOpenDeleteModal = () => {
+  const handleOpenDeleteModal = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     close();
     openDeleteModal();
   };
@@ -97,6 +105,7 @@ function useProjectMenu({
     isOpen,
     toggle,
     close,
+    handleTargetClick,
     handleOpenEditModal,
     handleOpenDeleteModal,
   };

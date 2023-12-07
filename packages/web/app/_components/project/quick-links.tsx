@@ -37,6 +37,7 @@ export const QuickLinks: FC<Props> = (props) => {
     setPopoverOpen,
     expanded,
     setExpanded,
+    onClearFolderParams,
     onLinkSubmit,
     onFolderSubmit,
     handleEditOpen,
@@ -83,6 +84,7 @@ export const QuickLinks: FC<Props> = (props) => {
             onFolderSubmit={onFolderSubmit}
             quickLink={editLink ?? undefined}
             folder={editFolder ?? undefined}
+            onClearFolderParams={onClearFolderParams}
           />
           <Stack
             className={classNames(
@@ -107,6 +109,7 @@ export const QuickLinks: FC<Props> = (props) => {
             onDeleteOpen={handleOpenDelete}
             onEditOpen={handleEditOpen}
             setPopoverOpen={setPopoverOpen}
+            onClearFolderParams={onClearFolderParams}
           />
         </Stack>
       </Card>
@@ -148,6 +151,7 @@ function useQuickLinks({ projectId }: Props) {
       setDeleteId: setDeleteFolderId,
       onDelete: onFolderDelete,
       onSubmit: onFolderSubmit,
+      onClearFolderParams,
     },
   ] = useFolders(projectId, () => {
     setPopoverOpen(popoverInitialState);
@@ -199,6 +203,7 @@ function useQuickLinks({ projectId }: Props) {
     setPopoverOpen,
     expanded,
     setExpanded,
+    onClearFolderParams,
     onLinkSubmit,
     onFolderSubmit,
     handleEditOpen,

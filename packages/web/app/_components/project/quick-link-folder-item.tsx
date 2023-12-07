@@ -4,6 +4,8 @@ import { Directory } from '@prisma/client';
 import { ProjectMenu } from './project-menu';
 import { QuickLinkType } from './quick-links';
 import { FolderIcon } from '../icons/folder-icon';
+import { useFolders } from '@/hooks/use-folders';
+import { useParams } from 'next/navigation';
 import classNames from 'classnames';
 import styles from '@/styles/components/quick-links.module.scss';
 
@@ -15,8 +17,13 @@ type Props = {
 };
 
 export const QuickLinkFolderItem: FC<Props> = (props) => {
-  const { name, handleEditOpen, handleDeleteOpen, inExpandedView } =
-    useQuickLinkFolderItem(props);
+  const {
+    name,
+    inExpandedView,
+    handleEditOpen,
+    handleDeleteOpen,
+    handleFolderSelect,
+  } = useQuickLinkFolderItem(props);
 
   return (
     <Button
@@ -42,6 +49,7 @@ export const QuickLinkFolderItem: FC<Props> = (props) => {
         [styles.quickLinkFolderExpandedView]: inExpandedView,
       })}
       classNames={{ label: styles.quickLinkLabel }}
+      onClick={handleFolderSelect}
     >
       {name}
     </Button>
@@ -55,14 +63,19 @@ function useQuickLinkFolderItem({
   inExpandedView,
 }: Props) {
   const { id, name } = item;
+  const { id: projectId } = useParams();
+  const [, { onFolderSelect }] = useFolders(projectId);
 
   const handleEditOpen = () => onEditOpen(item, 'folder');
   const handleDeleteOpen = () => onDeleteOpen(id, 'folder');
 
+  const handleFolderSelect = () => onFolderSelect(item.id);
+
   return {
     name,
+    inExpandedView,
     handleEditOpen,
     handleDeleteOpen,
-    inExpandedView,
+    handleFolderSelect,
   };
 }

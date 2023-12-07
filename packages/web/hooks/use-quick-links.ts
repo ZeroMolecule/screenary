@@ -8,6 +8,7 @@ import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation
 import { editQuickLinkMutation } from '@/domain/mutations/edit-quick-link-mutation';
 import { deleteQuickLinkMutation } from '@/domain/mutations/delete-quick-link-mutation';
 import { QuickLinkFormValues } from '@/app/_components/project/quick-link-popover-menu';
+import { useFolders } from './use-folders';
 
 export const useQuickLinks = (
   projectId: string,
@@ -27,15 +28,16 @@ export const useQuickLinks = (
 ] => {
   const [editItem, setEditItem] = useState<QuickLink | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [{ selectedFolderId }] = useFolders(projectId);
 
   const onCreated = useNotificationSuccess('created');
   const onEdited = useNotificationSuccess('saved');
   const onDeleted = useNotificationSuccess('deleted');
 
-  const { data: quickLinks, refetch } = useQuery<
-    Data<QuickLink[]>
-  >({
-    queryKey: quickLinksQuery.key(projectId),
+  const { data: quickLinks, refetch } = useQuery<Data<QuickLink[]>>({
+    queryKey: quickLinksQuery.key(projectId, {
+      directoryId: selectedFolderId ?? 'null',
+    }),
   });
   const { mutateAsync: createQuickLink } = useMutation({
     mutationFn: addQuickLinkMutation.fnc,

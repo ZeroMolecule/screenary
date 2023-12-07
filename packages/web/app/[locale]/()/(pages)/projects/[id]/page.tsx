@@ -12,10 +12,13 @@ import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 import { foldersQuery } from '@/domain/queries/folders-query';
 
 type Params = { locale: string; id: string };
-type Props = { params: Params };
+type Props = {
+  params: Params;
+  searchParams: { [key: string]: string | undefined };
+};
 
-async function ProjectPage({ params: { id } }: Props) {
-  const { dehydratedState } = await useProjectPage(id);
+async function ProjectPage(props: Props) {
+  const { id, dehydratedState } = await useProjectPage(props);
 
   return (
     <HydrationBoundary state={dehydratedState}>
@@ -27,7 +30,8 @@ async function ProjectPage({ params: { id } }: Props) {
   );
 }
 
-async function useProjectPage(id: string) {
+async function useProjectPage({ params: { id }, searchParams }: Props) {
+  const folderParamsId = searchParams.folder ?? 'null';
   const queryClient = getQueryClient();
   await Promise.all([
     queryClient.prefetchQuery({ queryKey: projectQuery.key(id) }),
@@ -42,12 +46,16 @@ async function useProjectPage(id: string) {
         status: TaskStatus.DONE,
       }),
     }),
-    queryClient.prefetchQuery({ queryKey: quickLinksQuery.key(id) }),
-    queryClient.prefetchQuery({ queryKey: foldersQuery.key(id) }),
+    queryClient.prefetchQuery({
+      queryKey: quickLinksQuery.key(id, { directoryId: folderParamsId }),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: foldersQuery.key(id, { parentId: folderParamsId }),
+    }),
   ]);
   const dehydratedState = dehydrate(queryClient);
 
-  return { dehydratedState };
+  return { id, dehydratedState };
 }
 
 export default withPrivatePage(ProjectPage);

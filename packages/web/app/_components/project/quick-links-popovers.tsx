@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
   Box,
+  Button,
   Group,
   Popover,
   PopoverDropdown,
@@ -29,6 +30,7 @@ type Props = {
   onFolderSubmit: (values: FolderFormValues) => Promise<void>;
   quickLink?: QuickLink;
   folder?: Directory;
+  onClearFolderParams?: () => void;
 };
 
 export const QuickLinksPopovers: FC<Props> = (props) => {
@@ -42,13 +44,22 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
     onFolderSubmit,
     quickLink,
     folder,
+    onClearFolderParams,
   } = useQuickLinksPopovers(props);
 
   return (
     <Group justify="space-between">
-      <Text size="lg" fw={600}>
+      <Button
+        component={Text}
+        size="lg"
+        fw={600}
+        variant="transparent"
+        h="auto"
+        p={0}
+        onClick={onClearFolderParams}
+      >
         {t('title')}
-      </Text>
+      </Button>
       <Popover
         opened={popoverOpen.link}
         onChange={handleLinkChange}
@@ -119,6 +130,7 @@ function useQuickLinksPopovers({
   onFolderSubmit,
   quickLink,
   folder,
+  onClearFolderParams,
 }: Props) {
   const t = useTranslations('project.quickLinks');
 
@@ -149,5 +161,6 @@ function useQuickLinksPopovers({
     onFolderSubmit,
     quickLink,
     folder,
+    onClearFolderParams,
   };
 }
