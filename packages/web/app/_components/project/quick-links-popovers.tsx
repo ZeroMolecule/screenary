@@ -24,9 +24,8 @@ type Props = {
   setPopoverLinkOpen: Dispatch<SetStateAction<boolean>>;
   popoverFolderOpen: boolean;
   setPopoverFolderOpen: Dispatch<SetStateAction<boolean>>;
-  onLinkClose: () => void;
+  onEditClose: () => void;
   onLinkSubmit: (values: QuickLinkFormValues) => Promise<void>;
-  onFolderClose: () => void;
   onFolderSubmit: (values: FolderFormValues) => Promise<void>;
   quickLink?: QuickLink;
   folder?: Directory;
@@ -115,9 +114,8 @@ function useQuickLinksPopovers({
   setPopoverLinkOpen,
   popoverFolderOpen,
   setPopoverFolderOpen,
-  onLinkClose,
+  onEditClose,
   onLinkSubmit,
-  onFolderClose,
   onFolderSubmit,
   quickLink,
   folder,
@@ -127,12 +125,10 @@ function useQuickLinksPopovers({
   const handleOnClose = () => {
     if (quickLink || folder) {
       setTimeout(() => {
-        onLinkClose();
-        onFolderClose();
+        onEditClose();
       }, 250);
     } else {
-      onLinkClose();
-      onFolderClose();
+      onEditClose();
     }
   };
 

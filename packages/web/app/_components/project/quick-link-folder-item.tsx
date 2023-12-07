@@ -3,13 +3,14 @@ import { Button } from '@mantine/core';
 import { IconBrandMedium } from '@tabler/icons-react';
 import { Directory } from '@prisma/client';
 import { ProjectMenu } from './project-menu';
+import { QuickLinkType } from './quick-links';
 import classNames from 'classnames';
 import styles from '@/styles/components/quick-links.module.scss';
 
 type Props = {
   item: Directory;
-  onEditOpen: (folder: Directory) => void;
-  onDeleteOpen: (id: string) => void;
+  onEditOpen: (folder: Directory, type: QuickLinkType) => void;
+  onDeleteOpen: (id: string, type: QuickLinkType) => void;
   inExpandedView?: boolean;
 };
 
@@ -54,8 +55,8 @@ function useQuickLinkFolderItem({
 }: Props) {
   const { id, name } = item;
 
-  const handleEditOpen = () => onEditOpen(item);
-  const handleDeleteOpen = () => onDeleteOpen(id);
+  const handleEditOpen = () => onEditOpen(item, 'folder');
+  const handleDeleteOpen = () => onDeleteOpen(id, 'folder');
 
   return {
     name,

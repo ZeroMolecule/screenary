@@ -3,13 +3,14 @@ import { Button } from '@mantine/core';
 import { IconBrandMedium } from '@tabler/icons-react';
 import { QuickLink } from '@prisma/client';
 import { ProjectMenu } from './project-menu';
+import { QuickLinkType } from './quick-links';
 import classNames from 'classnames';
 import styles from '@/styles/components/quick-links.module.scss';
 
 type Props = {
   item: QuickLink;
-  onEditOpen: (link: QuickLink) => void;
-  onDeleteOpen: (id: string) => void;
+  onEditOpen: (link: QuickLink, type: QuickLinkType) => void;
+  onDeleteOpen: (id: string, type: QuickLinkType) => void;
   inExpandedView?: boolean;
 };
 
@@ -56,8 +57,8 @@ function useQuickLinkItem({
 }: Props) {
   const { id, url } = item;
 
-  const handleEditOpen = () => onEditOpen(item);
-  const handleDeleteOpen = () => onDeleteOpen(id);
+  const handleEditOpen = () => onEditOpen(item, 'link');
+  const handleDeleteOpen = () => onDeleteOpen(id, 'link');
 
   return {
     url,
