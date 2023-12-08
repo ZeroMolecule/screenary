@@ -91,6 +91,16 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
           bottom={expandedSpacing}
         >
           <QuickLinkPopoverMenu
+            title={
+              quickLink
+                ? t('form.link.edit.title')
+                : t('form.link.create.title')
+            }
+            label={
+              quickLink
+                ? t('form.link.edit.urlLabel')
+                : t('form.link.create.urlLabel')
+            }
             onClose={() => handleLinkChange(false)}
             onSubmit={onLinkSubmit}
             item={quickLink}
@@ -120,6 +130,16 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
           bottom={expandedSpacing}
         >
           <QuickLinkFolderPopoverMenu
+            title={
+              folder
+                ? t('form.folder.edit.title')
+                : t('form.folder.create.title')
+            }
+            label={
+              folder
+                ? t('form.folder.edit.nameLabel')
+                : t('form.folder.create.nameLabel')
+            }
             onClose={() => handleFolderChange(false)}
             onSubmit={onFolderSubmit}
             item={folder}

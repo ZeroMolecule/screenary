@@ -9,18 +9,20 @@ import { FormTextInput } from '../base/form/text-input';
 import styles from '@/styles/components/input.module.scss';
 
 type Props = {
+  title: string;
+  label: string;
   onClose: () => void;
   onSubmit: (values: FolderFormValues) => Promise<void>;
   item?: Directory;
 };
 
 export const QuickLinkFolderPopoverMenu: FC<Props> = (props) => {
-  const { t, formType, folderForm, isSubmitting, onClose, onSubmit } =
+  const { t, title, label, folderForm, isSubmitting, onClose, onSubmit } =
     useQuickLinkFolderPopoverMenu(props);
 
   return (
     <PopoverMenuForm
-      title={t(`${formType}.title`)}
+      title={title}
       form={folderForm}
       isSubmitting={isSubmitting}
       onClose={onClose}
@@ -29,7 +31,7 @@ export const QuickLinkFolderPopoverMenu: FC<Props> = (props) => {
     >
       <FormTextInput
         name="name"
-        label={t(`${formType}.nameLabel`)}
+        label={label}
         placeholder={t('namePlaceholder')}
         c="white"
         classNames={{ input: styles.inputDark }}
@@ -38,9 +40,14 @@ export const QuickLinkFolderPopoverMenu: FC<Props> = (props) => {
   );
 };
 
-function useQuickLinkFolderPopoverMenu({ onClose, onSubmit, item }: Props) {
+function useQuickLinkFolderPopoverMenu({
+  title,
+  label,
+  onClose,
+  onSubmit,
+  item,
+}: Props) {
   const t = useTranslations('project.quickLinks.form.folder');
-  const formType = item ? 'edit' : 'create';
 
   const folderForm = useForm<FolderFormValues>({
     resolver: zodResolver(folderSchema),
@@ -55,7 +62,8 @@ function useQuickLinkFolderPopoverMenu({ onClose, onSubmit, item }: Props) {
 
   return {
     t,
-    formType,
+    title,
+    label,
     folderForm,
     isSubmitting,
     onClose,

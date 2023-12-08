@@ -9,18 +9,20 @@ import { QuickLink } from '@prisma/client';
 import styles from '@/styles/components/input.module.scss';
 
 type Props = {
+  title: string;
+  label: string;
   onClose: () => void;
   onSubmit: (values: QuickLinkFormValues) => Promise<void>;
   item?: QuickLink;
 };
 
 export const QuickLinkPopoverMenu: FC<Props> = (props) => {
-  const { t, formType, quickLinkForm, isSubmitting, onClose, onSubmit } =
+  const { t, title, label, quickLinkForm, isSubmitting, onClose, onSubmit } =
     useQuickLinkPopoverMenu(props);
 
   return (
     <PopoverMenuForm
-      title={t(`${formType}.title`)}
+      title={title}
       form={quickLinkForm}
       isSubmitting={isSubmitting}
       onClose={onClose}
@@ -29,7 +31,7 @@ export const QuickLinkPopoverMenu: FC<Props> = (props) => {
     >
       <FormTextInput
         name="url"
-        label={t(`${formType}.urlLabel`)}
+        label={label}
         placeholder={t('urlPlaceholder')}
         c="white"
         classNames={{ input: styles.inputDark }}
@@ -38,9 +40,14 @@ export const QuickLinkPopoverMenu: FC<Props> = (props) => {
   );
 };
 
-function useQuickLinkPopoverMenu({ onClose, onSubmit, item }: Props) {
+function useQuickLinkPopoverMenu({
+  title,
+  label,
+  onClose,
+  onSubmit,
+  item,
+}: Props) {
   const t = useTranslations('project.quickLinks.form.link');
-  const formType = item ? 'edit' : 'create';
 
   const quickLinkForm = useForm<QuickLinkFormValues>({
     resolver: zodResolver(quickLinkSchema),
@@ -55,7 +62,8 @@ function useQuickLinkPopoverMenu({ onClose, onSubmit, item }: Props) {
 
   return {
     t,
-    formType,
+    title,
+    label,
     quickLinkForm,
     isSubmitting,
     onClose,
