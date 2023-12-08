@@ -86,6 +86,7 @@ export const QuickLinks: FC<Props> = (props) => {
             quickLink={editLink ?? undefined}
             folder={editFolder ?? undefined}
             onClearFolderParams={onClearFolderParams}
+            isExpanded={expanded}
           />
           <Stack
             className={classNames(

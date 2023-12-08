@@ -31,12 +31,14 @@ type Props = {
   quickLink?: QuickLink;
   folder?: Directory;
   onClearFolderParams?: () => void;
+  isExpanded?: boolean;
 };
 
 export const QuickLinksPopovers: FC<Props> = (props) => {
   const {
     t,
     popoverOpen,
+    expandedSpacing,
     handleOnClose,
     handleLinkChange,
     handleFolderChange,
@@ -84,9 +86,9 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
           ml="auto"
           pos="absolute"
           left={0}
-          right={0}
+          right={expandedSpacing}
           top={0}
-          bottom={0}
+          bottom={expandedSpacing}
         >
           <QuickLinkPopoverMenu
             onClose={() => handleLinkChange(false)}
@@ -113,9 +115,9 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
           ml="auto"
           pos="absolute"
           left={0}
-          right={0}
+          right={expandedSpacing}
           top={0}
-          bottom={0}
+          bottom={expandedSpacing}
         >
           <QuickLinkFolderPopoverMenu
             onClose={() => handleFolderChange(false)}
@@ -137,8 +139,10 @@ function useQuickLinksPopovers({
   quickLink,
   folder,
   onClearFolderParams,
+  isExpanded,
 }: Props) {
   const t = useTranslations('project.quickLinks');
+  const expandedSpacing = isExpanded ? 3 : 0;
 
   const handleOnClose = () => {
     if (quickLink || folder) {
@@ -160,6 +164,7 @@ function useQuickLinksPopovers({
   return {
     t,
     popoverOpen,
+    expandedSpacing,
     handleOnClose,
     handleLinkChange,
     handleFolderChange,
