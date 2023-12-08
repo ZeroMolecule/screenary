@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
 import { Button } from '@mantine/core';
 import { IconLink } from '@tabler/icons-react';
@@ -7,7 +7,6 @@ import { ProjectMenu } from './project-menu';
 import { QuickLinkType } from './quick-links';
 import { useQuery } from '@tanstack/react-query';
 import { quickLinkDataQuery } from '@/domain/queries/quick-link-data-query';
-import { load } from 'cheerio';
 import classNames from 'classnames';
 import styles from '@/styles/components/quick-links.module.scss';
 
@@ -22,7 +21,7 @@ export const QuickLinkItem: FC<Props> = (props) => {
   const {
     url,
     title,
-    faviconPath,
+    favicon,
     isLoading,
     handleEditOpen,
     handleDeleteOpen,
@@ -47,13 +46,13 @@ export const QuickLinkItem: FC<Props> = (props) => {
       bg={inExpandedView ? 'transparent' : 'neutral.0'}
       fw={400}
       leftSection={
-        faviconPath ? (
+        favicon ? (
           <Image
-            loader={() => faviconPath}
-            src={faviconPath}
+            loader={() => favicon}
+            src={favicon}
             width={16}
             height={16}
-            alt={title}
+            alt={title ?? ''}
             unoptimized
           />
         ) : (
@@ -93,26 +92,11 @@ function useQuickLinkItem({
     queryKey: quickLinkDataQuery.key(id),
     queryFn: () => quickLinkDataQuery.fnc(url),
   });
-  const $ = load(data ?? '');
-  const baseUrl = new URL(url).origin;
-  const title = data ? $('title').text() : url;
-  const favicon =
-    $('link[rel="icon"]').attr('href') ??
-    $('link[rel="shortcut icon"]').attr('href');
-  const faviconPath = (() => {
-    if (!favicon) {
-      return null;
-    }
-    if (favicon.startsWith('http')) {
-      return favicon;
-    }
-    return `${baseUrl}/${favicon}`;
-  })();
 
   return {
     url,
-    title,
-    faviconPath,
+    title: data?.title,
+    favicon: data?.favicon,
     isLoading,
     handleEditOpen,
     handleDeleteOpen,
