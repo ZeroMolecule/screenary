@@ -36,7 +36,7 @@ export const QuickLinkFolderItem: FC<Props> = (props) => {
       c={inExpandedView ? 'white' : 'neutral.9'}
       bg={inExpandedView ? rgba('black', 0.1) : 'neutral.0'}
       fw={400}
-      leftSection={<FolderIcon />}
+      leftSection={<FolderIcon color="var(--mantine-color-primary-3)" />}
       rightSection={
         <ProjectMenu
           openEditModal={handleEditOpen}

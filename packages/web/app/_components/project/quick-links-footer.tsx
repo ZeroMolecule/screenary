@@ -19,10 +19,10 @@ import { QuickLinkFolderItem } from './quick-link-folder-item';
 import { QuickLinkPopover, QuickLinkType } from './quick-links';
 import { Text } from '../base/text';
 import { EmptyPlaceholder } from '../empty-placeholder';
+import { FolderIcon } from '../icons/folder-icon';
 import emptyIcon from '@/public/images/link-icon.svg';
 import stylesOverflow from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/quick-links.module.scss';
-import { FolderIcon } from '../icons/folder-icon';
 
 type Props = {
   quickLinks: QuickLink[];
@@ -94,7 +94,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
                   <FolderIcon
                     width={16}
                     height={16}
-                    fillColor="var(--mantine-color-neutral-9)"
+                    color="var(--mantine-color-neutral-9)"
                   />
                 ) : (
                   <IconBookmark size={16} />
