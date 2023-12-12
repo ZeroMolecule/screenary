@@ -49,6 +49,7 @@ export class EmbeddedPagesService {
     userId: string,
     pagination: PaginationQuery
   ) {
+    console.log(projectId);
     const where = {
       projectId,
       userId,
@@ -56,6 +57,7 @@ export class EmbeddedPagesService {
 
     const [list, total] = await Promise.all([
       this.prismaService.embeddedPage.findMany({
+        where,
         ...pagination,
       }),
       this.prismaService.embeddedPage.count({ where }),
