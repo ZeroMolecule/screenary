@@ -45,7 +45,8 @@ export const QuickLinks: FC<Props> = (props) => {
     handleEditClose,
     isDeleteOpen,
     handleOpenDelete,
-    handleCloseDelete,
+    closeDelete,
+    handleAfterCloseDelete,
     deleteModalTitle,
     deleteModalOnSubmit,
   } = useQuickLinks(props);
@@ -119,9 +120,10 @@ export const QuickLinks: FC<Props> = (props) => {
       <div id={PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID} />
       <ConfirmDeleteModal
         opened={isDeleteOpen}
-        onClose={handleCloseDelete}
+        onClose={closeDelete}
         onSubmit={deleteModalOnSubmit}
         title={deleteModalTitle}
+        afterClose={handleAfterCloseDelete}
       />
     </Box>
   );
@@ -184,12 +186,11 @@ function useQuickLinks({ projectId }: Props) {
     }
     openDelete();
   };
-  const handleCloseDelete = () => {
+  const handleAfterCloseDelete = () => {
     setTimeout(() => {
       setDeleteLinkId(null);
       setDeleteFolderId(null);
     }, 250);
-    closeDelete();
   };
   const deleteModalTitle = deleteLinkId
     ? t('deleteLinkTitle')
@@ -214,7 +215,8 @@ function useQuickLinks({ projectId }: Props) {
     handleEditClose,
     isDeleteOpen,
     handleOpenDelete,
-    handleCloseDelete,
+    closeDelete,
+    handleAfterCloseDelete,
     deleteModalTitle,
     deleteModalOnSubmit,
   };
