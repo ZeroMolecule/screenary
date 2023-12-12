@@ -21,6 +21,7 @@ import { useTranslations } from 'next-intl';
 import { Notes } from './notes';
 import { Tasks } from './tasks';
 import { QuickLinks } from './quick-links';
+import { EmbeddedPages } from './embedded-pages';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/project.module.scss';
 
@@ -50,21 +51,7 @@ export const ProjectPage: FC = () => {
         styles={{ inner: { height: '100%' } }}
       >
         <GridCol h="100%" className={styles.embedGridCol}>
-          {/* TODO: embedded pages */}
-          <div
-            style={{
-              height: '100%',
-              borderRadius: '24px',
-              border: '1px solid #DCD5C7',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              backgroundColor: 'white',
-            }}
-          >
-            EMBEDDED PAGES
-          </div>
+          <EmbeddedPages projectId={id} />
         </GridCol>
         <GridCol span={9} h="100%" className={styles.tasksGridCol}>
           <Tasks projectId={id} />

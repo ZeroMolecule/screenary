@@ -11,6 +11,7 @@ import { NotificationsWidget } from '@/app/_components/notifications-widget';
 import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 import { foldersQuery } from '@/domain/queries/folders-query';
 import { folderQuery } from '@/domain/queries/folder-query';
+import { embeddedPagesQuery } from '@/domain/queries/embedded-pages-query';
 
 type Params = { locale: string; id: string };
 type Props = {
@@ -55,6 +56,9 @@ async function useProjectPage({ params: { id }, searchParams }: Props) {
     }),
     queryClient.prefetchQuery({
       queryKey: folderQuery.key(folderParamsId, id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: embeddedPagesQuery.key(id),
     }),
   ]);
   const dehydratedState = dehydrate(queryClient);
