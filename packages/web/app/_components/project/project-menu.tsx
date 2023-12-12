@@ -1,7 +1,8 @@
-import { FC } from 'react';
+import { FC, MouseEvent } from 'react';
 import {
   ActionIcon,
   Divider,
+  FloatingPosition,
   Menu,
   MenuDropdown,
   MenuTarget,
@@ -13,17 +14,32 @@ import { useDisclosure } from '@mantine/hooks';
 type Props = {
   openEditModal: () => void;
   openDeleteModal: () => void;
+  position?: FloatingPosition;
+  small?: boolean;
 };
 
 export const ProjectMenu: FC<Props> = (props) => {
-  const { isOpen, toggle, close, handleOpenEditModal, handleOpenDeleteModal } =
-    useProjectMenu(props);
+  const {
+    position,
+    small,
+    isOpen,
+    toggle,
+    close,
+    handleTargetClick,
+    handleOpenEditModal,
+    handleOpenDeleteModal,
+  } = useProjectMenu(props);
 
   return (
-    <Menu opened={isOpen} onChange={toggle}>
+    <Menu opened={isOpen} onChange={toggle} position={position}>
       <MenuTarget>
-        <ActionIcon size="xl" variant="subtle" color="neutral.5">
-          <IconDots size={32} />
+        <ActionIcon
+          size={small ? 'md' : 'xl'}
+          variant="subtle"
+          color="neutral.5"
+          onClick={handleTargetClick}
+        >
+          <IconDots size={small ? 24 : 32} />
         </ActionIcon>
       </MenuTarget>
       <MenuDropdown>
@@ -34,7 +50,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             color="neutral.5"
             onClick={close}
           >
-            <IconX size={24} />
+            <IconX />
           </ActionIcon>
           <Divider color="neutral.7" />
           <ActionIcon
@@ -43,7 +59,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             color="white"
             onClick={handleOpenDeleteModal}
           >
-            <IconTrash size={24} />
+            <IconTrash />
           </ActionIcon>
           <ActionIcon
             variant="transparent"
@@ -51,7 +67,7 @@ export const ProjectMenu: FC<Props> = (props) => {
             color="white"
             onClick={handleOpenEditModal}
           >
-            <IconPencil size={24} />
+            <IconPencil />
           </ActionIcon>
         </Stack>
       </MenuDropdown>
@@ -59,18 +75,38 @@ export const ProjectMenu: FC<Props> = (props) => {
   );
 };
 
-function useProjectMenu({ openEditModal, openDeleteModal }: Props) {
+function useProjectMenu({
+  openEditModal,
+  openDeleteModal,
+  position,
+  small,
+}: Props) {
   const [isOpen, { toggle, close }] = useDisclosure(false);
 
-  const handleOpenEditModal = () => {
+  const handleTargetClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleOpenEditModal = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     close();
     openEditModal();
   };
-
-  const handleOpenDeleteModal = () => {
+  const handleOpenDeleteModal = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     close();
     openDeleteModal();
   };
 
-  return { isOpen, toggle, close, handleOpenEditModal, handleOpenDeleteModal };
+  return {
+    position,
+    small,
+    isOpen,
+    toggle,
+    close,
+    handleTargetClick,
+    handleOpenEditModal,
+    handleOpenDeleteModal,
+  };
 }

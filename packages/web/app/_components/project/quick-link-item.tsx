@@ -1,0 +1,105 @@
+import { FC } from 'react';
+import Image from 'next/image';
+import { Button } from '@mantine/core';
+import { IconLink } from '@tabler/icons-react';
+import { QuickLink } from '@prisma/client';
+import { ProjectMenu } from './project-menu';
+import { QuickLinkType } from './quick-links';
+import { useQuery } from '@tanstack/react-query';
+import { quickLinkDataQuery } from '@/domain/queries/quick-link-data-query';
+import classNames from 'classnames';
+import styles from '@/styles/components/quick-links.module.scss';
+
+type Props = {
+  item: QuickLink;
+  onEditOpen: (link: QuickLink, type: QuickLinkType) => void;
+  onDeleteOpen: (id: string, type: QuickLinkType) => void;
+  inExpandedView?: boolean;
+};
+
+export const QuickLinkItem: FC<Props> = (props) => {
+  const {
+    url,
+    title,
+    favicon,
+    isLoading,
+    handleEditOpen,
+    handleDeleteOpen,
+    inExpandedView,
+  } = useQuickLinkItem(props);
+
+  if (isLoading) {
+    return null;
+  }
+
+  return (
+    <Button
+      component="a"
+      href={url}
+      target="_blank"
+      size="sm"
+      variant="transparent"
+      w="100%"
+      p="xs"
+      radius="md"
+      c={inExpandedView ? 'white' : 'neutral.9'}
+      bg={inExpandedView ? 'transparent' : 'neutral.0'}
+      fw={400}
+      leftSection={
+        favicon ? (
+          <Image
+            loader={() => favicon}
+            src={favicon}
+            width={16}
+            height={16}
+            alt={title ?? ''}
+            unoptimized
+          />
+        ) : (
+          <IconLink size={16} color="var(--mantine-color-primary-3)" />
+        )
+      }
+      rightSection={
+        <ProjectMenu
+          openEditModal={handleEditOpen}
+          openDeleteModal={handleDeleteOpen}
+          position="left-start"
+          small
+        />
+      }
+      className={classNames(styles.quickLink, {
+        [styles.quickLinkExpandedView]: inExpandedView,
+      })}
+      classNames={{ label: styles.quickLinkLabel }}
+    >
+      {title}
+    </Button>
+  );
+};
+
+function useQuickLinkItem({
+  item,
+  onEditOpen,
+  onDeleteOpen,
+  inExpandedView,
+}: Props) {
+  const { id, url } = item;
+
+  const handleEditOpen = () => onEditOpen(item, 'link');
+  const handleDeleteOpen = () => onDeleteOpen(id, 'link');
+
+  const { data, isLoading } = useQuery({
+    queryKey: quickLinkDataQuery.key(id),
+    queryFn: () => quickLinkDataQuery.fnc(url),
+  });
+
+  return {
+    url,
+    title: data?.title,
+    favicon: data?.favicon,
+    isLoading,
+    handleEditOpen,
+    handleDeleteOpen,
+    inExpandedView,
+  };
+}

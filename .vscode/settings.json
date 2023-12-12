@@ -9,6 +9,7 @@
     "svgr",
     "tabler",
     "tanstack",
-    "todos"
+    "todos",
+    "unoptimized"
   ]
 }

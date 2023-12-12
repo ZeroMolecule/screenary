@@ -1,24 +1,25 @@
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { useTranslations } from 'next-intl';
-import { ActionIcon, Button, Card, Group } from '@mantine/core';
-import { IconPlus, IconX } from '@tabler/icons-react';
-import { Title } from '../base/title';
-import { Note } from './note';
+import { Button } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 import { Note as NoteModel } from '@prisma/client';
-import styles from '@/styles/components/notes.module.scss';
+import { ExpandedPopover } from './expanded-popover';
 import { Text } from '../base/text';
+import { Note } from './note';
+import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
   notes: NoteModel[];
-  onClose: () => void;
+  expanded: boolean;
+  setExpanded: Dispatch<SetStateAction<boolean>>;
   onOpenDelete: (id: string) => void;
   onCreate: () => Promise<void>;
   onEdit: (note: NoteModel) => Promise<void>;
 };
 
-export const NotesExpanded: FC<Props> = (props) => {
-  const { t, notes, onClose, onOpenDelete, onCreate, onEdit } =
-    useNotesExpanded(props);
+export const NotesFooter: FC<Props> = (props) => {
+  const { t, notes, expanded, setExpanded, onOpenDelete, onCreate, onEdit } =
+    useNotesFooter(props);
 
   const renderNote = (note: NoteModel) => (
     <Note
@@ -30,15 +31,11 @@ export const NotesExpanded: FC<Props> = (props) => {
   );
 
   return (
-    <Card className={styles.notesContainer}>
-      <Group justify="space-between">
-        <Title order={5} c="white" fw={700}>
-          {t('title')}
-        </Title>
-        <ActionIcon variant="transparent" color="white" onClick={onClose}>
-          <IconX />
-        </ActionIcon>
-      </Group>
+    <ExpandedPopover
+      title={t('title')}
+      expanded={expanded}
+      setExpanded={setExpanded}
+    >
       {!notes.length ? (
         <Text mt="md" c="neutral.1" fw={500}>
           {t('emptyLongText')}
@@ -59,18 +56,19 @@ export const NotesExpanded: FC<Props> = (props) => {
       >
         {t('addAction')}
       </Button>
-    </Card>
+    </ExpandedPopover>
   );
 };
 
-function useNotesExpanded({
+function useNotesFooter({
   notes,
-  onClose,
+  expanded,
+  setExpanded,
   onOpenDelete,
   onCreate,
   onEdit,
 }: Props) {
   const t = useTranslations('project.notes');
 
-  return { t, notes, onClose, onOpenDelete, onCreate, onEdit };
+  return { t, notes, expanded, setExpanded, onOpenDelete, onCreate, onEdit };
 }

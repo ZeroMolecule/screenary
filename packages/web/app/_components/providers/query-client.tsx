@@ -42,6 +42,7 @@ function useQueryClientProvider() {
               const [path, params] = queryKey as [string, unknown];
               return getAxiosData(await remoteApi.get(path, { params }));
             },
+            retry: false,
           },
           mutations: {
             onSuccess,

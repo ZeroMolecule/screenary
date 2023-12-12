@@ -6,7 +6,7 @@ import { Data } from '@/domain/remote/response/data';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
-import { Grid, GridCol, Group, Portal, Stack } from '@mantine/core';
+import { Box, Grid, GridCol, Group, Portal, Stack } from '@mantine/core';
 import { ProjectMenu } from './project-menu';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
 import { useDisclosure } from '@mantine/hooks';
@@ -20,6 +20,8 @@ import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useTranslations } from 'next-intl';
 import { Notes } from './notes';
 import { Tasks } from './tasks';
+import { QuickLinks } from './quick-links';
+import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/project.module.scss';
 
 // TODO: custom modal hook
@@ -68,24 +70,16 @@ export const ProjectPage: FC = () => {
           <Tasks projectId={id} />
         </GridCol>
         <GridCol span={3} h="100%">
-          <Stack h="100%" pos="relative" gap="xs">
-            <Notes projectId={id} />
-            {/* TODO: quick links */}
-            <div
-              style={{
-                height: '100%',
-                borderRadius: '24px',
-                border: '1px solid #DCD5C7',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-                backgroundColor: 'white',
-              }}
+          <Box h="100%" pos="relative">
+            <Stack
+              h="100%"
+              gap="xs"
+              className={overflowStyles['overflow-auto']}
             >
-              QUICK LINKS
-            </div>
-          </Stack>
+              <Notes projectId={id} />
+              <QuickLinks projectId={id} />
+            </Stack>
+          </Box>
         </GridCol>
       </Grid>
       <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>

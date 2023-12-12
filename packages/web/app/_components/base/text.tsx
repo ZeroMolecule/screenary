@@ -2,13 +2,16 @@
 
 import { FC, ReactNode } from 'react';
 import {
+  ElementProps,
   MantineStyleProps,
   Text as MantineText,
   TextProps as MantineTextProps,
 } from '@mantine/core';
 import { FontFamilyVariant, fontFamily } from '../providers/theme/typography';
 
-type Props = Omit<MantineTextProps, 'ff'> & {
+type ExtendedTextProps = MantineTextProps &
+  ElementProps<'p', keyof MantineTextProps>;
+type Props = Omit<ExtendedTextProps, 'ff'> & {
   ff?: FontFamilyVariant | MantineStyleProps['ff'];
   children: ReactNode;
 };
