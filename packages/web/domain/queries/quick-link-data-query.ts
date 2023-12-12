@@ -30,5 +30,6 @@ export const quickLinkDataQuery = {
         })();
 
         return { title, favicon: faviconPath };
-      }),
+      })
+      .catch(() => ({ title: url, favicon: null })),
 };
