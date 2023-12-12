@@ -49,7 +49,6 @@ export class EmbeddedPagesService {
     userId: string,
     pagination: PaginationQuery
   ) {
-    console.log(projectId);
     const where = {
       projectId,
       userId,
