@@ -1,10 +1,10 @@
-import { EmbeddedPage } from '@prisma/client';
 import { FC } from 'react';
+import { EmbeddedPage } from '@prisma/client';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { PopoverMenuForm } from '../popover-menu-form';
 import { FormTextInput } from '../base/form/text-input';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 type Props = {
   onClose: () => void;
@@ -23,6 +23,7 @@ export const EmbeddedPagePopover: FC<Props> = (props) => {
       isSubmitting={isSubmitting}
       onClose={onClose}
       onSubmit={onSubmit}
+      stackProps={{ pos: 'static' }}
     >
       <FormTextInput
         name="url"

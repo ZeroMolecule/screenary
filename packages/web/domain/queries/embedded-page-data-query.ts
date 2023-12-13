@@ -2,10 +2,10 @@ import axios from 'axios';
 import { getAxiosData } from '../remote/response/data';
 import { extractTitleAndFavicon } from '@/utils/url';
 
-const QUICK_LINK_DATA_QUERY_KEY = 'quick-link-data';
+const EMBEDDED_PAGE_DATA_QUERY_KEY = 'embedded-page-data';
 
-export const quickLinkDataQuery = {
-  key: (id: string) => [`${QUICK_LINK_DATA_QUERY_KEY}/${id}`],
+export const embeddedPageDataQuery = {
+  key: (id: string) => [`${EMBEDDED_PAGE_DATA_QUERY_KEY}/${id}`],
   fnc: (url: string) =>
     axios
       .get(url)
