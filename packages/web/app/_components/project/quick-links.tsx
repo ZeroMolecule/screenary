@@ -40,12 +40,14 @@ export const QuickLinks: FC<Props> = (props) => {
     setExpanded,
     onClearFolderParams,
     onLinkSubmit,
+    onLinkRefresh,
     onFolderSubmit,
     handleEditOpen,
     handleEditClose,
     isDeleteOpen,
     handleOpenDelete,
-    handleCloseDelete,
+    closeDelete,
+    handleAfterCloseDelete,
     deleteModalTitle,
     deleteModalOnSubmit,
   } = useQuickLinks(props);
@@ -65,6 +67,7 @@ export const QuickLinks: FC<Props> = (props) => {
       item={item}
       onEditOpen={handleEditOpen}
       onDeleteOpen={handleOpenDelete}
+      onRefresh={onLinkRefresh}
     />
   );
 
@@ -113,15 +116,17 @@ export const QuickLinks: FC<Props> = (props) => {
             setPopoverOpen={setPopoverOpen}
             onClearFolderParams={onClearFolderParams}
             selectedFolder={selectedFolder}
+            onLinkRefresh={onLinkRefresh}
           />
         </Stack>
       </Card>
       <div id={PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID} />
       <ConfirmDeleteModal
         opened={isDeleteOpen}
-        onClose={handleCloseDelete}
+        onClose={closeDelete}
         onSubmit={deleteModalOnSubmit}
         title={deleteModalTitle}
+        afterClose={handleAfterCloseDelete}
       />
     </Box>
   );
@@ -142,6 +147,7 @@ function useQuickLinks({ projectId }: Props) {
       setDeleteId: setDeleteLinkId,
       onDelete: onLinkDelete,
       onSubmit: onLinkSubmit,
+      onRefresh: onLinkRefresh,
     },
   ] = useQuickLinksHook(projectId, () => {
     setPopoverOpen(popoverInitialState);
@@ -184,12 +190,11 @@ function useQuickLinks({ projectId }: Props) {
     }
     openDelete();
   };
-  const handleCloseDelete = () => {
+  const handleAfterCloseDelete = () => {
     setTimeout(() => {
       setDeleteLinkId(null);
       setDeleteFolderId(null);
     }, 250);
-    closeDelete();
   };
   const deleteModalTitle = deleteLinkId
     ? t('deleteLinkTitle')
@@ -209,12 +214,14 @@ function useQuickLinks({ projectId }: Props) {
     setExpanded,
     onClearFolderParams,
     onLinkSubmit,
+    onLinkRefresh,
     onFolderSubmit,
     handleEditOpen,
     handleEditClose,
     isDeleteOpen,
     handleOpenDelete,
-    handleCloseDelete,
+    closeDelete,
+    handleAfterCloseDelete,
     deleteModalTitle,
     deleteModalOnSubmit,
   };
