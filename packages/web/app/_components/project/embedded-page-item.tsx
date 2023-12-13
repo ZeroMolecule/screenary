@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import Image from 'next/image';
 import { Card, Tooltip } from '@mantine/core';
 import { IconLink } from '@tabler/icons-react';
@@ -7,10 +7,11 @@ import styles from '@/styles/components/embedded-pages.module.scss';
 
 type Props = {
   item: EmbeddedPage;
+  setEmbeddedPage: Dispatch<SetStateAction<EmbeddedPage | null>>;
 };
 
 export const EmbeddedPageItem: FC<Props> = (props) => {
-  const { title, favicon } = useEmbeddedPageItem(props);
+  const { title, favicon, handleOnClick } = useEmbeddedPageItem(props);
 
   return (
     <Tooltip label={title} position="right">
@@ -21,6 +22,7 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
         radius="lg"
         pos="relative"
         className={styles.item}
+        onClick={handleOnClick}
       >
         {favicon ? (
           <Image
@@ -38,8 +40,16 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
   );
 };
 
-function useEmbeddedPageItem({ item }: Props) {
-  const { url, title, icon } = item;
+function useEmbeddedPageItem({ item, setEmbeddedPage }: Props) {
+  const { id, url, title, icon } = item;
 
-  return { title: title ?? url, favicon: icon };
+  const handleOnClick = () => {
+    setEmbeddedPage((prev) => (prev && prev.id === id ? null : item));
+  };
+
+  return {
+    title: title ?? url,
+    favicon: icon,
+    handleOnClick,
+  };
 }

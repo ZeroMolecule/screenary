@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Project, projectQuery } from '@/domain/queries/project-query';
 import { Data } from '@/domain/remote/response/data';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -22,7 +22,10 @@ import { Notes } from './notes';
 import { Tasks } from './tasks';
 import { QuickLinks } from './quick-links';
 import { EmbeddedPages } from './embedded-pages';
+import { EmbeddedPageIFrame } from './embedded-page-i-frame';
+import { EmbeddedPage } from '@prisma/client';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
+import flexStyles from '@/styles/utils/flex.module.scss';
 import styles from '@/styles/components/project.module.scss';
 
 // TODO: custom modal hook
@@ -37,6 +40,8 @@ export const ProjectPage: FC = () => {
     isDeleteOpen,
     openDelete,
     closeDelete,
+    embeddedPage,
+    setEmbeddedPage,
     project,
     handleEdit,
     handleDelete,
@@ -51,23 +56,31 @@ export const ProjectPage: FC = () => {
         styles={{ inner: { height: '100%' } }}
       >
         <GridCol h="100%" className={styles.embedGridCol}>
-          <EmbeddedPages projectId={id} />
+          <EmbeddedPages projectId={id} setEmbeddedPage={setEmbeddedPage} />
         </GridCol>
-        <GridCol span={9} h="100%" className={styles.tasksGridCol}>
-          <Tasks projectId={id} />
-        </GridCol>
-        <GridCol span={3} h="100%">
-          <Box h="100%" pos="relative">
-            <Stack
-              h="100%"
-              gap="xs"
-              className={overflowStyles['overflow-auto']}
-            >
-              <Notes projectId={id} />
-              <QuickLinks projectId={id} />
-            </Stack>
-          </Box>
-        </GridCol>
+        {embeddedPage ? (
+          <GridCol h="100%" className={flexStyles['flex-1']}>
+            <EmbeddedPageIFrame embeddedPage={embeddedPage} />
+          </GridCol>
+        ) : (
+          <>
+            <GridCol span={9} h="100%" className={styles.tasksGridCol}>
+              <Tasks projectId={id} />
+            </GridCol>
+            <GridCol span={3} h="100%">
+              <Box h="100%" pos="relative">
+                <Stack
+                  h="100%"
+                  gap="xs"
+                  className={overflowStyles['overflow-auto']}
+                >
+                  <Notes projectId={id} />
+                  <QuickLinks projectId={id} />
+                </Stack>
+              </Box>
+            </GridCol>
+          </>
+        )}
       </Grid>
       <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>
         <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
@@ -97,6 +110,8 @@ function useProjectPage() {
     useDisclosure(false);
   const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
+  const [embeddedPage, setEmbeddedPage] = useState<EmbeddedPage | null>(null);
+
   const onEdit = useNotificationSuccess('saved');
   const onDelete = useNotificationSuccess('deleted');
 
@@ -140,6 +155,8 @@ function useProjectPage() {
     isDeleteOpen,
     openDelete,
     closeDelete,
+    embeddedPage,
+    setEmbeddedPage,
     project: project?.data,
     handleEdit,
     handleDelete,

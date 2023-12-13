@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import {
   Card,
   Popover,
@@ -24,14 +24,24 @@ import styles from '@/styles/components/embedded-pages.module.scss';
 
 type Props = {
   projectId: string;
+  setEmbeddedPage: Dispatch<SetStateAction<EmbeddedPage | null>>;
 };
 
 export const EmbeddedPages: FC<Props> = (props) => {
-  const { embeddedPages, popoverOpen, setPopoverOpen, handleSubmit } =
-    useEmbeddedPages(props);
+  const {
+    setEmbeddedPage,
+    embeddedPages,
+    popoverOpen,
+    setPopoverOpen,
+    handleSubmit,
+  } = useEmbeddedPages(props);
 
   const renderEmbeddedPage = (item: EmbeddedPage) => (
-    <EmbeddedPageItem key={item.id} item={item} />
+    <EmbeddedPageItem
+      key={item.id}
+      item={item}
+      setEmbeddedPage={setEmbeddedPage}
+    />
   );
 
   return (
@@ -59,7 +69,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
   );
 };
 
-function useEmbeddedPages({ projectId }: Props) {
+function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [editItem, setEditItem] = useState<EmbeddedPage | null>(null);
 
@@ -109,6 +119,7 @@ function useEmbeddedPages({ projectId }: Props) {
   };
 
   return {
+    setEmbeddedPage,
     embeddedPages: embeddedPages?.data ?? [],
     popoverOpen,
     setPopoverOpen,
