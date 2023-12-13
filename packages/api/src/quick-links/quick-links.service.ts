@@ -4,14 +4,24 @@ import { CreateQuickLinkDto } from './dtos/create-quick-link.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { UpdateQuickLinkDto } from './dtos/update-quick-link.dto';
 import { FindManyQuickLinkDto } from './dtos/find-many-quick-link.dto';
+import { WebpageInfoService } from '../shared/services/webpage-info.service';
 
 @Injectable()
 export class QuickLinksService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private webpageInfoService: WebpageInfoService
+  ) {}
 
   async create(dto: CreateQuickLinkDto, projectId: string, userId: string) {
+    let pageInfo;
+    if (!dto.name || !dto.icon) {
+      pageInfo = await this.webpageInfoService.find(dto.url);
+    }
+
     return this.prismaService.quickLink.create({
       data: {
+        ...pageInfo,
         ...dto,
         projectId,
         userId,
@@ -25,13 +35,30 @@ export class QuickLinksService {
     projectId: string,
     userId: string
   ) {
+    let pageInfo;
+    if (!dto.name || !dto.icon) {
+      let url = dto.url;
+      if (!url) {
+        const quickLink = await this.findOne(id, projectId, userId);
+        if (quickLink) {
+          url = quickLink.url;
+        }
+      }
+      if (url) {
+        pageInfo = await this.webpageInfoService.find(url);
+      }
+    }
+
     return this.prismaService.quickLink.update({
       where: {
         id,
         projectId,
         userId,
       },
-      data: dto,
+      data: {
+        ...pageInfo,
+        ...dto,
+      },
     });
   }
 
