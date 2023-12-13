@@ -10,8 +10,8 @@ import { load } from 'cheerio';
 export class WebpageInfoServiceImpl extends WebpageInfoService {
   async find(url: string): Promise<WebpageInfo> {
     return axios
-      .get(url)
-      .then((response) => response.data as string)
+      .get<string>(url)
+      .then((response) => response.data)
       .then(async (html) => {
         const $ = load(html);
         const baseUrl = new URL(url).origin;
@@ -43,18 +43,14 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
   async findAlternativeIcon(baseUrl: string): Promise<string | undefined> {
     let iconUrl = `${baseUrl}/favicon.ico`;
     try {
-      const response = await axios.head(iconUrl);
-      if (response.status === 200) {
-        return iconUrl;
-      }
+      await axios.head(iconUrl);
+      return iconUrl;
     } catch (e) {}
 
     iconUrl = `${baseUrl}/images/favicon.ico`;
     try {
-      const response = await axios.head(iconUrl);
-      if (response.status === 200) {
-        return iconUrl;
-      }
+      await axios.head(iconUrl);
+      return iconUrl;
     } catch (e) {}
   }
 }
