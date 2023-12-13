@@ -105,6 +105,14 @@
   "project": {
     "deleteTitle": "Delete Project",
     "deleteDescription": "Are you sure you want to delete {projectName} project?",
+    "embeddedPages": {
+      "form": {
+        "createTitle": "New Embedded Page",
+        "editTitle": "Edit Embedded Page",
+        "urlLabel": "Page URL",
+        "urlPlaceholder": "https://"
+      }
+    },
     "tasks": {
       "title": "To-Do"
     },

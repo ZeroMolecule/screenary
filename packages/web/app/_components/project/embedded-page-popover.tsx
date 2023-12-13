@@ -1,10 +1,12 @@
 import { FC } from 'react';
-import { EmbeddedPage } from '@prisma/client';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { EmbeddedPage } from '@prisma/client';
 import { PopoverMenuForm } from '../popover-menu-form';
 import { FormTextInput } from '../base/form/text-input';
+import inputStyles from '@/styles/components/input.module.scss';
 
 type Props = {
   onClose: () => void;
@@ -13,12 +15,12 @@ type Props = {
 };
 
 export const EmbeddedPagePopover: FC<Props> = (props) => {
-  const { embeddedPageForm, isSubmitting, onClose, onSubmit } =
+  const { t, embeddedPageForm, isSubmitting, onClose, onSubmit } =
     useEmbeddedPagePopover(props);
 
   return (
     <PopoverMenuForm
-      title="new form"
+      title={t('createTitle')}
       form={embeddedPageForm}
       isSubmitting={isSubmitting}
       onClose={onClose}
@@ -27,15 +29,18 @@ export const EmbeddedPagePopover: FC<Props> = (props) => {
     >
       <FormTextInput
         name="url"
-        label="Enter URL"
-        placeholder="https://"
+        label={t('urlLabel')}
+        placeholder={t('urlPlaceholder')}
         c="white"
+        classNames={{ input: inputStyles.inputTransparent }}
       />
     </PopoverMenuForm>
   );
 };
 
 function useEmbeddedPagePopover({ onClose, onSubmit, item }: Props) {
+  const t = useTranslations('project.embeddedPages.form');
+
   const embeddedPageForm = useForm<EmbeddedPageFormValues>({
     resolver: zodResolver(embeddedPageSchema),
     defaultValues: {
@@ -48,6 +53,7 @@ function useEmbeddedPagePopover({ onClose, onSubmit, item }: Props) {
   } = embeddedPageForm;
 
   return {
+    t,
     embeddedPageForm,
     isSubmitting,
     onClose,

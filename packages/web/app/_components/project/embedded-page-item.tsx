@@ -1,10 +1,8 @@
 import { FC } from 'react';
 import Image from 'next/image';
-import { useQuery } from '@tanstack/react-query';
 import { Card, Tooltip } from '@mantine/core';
 import { IconLink } from '@tabler/icons-react';
 import { EmbeddedPage } from '@prisma/client';
-import { embeddedPageDataQuery } from '@/domain/queries/embedded-page-data-query';
 import styles from '@/styles/components/embedded-pages.module.scss';
 
 type Props = {
@@ -41,12 +39,7 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
 };
 
 function useEmbeddedPageItem({ item }: Props) {
-  const { id, url } = item;
+  const { url, title, icon } = item;
 
-  const { data } = useQuery({
-    queryKey: embeddedPageDataQuery.key(id),
-    queryFn: () => embeddedPageDataQuery.fnc(url),
-  });
-
-  return { title: data?.title, favicon: data?.favicon };
+  return { title: title ?? url, favicon: icon };
 }
