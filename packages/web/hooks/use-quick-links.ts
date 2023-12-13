@@ -9,6 +9,7 @@ import { editQuickLinkMutation } from '@/domain/mutations/edit-quick-link-mutati
 import { deleteQuickLinkMutation } from '@/domain/mutations/delete-quick-link-mutation';
 import { QuickLinkFormValues } from '@/app/_components/project/quick-link-popover-menu';
 import { useFolders } from './use-folders';
+import { refreshQuickLinkMutation } from '@/domain/mutations/refresh-quick-link-mutation';
 
 export const useQuickLinks = (
   projectId: string,
@@ -22,6 +23,7 @@ export const useQuickLinks = (
   {
     onSubmit: (values: QuickLinkFormValues) => Promise<void>;
     onDelete: () => Promise<void>;
+    onRefresh: (id: string) => Promise<void>;
     setEditItem: Dispatch<SetStateAction<QuickLink | null>>;
     setDeleteId: Dispatch<SetStateAction<string | null>>;
   }
@@ -55,6 +57,10 @@ export const useQuickLinks = (
       onSuccess();
     },
   });
+  const { mutateAsync: refreshQuickLink } = useMutation({
+    mutationFn: refreshQuickLinkMutation.fnc,
+    onSuccess: () => null,
+  });
   const { mutateAsync: deleteQuickLink } = useMutation({
     mutationFn: deleteQuickLinkMutation.fnc,
     onSuccess: async () => {
@@ -79,6 +85,9 @@ export const useQuickLinks = (
       );
     }
   };
+  const handleRefresh = async (id: string) => {
+    await refreshQuickLink({ id, projectId });
+  };
   const handleDelete = async () => {
     if (deleteId) {
       await deleteQuickLink({ id: deleteId, projectId }).catch(() => null);
@@ -89,6 +98,7 @@ export const useQuickLinks = (
     { quickLinks: quickLinks?.data ?? [], editItem, deleteId },
     {
       onSubmit: handleSubmit,
+      onRefresh: handleRefresh,
       onDelete: handleDelete,
       setEditItem,
       setDeleteId,
