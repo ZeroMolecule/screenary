@@ -23,7 +23,7 @@ export const useQuickLinks = (
   {
     onSubmit: (values: QuickLinkFormValues) => Promise<void>;
     onDelete: () => Promise<void>;
-    onRefresh: (id: string) => Promise<void>;
+    onRefresh: (id: string) => void;
     setEditItem: Dispatch<SetStateAction<QuickLink | null>>;
     setDeleteId: Dispatch<SetStateAction<string | null>>;
   }
@@ -57,7 +57,7 @@ export const useQuickLinks = (
       onSuccess();
     },
   });
-  const { mutateAsync: refreshQuickLink } = useMutation({
+  const { mutate: refreshQuickLink } = useMutation({
     mutationFn: refreshQuickLinkMutation.fnc,
     onSuccess: () => null,
   });
@@ -85,8 +85,8 @@ export const useQuickLinks = (
       );
     }
   };
-  const handleRefresh = async (id: string) => {
-    await refreshQuickLink({ id, projectId });
+  const handleRefresh = (id: string) => {
+    refreshQuickLink({ id, projectId });
   };
   const handleDelete = async () => {
     if (deleteId) {

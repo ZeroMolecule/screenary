@@ -12,7 +12,7 @@ type Props = {
   item: QuickLink;
   onEditOpen: (link: QuickLink, type: QuickLinkType) => void;
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
-  onRefresh: (id: string) => Promise<void>;
+  onRefresh: (id: string) => void;
   inExpandedView?: boolean;
 };
 
