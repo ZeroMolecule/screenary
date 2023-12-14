@@ -89,7 +89,6 @@ function useProjectDashboard({ id, children }: Props) {
   const { data: project, refetch } = useQuery<Data<Project>>({
     queryKey: projectQuery.key(id),
   });
-  console.log(project);
 
   const { mutateAsync: editProject } = useMutation({
     mutationFn: editProjectMutation.fnc,

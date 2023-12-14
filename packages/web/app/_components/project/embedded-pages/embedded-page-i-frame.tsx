@@ -32,7 +32,6 @@ function useEmbeddedPageIFrame({ projectId, pageId }: Props) {
   const { data } = useQuery<Data<EmbeddedPage>>({
     queryKey: embeddedPageQuery.key(projectId, pageId),
   });
-  console.log(data);
   const { url, title } = data?.data ?? {};
 
   return { url, title };

@@ -107,7 +107,6 @@ function useEmbeddedPages({ projectId }: Props) {
   const { data: embeddedPages, refetch } = useQuery<Data<EmbeddedPage[]>>({
     queryKey: embeddedPagesQuery.key(projectId),
   });
-  console.log(embeddedPages);
   const { mutateAsync: createEmbeddedPage } = useMutation({
     mutationFn: addEmbeddedPageMutation.fnc,
     onSuccess: async () => {
