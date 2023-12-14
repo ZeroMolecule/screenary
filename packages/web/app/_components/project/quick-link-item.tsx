@@ -5,8 +5,6 @@ import { IconLink } from '@tabler/icons-react';
 import { QuickLink } from '@prisma/client';
 import { ProjectMenu } from './project-menu';
 import { QuickLinkType } from './quick-links';
-import { useQuery } from '@tanstack/react-query';
-import { quickLinkDataQuery } from '@/domain/queries/quick-link-data-query';
 import classNames from 'classnames';
 import styles from '@/styles/components/quick-links.module.scss';
 
@@ -14,6 +12,7 @@ type Props = {
   item: QuickLink;
   onEditOpen: (link: QuickLink, type: QuickLinkType) => void;
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
+  onRefresh: (id: string) => void;
   inExpandedView?: boolean;
 };
 
@@ -22,15 +21,11 @@ export const QuickLinkItem: FC<Props> = (props) => {
     url,
     title,
     favicon,
-    isLoading,
     handleEditOpen,
     handleDeleteOpen,
+    handleRefresh,
     inExpandedView,
   } = useQuickLinkItem(props);
-
-  if (isLoading) {
-    return null;
-  }
 
   return (
     <Button
@@ -71,6 +66,7 @@ export const QuickLinkItem: FC<Props> = (props) => {
         [styles.quickLinkExpandedView]: inExpandedView,
       })}
       classNames={{ label: styles.quickLinkLabel }}
+      onClick={handleRefresh}
     >
       {title}
     </Button>
@@ -81,25 +77,23 @@ function useQuickLinkItem({
   item,
   onEditOpen,
   onDeleteOpen,
+  onRefresh,
   inExpandedView,
 }: Props) {
-  const { id, url } = item;
+  const { id, url, title, icon } = item;
 
   const handleEditOpen = () => onEditOpen(item, 'link');
   const handleDeleteOpen = () => onDeleteOpen(id, 'link');
 
-  const { data, isLoading } = useQuery({
-    queryKey: quickLinkDataQuery.key(id),
-    queryFn: () => quickLinkDataQuery.fnc(url),
-  });
+  const handleRefresh = () => onRefresh(id);
 
   return {
     url,
-    title: data?.title,
-    favicon: data?.favicon,
-    isLoading,
+    title: title ?? url,
+    favicon: icon,
     handleEditOpen,
     handleDeleteOpen,
+    handleRefresh,
     inExpandedView,
   };
 }

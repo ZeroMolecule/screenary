@@ -32,6 +32,7 @@ type Props = {
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
   onEditOpen: (item: QuickLink | Directory, type: QuickLinkType) => void;
   setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
+  onLinkRefresh: (id: string) => void;
   onClearFolderParams?: () => void;
   selectedFolder?: Directory | null;
 };
@@ -46,6 +47,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
     onDeleteOpen,
     onEditOpen,
     setPopoverOpen,
+    onLinkRefresh,
     onClearFolderParams,
     selectedFolder,
   } = useQuickLinksFooter(props);
@@ -67,6 +69,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
       item={item}
       onEditOpen={onEditOpen}
       onDeleteOpen={onDeleteOpen}
+      onRefresh={onLinkRefresh}
       inExpandedView
     />
   );
@@ -157,6 +160,7 @@ function useQuickLinksFooter({
   onDeleteOpen,
   onEditOpen,
   setPopoverOpen,
+  onLinkRefresh,
   onClearFolderParams,
   selectedFolder,
 }: Props) {
@@ -171,6 +175,7 @@ function useQuickLinksFooter({
     onDeleteOpen,
     onEditOpen,
     setPopoverOpen,
+    onLinkRefresh,
     onClearFolderParams,
     selectedFolder,
   };
