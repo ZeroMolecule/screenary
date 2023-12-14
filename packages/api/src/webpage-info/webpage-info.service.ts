@@ -4,7 +4,7 @@ import {
   WebpageInfoService,
 } from '../shared/services/webpage-info.service';
 import axios from 'axios';
-import { load } from 'cheerio';
+import { CheerioAPI, load } from 'cheerio';
 
 @Injectable()
 export class WebpageInfoServiceImpl extends WebpageInfoService {
@@ -16,41 +16,91 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
         const $ = load(html);
         const baseUrl = new URL(url).origin;
 
-        const title = $('title').text() || url;
-
-        const favicon =
-          $('link[rel="icon"]').attr('href') ??
-          $('link[rel="shortcut icon"]').attr('href');
-        let faviconPath = (() => {
-          if (!favicon) {
-            return undefined;
-          }
-          if (favicon.startsWith('http')) {
-            return favicon;
-          }
-          return `${baseUrl}/${favicon}`;
-        })();
-
-        if (!faviconPath) {
-          faviconPath = await this.findAlternativeIcon(baseUrl);
+        const title = this.findTitle($);
+        let favicon = await this.findManifestIcon($, baseUrl);
+        if (!favicon) {
+          favicon = await this.findMetaIcon($, baseUrl);
+        }
+        if (!favicon) {
+          favicon = await this.findAlternativeIcon(baseUrl);
         }
 
-        return { title, icon: faviconPath };
+        return { title, icon: favicon };
       })
       .catch(() => ({}));
   }
 
-  async findAlternativeIcon(baseUrl: string): Promise<string | undefined> {
+  async findAlternativeIcon(baseUrl: string) {
     let iconUrl = `${baseUrl}/favicon.ico`;
-    try {
-      await axios.head(iconUrl);
+    if (await this.validateUrl(iconUrl)) {
       return iconUrl;
-    } catch (e) {}
-
+    }
     iconUrl = `${baseUrl}/images/favicon.ico`;
-    try {
-      await axios.head(iconUrl);
+    if (await this.validateUrl(iconUrl)) {
       return iconUrl;
-    } catch (e) {}
+    }
+  }
+
+  findTitle($: CheerioAPI) {
+    return $('title').text();
+  }
+
+  async findManifestIcon($: CheerioAPI, baseUrl: string) {
+    let manifestUrl = $('link[rel="manifest"]').attr('href');
+    if (!manifestUrl) {
+      return undefined;
+    }
+    if (!manifestUrl.startsWith('http')) {
+      manifestUrl = `${baseUrl}/${manifestUrl}`;
+    }
+
+    const manifest = await axios
+      .get(manifestUrl)
+      .then((response) => response.data)
+      .catch(() => undefined);
+
+    if (!manifest) {
+      return undefined;
+    }
+
+    const iconUrl = manifest.icons?.at(-1)?.src;
+    if (!iconUrl) {
+      return undefined;
+    }
+
+    if (!iconUrl.startsWith('http')) {
+      return `${baseUrl}/${iconUrl}`;
+    }
+
+    if (await this.validateUrl(iconUrl)) {
+      return iconUrl;
+    }
+  }
+
+  async findMetaIcon($: CheerioAPI, baseUrl: string) {
+    let iconUrl =
+      $('link[rel="icon"]').attr('href') ??
+      $('link[rel="shortcut icon"]').attr('href');
+
+    if (!iconUrl) {
+      return undefined;
+    }
+
+    if (!iconUrl.startsWith('http')) {
+      iconUrl = `${baseUrl}/${iconUrl}`;
+    }
+
+    if (await this.validateUrl(iconUrl)) {
+      return iconUrl;
+    }
+  }
+
+  async validateUrl(url: string): Promise<boolean> {
+    try {
+      await axios.head(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
