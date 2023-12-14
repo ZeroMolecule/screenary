@@ -1,4 +1,5 @@
 import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Card,
   Popover,
@@ -29,18 +30,31 @@ type Props = {
 
 export const EmbeddedPages: FC<Props> = (props) => {
   const {
+    t,
     setEmbeddedPage,
     embeddedPages,
-    popoverOpen,
-    setPopoverOpen,
-    handleSubmit,
+    popoverOpenCreate,
+    setPopoverOpenCreate,
+    popoverOpenEdit,
+    setPopoverOpenEdit,
+    deleteOpen,
+    setDeleteOpen,
+    handleCreate,
+    handleEdit,
+    handleDelete,
   } = useEmbeddedPages(props);
 
   const renderEmbeddedPage = (item: EmbeddedPage) => (
     <EmbeddedPageItem
       key={item.id}
       item={item}
+      popoverOpen={popoverOpenEdit[item.id] || false}
+      setPopoverOpen={setPopoverOpenEdit}
       setEmbeddedPage={setEmbeddedPage}
+      deleteOpen={deleteOpen}
+      setDeleteOpen={setDeleteOpen}
+      onDelete={handleDelete}
+      onEdit={handleEdit}
     />
   );
 
@@ -49,18 +63,19 @@ export const EmbeddedPages: FC<Props> = (props) => {
       <Stack gap={20}>
         {embeddedPages.map(renderEmbeddedPage)}
         <Popover
-          opened={popoverOpen}
-          onChange={setPopoverOpen}
+          opened={popoverOpenCreate}
+          onChange={setPopoverOpenCreate}
           radius={24}
           position="right-start"
         >
           <PopoverTarget>
-            <EmbeddedPageCreate onOpen={() => setPopoverOpen(true)} />
+            <EmbeddedPageCreate onOpen={() => setPopoverOpenCreate(true)} />
           </PopoverTarget>
           <PopoverDropdown miw={324} p={0}>
             <EmbeddedPagePopover
-              onClose={() => setPopoverOpen(false)}
-              onSubmit={handleSubmit}
+              title={t('form.createTitle')}
+              onClose={() => setPopoverOpenCreate(false)}
+              onSubmit={handleCreate}
             />
           </PopoverDropdown>
         </Popover>
@@ -70,8 +85,12 @@ export const EmbeddedPages: FC<Props> = (props) => {
 };
 
 function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
-  const [popoverOpen, setPopoverOpen] = useState(false);
-  const [editItem, setEditItem] = useState<EmbeddedPage | null>(null);
+  const t = useTranslations('project.embeddedPages');
+  const [popoverOpenCreate, setPopoverOpenCreate] = useState(false);
+  const [popoverOpenEdit, setPopoverOpenEdit] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const onCreated = useNotificationSuccess('created');
   const onEdited = useNotificationSuccess('saved');
@@ -85,15 +104,16 @@ function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
     onSuccess: async () => {
       await refetch();
       onCreated();
-      setPopoverOpen(false);
+      setPopoverOpenCreate(false);
     },
   });
   const { mutateAsync: editEmbeddedPage } = useMutation({
     mutationFn: editEmbeddedPageMutation.fnc,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await refetch();
       onEdited();
-      setPopoverOpen(false);
+      setPopoverOpenEdit({});
+      setEmbeddedPage((prev) => (prev?.id === data.id ? data : prev));
     },
   });
   const { mutateAsync: deleteEmbeddedPage } = useMutation({
@@ -101,28 +121,32 @@ function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
     onSuccess: async () => {
       await refetch();
       onDeleted();
+      setDeleteOpen(false);
     },
   });
 
-  const handleSubmit = async (values: EmbeddedPageFormValues) => {
-    if (editItem) {
-      await editEmbeddedPage({ ...values, id: editItem.id, projectId }).catch(
-        () => null
-      );
-    } else {
-      await createEmbeddedPage({ ...values, projectId }).catch(() => null);
-    }
+  const handleCreate = async (values: EmbeddedPageFormValues) => {
+    await createEmbeddedPage({ ...values, projectId }).catch(() => null);
   };
-
+  const handleEdit = async ({ id, projectId, url }: EmbeddedPage) => {
+    await editEmbeddedPage({ id, projectId, url }).catch(() => null);
+  };
   const handleDelete = async (id: string) => {
     await deleteEmbeddedPage({ id, projectId }).catch(() => null);
   };
 
   return {
+    t,
     setEmbeddedPage,
     embeddedPages: embeddedPages?.data ?? [],
-    popoverOpen,
-    setPopoverOpen,
-    handleSubmit,
+    popoverOpenCreate,
+    setPopoverOpenCreate,
+    popoverOpenEdit,
+    setPopoverOpenEdit,
+    deleteOpen,
+    setDeleteOpen,
+    handleCreate,
+    handleEdit,
+    handleDelete,
   };
 }

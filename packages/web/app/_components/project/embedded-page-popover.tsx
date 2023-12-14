@@ -6,26 +6,49 @@ import { z } from 'zod';
 import { EmbeddedPage } from '@prisma/client';
 import { PopoverMenuForm } from '../popover-menu-form';
 import { FormTextInput } from '../base/form/text-input';
+import { ActionIcon } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
 import inputStyles from '@/styles/components/input.module.scss';
 
 type Props = {
+  title: string;
   onClose: () => void;
   onSubmit: (values: EmbeddedPageFormValues) => Promise<void>;
+  onOpenDelete?: () => void;
   item?: EmbeddedPage;
 };
 
 export const EmbeddedPagePopover: FC<Props> = (props) => {
-  const { t, embeddedPageForm, isSubmitting, onClose, onSubmit } =
-    useEmbeddedPagePopover(props);
+  const {
+    t,
+    item,
+    title,
+    embeddedPageForm,
+    isSubmitting,
+    onClose,
+    onSubmit,
+    onOpenDelete,
+  } = useEmbeddedPagePopover(props);
 
   return (
     <PopoverMenuForm
-      title={t('createTitle')}
+      title={title}
       form={embeddedPageForm}
       isSubmitting={isSubmitting}
       onClose={onClose}
       onSubmit={onSubmit}
       stackProps={{ pos: 'static' }}
+      headerActions={
+        item ? (
+          <ActionIcon
+            variant="transparent"
+            color="white"
+            onClick={onOpenDelete}
+          >
+            <IconTrash size={20} />
+          </ActionIcon>
+        ) : null
+      }
     >
       <FormTextInput
         name="url"
@@ -38,7 +61,13 @@ export const EmbeddedPagePopover: FC<Props> = (props) => {
   );
 };
 
-function useEmbeddedPagePopover({ onClose, onSubmit, item }: Props) {
+function useEmbeddedPagePopover({
+  title,
+  onClose,
+  onSubmit,
+  onOpenDelete,
+  item,
+}: Props) {
   const t = useTranslations('project.embeddedPages.form');
 
   const embeddedPageForm = useForm<EmbeddedPageFormValues>({
@@ -54,10 +83,13 @@ function useEmbeddedPagePopover({ onClose, onSubmit, item }: Props) {
 
   return {
     t,
+    item,
+    title,
     embeddedPageForm,
     isSubmitting,
     onClose,
     onSubmit: handleSubmit(onSubmit),
+    onOpenDelete,
   };
 }
 

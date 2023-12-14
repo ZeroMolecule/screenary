@@ -106,6 +106,7 @@
     "deleteTitle": "Delete Project",
     "deleteDescription": "Are you sure you want to delete {projectName} project?",
     "embeddedPages": {
+      "deleteTitle": "Delete Embedded Page",
       "form": {
         "createTitle": "New Embedded Page",
         "editTitle": "Edit Embedded Page",
