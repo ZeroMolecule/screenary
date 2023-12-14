@@ -61,8 +61,8 @@ export const EmbeddedPages: FC<Props> = (props) => {
   );
 
   return (
-    <Card h="100%" pos="unset" p="xs" radius={24} className={styles.card}>
-      <Box p="xs" className={overflowStyles['overflow-auto']}>
+    <Card h="100%" pos="unset" p={4} radius={24} className={styles.card}>
+      <Box p="sm" className={overflowStyles['overflow-auto']}>
         <Stack gap={20}>
           {embeddedPages.map(renderEmbeddedPage)}
           <Popover
