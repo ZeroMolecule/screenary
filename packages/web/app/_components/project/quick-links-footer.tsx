@@ -32,7 +32,7 @@ type Props = {
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
   onEditOpen: (item: QuickLink | Directory, type: QuickLinkType) => void;
   setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
-  onLinkRefresh: (id: string) => Promise<void>;
+  onLinkRefresh: (id: string) => void;
   onClearFolderParams?: () => void;
   selectedFolder?: Directory | null;
 };
