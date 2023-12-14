@@ -1,6 +1,7 @@
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
+  Box,
   Card,
   Popover,
   PopoverDropdown,
@@ -21,6 +22,7 @@ import { editEmbeddedPageMutation } from '@/domain/mutations/edit-embedded-page-
 import { deleteEmbeddedPageMutation } from '@/domain/mutations/delete-embedded-page-mutation';
 import { EmbeddedPageItem } from './embedded-page-item';
 import { EmbeddedPageCreate } from './embedded-page-create';
+import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/embedded-pages.module.scss';
 
 type Props = {
@@ -59,27 +61,29 @@ export const EmbeddedPages: FC<Props> = (props) => {
   );
 
   return (
-    <Card h="100%" pos="unset" radius={24} className={styles.card}>
-      <Stack gap={20}>
-        {embeddedPages.map(renderEmbeddedPage)}
-        <Popover
-          opened={popoverOpenCreate}
-          onChange={setPopoverOpenCreate}
-          radius={24}
-          position="right-start"
-        >
-          <PopoverTarget>
-            <EmbeddedPageCreate onOpen={() => setPopoverOpenCreate(true)} />
-          </PopoverTarget>
-          <PopoverDropdown miw={324} p={0}>
-            <EmbeddedPagePopover
-              title={t('form.createTitle')}
-              onClose={() => setPopoverOpenCreate(false)}
-              onSubmit={handleCreate}
-            />
-          </PopoverDropdown>
-        </Popover>
-      </Stack>
+    <Card h="100%" pos="unset" p="xs" radius={24} className={styles.card}>
+      <Box p="xs" className={overflowStyles['overflow-auto']}>
+        <Stack gap={20}>
+          {embeddedPages.map(renderEmbeddedPage)}
+          <Popover
+            opened={popoverOpenCreate}
+            onChange={setPopoverOpenCreate}
+            radius={24}
+            position="right-start"
+          >
+            <PopoverTarget>
+              <EmbeddedPageCreate onOpen={() => setPopoverOpenCreate(true)} />
+            </PopoverTarget>
+            <PopoverDropdown miw={324} p={0}>
+              <EmbeddedPagePopover
+                title={t('form.createTitle')}
+                onClose={() => setPopoverOpenCreate(false)}
+                onSubmit={handleCreate}
+              />
+            </PopoverDropdown>
+          </Popover>
+        </Stack>
+      </Box>
     </Card>
   );
 };
