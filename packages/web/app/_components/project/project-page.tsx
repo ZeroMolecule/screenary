@@ -2,9 +2,9 @@
 
 import { FC } from 'react';
 import { Box, GridCol, Stack } from '@mantine/core';
-import { Notes } from './notes';
-import { Tasks } from './tasks';
-import { QuickLinks } from './quick-links';
+import { Notes } from './notes/notes';
+import { Tasks } from './tasks/tasks';
+import { QuickLinks } from './quick-links/quick-links';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/project.module.scss';
 

@@ -7,7 +7,7 @@ import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation';
 import { editQuickLinkMutation } from '@/domain/mutations/edit-quick-link-mutation';
 import { deleteQuickLinkMutation } from '@/domain/mutations/delete-quick-link-mutation';
-import { QuickLinkFormValues } from '@/app/_components/project/quick-link-popover-menu';
+import { QuickLinkFormValues } from '@/app/_components/project/quick-links/quick-link-popover-menu';
 import { useFolders } from './use-folders';
 import { refreshQuickLinkMutation } from '@/domain/mutations/refresh-quick-link-mutation';
 

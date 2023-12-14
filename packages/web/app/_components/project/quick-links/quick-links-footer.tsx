@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Directory, QuickLink } from '@prisma/client';
-import { ExpandedPopover } from './expanded-popover';
+import { ExpandedPopover } from '../expanded-popover';
 import { QuickLinkItem } from './quick-link-item';
 import {
   Box,
@@ -17,9 +17,9 @@ import { IconBookmark, IconPlus } from '@tabler/icons-react';
 import { PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID } from '@/utils/constants';
 import { QuickLinkFolderItem } from './quick-link-folder-item';
 import { QuickLinkPopover, QuickLinkType } from './quick-links';
-import { Text } from '../base/text';
-import { EmptyPlaceholder } from '../empty-placeholder';
-import { FolderIcon } from '../icons/folder-icon';
+import { Text } from '../../base/text';
+import { EmptyPlaceholder } from '../../empty-placeholder';
+import { FolderIcon } from '../../icons/folder-icon';
 import emptyIcon from '@/public/images/link-icon.svg';
 import stylesOverflow from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/quick-links.module.scss';
