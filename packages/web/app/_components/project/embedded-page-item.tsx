@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, SyntheticEvent, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import {
@@ -20,6 +20,8 @@ import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import classNames from 'classnames';
 import styles from '@/styles/components/embedded-pages.module.scss';
 
+const ICON_CONTAINER_DIMENSIONS_IN_PIXELS = 64;
+
 type Props = {
   item: EmbeddedPage;
   popoverOpen: boolean;
@@ -36,12 +38,15 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
     t,
     item,
     title,
-    favicon,
+    icon,
+    image,
     ref,
     hovered,
     popoverOpen,
     deleteOpen,
     setDeleteOpen,
+    handleImageOnLoad,
+    handleImageOnError,
     handleChange,
     handleOnClick,
     handleEdit,
@@ -73,8 +78,8 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
             offset={3}
           >
             <Card
-              w={64}
-              h={64}
+              w={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
+              h={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
               p={0}
               radius="lg"
               pos="relative"
@@ -83,12 +88,15 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
               })}
               onClick={handleOnClick}
             >
-              {favicon ? (
+              {icon && !image.isError ? (
                 <Image
-                  loader={() => favicon}
-                  src={favicon}
-                  fill
+                  loader={() => icon}
+                  src={icon}
                   alt={title ?? ''}
+                  width={image.width}
+                  height={image.height}
+                  onLoad={handleImageOnLoad}
+                  onError={handleImageOnError}
                   unoptimized
                 />
               ) : (
@@ -129,7 +137,24 @@ function useEmbeddedPageItem({
 }: Props) {
   const t = useTranslations('project.embeddedPages');
   const { id, url, title, icon } = item;
+  const [image, setImage] = useState<{
+    width: number;
+    height: number;
+    isError: boolean;
+  }>({ width: 0, height: 0, isError: false });
   const { hovered, ref } = useHover();
+
+  const handleImageOnLoad = (e: SyntheticEvent<HTMLImageElement>) => {
+    const { naturalWidth, naturalHeight } = e.currentTarget;
+    setImage((prev) => ({
+      ...prev,
+      width: Math.min(naturalWidth, ICON_CONTAINER_DIMENSIONS_IN_PIXELS - 1),
+      height: Math.min(naturalHeight, ICON_CONTAINER_DIMENSIONS_IN_PIXELS - 1),
+    }));
+  };
+  const handleImageOnError = () => {
+    setImage((prev) => ({ ...prev, isError: true }));
+  };
 
   const handleChange = (value: boolean) => {
     setPopoverOpen({ [id]: value });
@@ -151,12 +176,15 @@ function useEmbeddedPageItem({
     t,
     item,
     title: title ?? url,
-    favicon: icon,
+    icon,
+    image,
     ref,
     hovered,
     popoverOpen,
     deleteOpen,
     setDeleteOpen,
+    handleImageOnLoad,
+    handleImageOnError,
     handleChange,
     handleOnClick,
     handleEdit,
