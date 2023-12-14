@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   Box,
@@ -22,8 +23,10 @@ import { editEmbeddedPageMutation } from '@/domain/mutations/edit-embedded-page-
 import { deleteEmbeddedPageMutation } from '@/domain/mutations/delete-embedded-page-mutation';
 import { EmbeddedPageItem } from './embedded-page-item';
 import { EmbeddedPageCreate } from './embedded-page-create';
+import { useRouter } from '@/navigation';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/embedded-pages.module.scss';
+import { paths } from '@/navigation/paths';
 
 type Props = {
   projectId: string;
@@ -87,6 +90,8 @@ export const EmbeddedPages: FC<Props> = (props) => {
 
 function useEmbeddedPages({ projectId }: Props) {
   const t = useTranslations('project.embeddedPages');
+  const { pageId } = useParams();
+  const { replace } = useRouter();
   const [popoverOpenCreate, setPopoverOpenCreate] = useState(false);
   const [popoverOpenEdit, setPopoverOpenEdit] = useState<{
     [key: string]: boolean;
@@ -121,10 +126,13 @@ function useEmbeddedPages({ projectId }: Props) {
   });
   const { mutateAsync: deleteEmbeddedPage } = useMutation({
     mutationFn: deleteEmbeddedPageMutation.fnc,
-    onSuccess: async () => {
+    onSuccess: async ({ id }) => {
       await refetch();
       onDeleted();
       setDeleteOpen({});
+      if (pageId && pageId === id) {
+        replace(paths.project(projectId));
+      }
     },
   });
 

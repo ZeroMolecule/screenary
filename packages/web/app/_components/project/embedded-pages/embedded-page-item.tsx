@@ -1,5 +1,13 @@
-import { Dispatch, FC, SetStateAction, SyntheticEvent, useState } from 'react';
+import {
+  Dispatch,
+  FC,
+  MouseEvent,
+  SetStateAction,
+  SyntheticEvent,
+  useState,
+} from 'react';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
@@ -17,8 +25,11 @@ import {
   EmbeddedPagePopover,
 } from './embedded-page-popover';
 import { ConfirmDeleteModal } from '../../modals/confirm-delete-modal';
+import { Link } from '../../base/link';
+import { paths } from '@/navigation/paths';
 import classNames from 'classnames';
 import styles from '@/styles/components/embedded-pages.module.scss';
+import { useRouter } from '@/navigation';
 
 const ICON_CONTAINER_DIMENSIONS_IN_PIXELS = 64;
 
@@ -43,13 +54,16 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
     hovered,
     popoverOpen,
     deleteOpen,
+    navigatePath,
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
+    handleEditOpen,
     handleEdit,
     handleDeleteOpen,
     handleDelete,
   } = useEmbeddedPageItem(props);
+  const { push } = useRouter();
 
   return (
     <>
@@ -68,38 +82,41 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
                 size="sm"
                 radius="100%"
                 bg="neutral.2"
-                onClick={() => handleChange(true)}
+                onClick={handleEditOpen}
               >
                 <IconPencil size={12} color="var(--mantine-color-neutral-9)" />
               </ActionIcon>
             }
             offset={3}
           >
-            <Card
-              w={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
-              h={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
-              p={0}
-              radius="lg"
-              pos="relative"
-              className={classNames(styles.item, {
-                [styles.itemHover]: hovered,
-              })}
-            >
-              {icon && !image.isError ? (
-                <Image
-                  loader={() => icon}
-                  src={icon}
-                  alt={title ?? ''}
-                  width={image.width}
-                  height={image.height}
-                  onLoad={handleImageOnLoad}
-                  onError={handleImageOnError}
-                  unoptimized
-                />
-              ) : (
-                <IconLink size={32} color="var(--mantine-color-primary-5)" />
-              )}
-            </Card>
+            <Link href={navigatePath}>
+              <Card
+                w={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
+                h={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
+                p={0}
+                radius="lg"
+                pos="relative"
+                className={classNames(styles.item, {
+                  [styles.itemHover]: hovered,
+                })}
+                onClick={() => push(navigatePath)}
+              >
+                {icon && !image.isError ? (
+                  <Image
+                    loader={() => icon}
+                    src={icon}
+                    alt={title ?? ''}
+                    width={image.width}
+                    height={image.height}
+                    onLoad={handleImageOnLoad}
+                    onError={handleImageOnError}
+                    unoptimized
+                  />
+                ) : (
+                  <IconLink size={32} color="var(--mantine-color-primary-5)" />
+                )}
+              </Card>
+            </Link>
           </Indicator>
         </PopoverTarget>
         <PopoverDropdown miw={324} p={0}>
@@ -133,12 +150,20 @@ function useEmbeddedPageItem({
 }: Props) {
   const t = useTranslations('project.embeddedPages');
   const { id, url, title, icon } = item;
+  const { id: projectId, pageId } = useParams();
   const [image, setImage] = useState<{
     width: number;
     height: number;
     isError: boolean;
   }>({ width: 0, height: 0, isError: false });
   const { hovered, ref } = useHover();
+
+  const navigatePath = (() => {
+    if (pageId && pageId === id) {
+      return paths.project(projectId);
+    }
+    return paths.embeddedPage(projectId, id);
+  })();
 
   const handleImageOnLoad = (e: SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = e.currentTarget;
@@ -155,7 +180,10 @@ function useEmbeddedPageItem({
   const handleChange = (value: boolean) => {
     setPopoverOpen({ [id]: value });
   };
-
+  const handleEditOpen = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setPopoverOpen({ [id]: true });
+  };
   const handleEdit = async (values: EmbeddedPageFormValues) => {
     await onEdit({ ...item, url: values.url });
   };
@@ -177,9 +205,11 @@ function useEmbeddedPageItem({
     hovered,
     popoverOpen,
     deleteOpen,
+    navigatePath,
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
+    handleEditOpen,
     handleEdit,
     handleDeleteOpen,
     handleDelete,
