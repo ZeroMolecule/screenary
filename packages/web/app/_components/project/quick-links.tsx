@@ -153,6 +153,7 @@ function useQuickLinks({ projectId }: Props) {
     setPopoverOpen(popoverInitialState);
     closeDelete();
   });
+  console.log(quickLinks);
   const [
     { folders, editItem: editFolder, selectedFolder },
     {

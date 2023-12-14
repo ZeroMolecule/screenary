@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Box,
@@ -27,13 +27,11 @@ import styles from '@/styles/components/embedded-pages.module.scss';
 
 type Props = {
   projectId: string;
-  setEmbeddedPage: Dispatch<SetStateAction<EmbeddedPage | null>>;
 };
 
 export const EmbeddedPages: FC<Props> = (props) => {
   const {
     t,
-    setEmbeddedPage,
     embeddedPages,
     popoverOpenCreate,
     setPopoverOpenCreate,
@@ -52,7 +50,6 @@ export const EmbeddedPages: FC<Props> = (props) => {
       item={item}
       popoverOpen={popoverOpenEdit[item.id] || false}
       setPopoverOpen={setPopoverOpenEdit}
-      setEmbeddedPage={setEmbeddedPage}
       deleteOpen={deleteOpen[item.id] || false}
       setDeleteOpen={setDeleteOpen}
       onDelete={handleDelete}
@@ -88,7 +85,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
   );
 };
 
-function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
+function useEmbeddedPages({ projectId }: Props) {
   const t = useTranslations('project.embeddedPages');
   const [popoverOpenCreate, setPopoverOpenCreate] = useState(false);
   const [popoverOpenEdit, setPopoverOpenEdit] = useState<{
@@ -105,6 +102,7 @@ function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
   const { data: embeddedPages, refetch } = useQuery<Data<EmbeddedPage[]>>({
     queryKey: embeddedPagesQuery.key(projectId),
   });
+  console.log(embeddedPages);
   const { mutateAsync: createEmbeddedPage } = useMutation({
     mutationFn: addEmbeddedPageMutation.fnc,
     onSuccess: async () => {
@@ -115,11 +113,10 @@ function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
   });
   const { mutateAsync: editEmbeddedPage } = useMutation({
     mutationFn: editEmbeddedPageMutation.fnc,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await refetch();
       onEdited();
       setPopoverOpenEdit({});
-      setEmbeddedPage((prev) => (prev?.id === data.id ? data : prev));
     },
   });
   const { mutateAsync: deleteEmbeddedPage } = useMutation({
@@ -143,7 +140,6 @@ function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
 
   return {
     t,
-    setEmbeddedPage,
     embeddedPages: embeddedPages?.data ?? [],
     popoverOpenCreate,
     setPopoverOpenCreate,

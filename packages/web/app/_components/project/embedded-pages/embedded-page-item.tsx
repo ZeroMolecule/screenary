@@ -16,7 +16,7 @@ import {
   EmbeddedPageFormValues,
   EmbeddedPagePopover,
 } from './embedded-page-popover';
-import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
+import { ConfirmDeleteModal } from '../../modals/confirm-delete-modal';
 import classNames from 'classnames';
 import styles from '@/styles/components/embedded-pages.module.scss';
 
@@ -26,7 +26,6 @@ type Props = {
   item: EmbeddedPage;
   popoverOpen: boolean;
   setPopoverOpen: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
-  setEmbeddedPage: Dispatch<SetStateAction<EmbeddedPage | null>>;
   deleteOpen: boolean;
   setDeleteOpen: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
   onDelete: (id: string) => Promise<void>;
@@ -47,7 +46,6 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
-    handleOnClick,
     handleEdit,
     handleDeleteOpen,
     handleDelete,
@@ -86,7 +84,6 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
               className={classNames(styles.item, {
                 [styles.itemHover]: hovered,
               })}
-              onClick={handleOnClick}
             >
               {icon && !image.isError ? (
                 <Image
@@ -129,7 +126,6 @@ function useEmbeddedPageItem({
   item,
   popoverOpen,
   setPopoverOpen,
-  setEmbeddedPage,
   deleteOpen,
   setDeleteOpen,
   onDelete,
@@ -160,10 +156,6 @@ function useEmbeddedPageItem({
     setPopoverOpen({ [id]: value });
   };
 
-  const handleOnClick = () => {
-    setEmbeddedPage((prev) => (prev && prev.id === id ? null : item));
-  };
-
   const handleEdit = async (values: EmbeddedPageFormValues) => {
     await onEdit({ ...item, url: values.url });
   };
@@ -188,7 +180,6 @@ function useEmbeddedPageItem({
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
-    handleOnClick,
     handleEdit,
     handleDeleteOpen,
     handleDelete,
