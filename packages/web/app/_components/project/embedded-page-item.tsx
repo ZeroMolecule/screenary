@@ -28,7 +28,7 @@ type Props = {
   setPopoverOpen: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
   setEmbeddedPage: Dispatch<SetStateAction<EmbeddedPage | null>>;
   deleteOpen: boolean;
-  setDeleteOpen: Dispatch<SetStateAction<boolean>>;
+  setDeleteOpen: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
   onDelete: (id: string) => Promise<void>;
   onEdit: (item: EmbeddedPage) => Promise<void>;
 };
@@ -44,12 +44,12 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
     hovered,
     popoverOpen,
     deleteOpen,
-    setDeleteOpen,
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
     handleOnClick,
     handleEdit,
+    handleDeleteOpen,
     handleDelete,
   } = useEmbeddedPageItem(props);
 
@@ -111,14 +111,14 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
             onClose={() => handleChange(false)}
             onSubmit={handleEdit}
             item={item}
-            onOpenDelete={() => setDeleteOpen(true)}
+            onOpenDelete={() => handleDeleteOpen(true)}
           />
         </PopoverDropdown>
       </Popover>
       <ConfirmDeleteModal
         title={t('deleteTitle')}
         opened={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
+        onClose={() => handleDeleteOpen(false)}
         onSubmit={handleDelete}
       />
     </>
@@ -168,6 +168,9 @@ function useEmbeddedPageItem({
     await onEdit({ ...item, url: values.url });
   };
 
+  const handleDeleteOpen = (value: boolean) => {
+    setDeleteOpen({ [id]: value });
+  };
   const handleDelete = async () => {
     await onDelete(id);
   };
@@ -182,12 +185,12 @@ function useEmbeddedPageItem({
     hovered,
     popoverOpen,
     deleteOpen,
-    setDeleteOpen,
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
     handleOnClick,
     handleEdit,
+    handleDeleteOpen,
     handleDelete,
   };
 }

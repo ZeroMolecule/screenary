@@ -51,7 +51,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
       popoverOpen={popoverOpenEdit[item.id] || false}
       setPopoverOpen={setPopoverOpenEdit}
       setEmbeddedPage={setEmbeddedPage}
-      deleteOpen={deleteOpen}
+      deleteOpen={deleteOpen[item.id] || false}
       setDeleteOpen={setDeleteOpen}
       onDelete={handleDelete}
       onEdit={handleEdit}
@@ -90,7 +90,9 @@ function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
   const [popoverOpenEdit, setPopoverOpenEdit] = useState<{
     [key: string]: boolean;
   }>({});
-  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const onCreated = useNotificationSuccess('created');
   const onEdited = useNotificationSuccess('saved');
@@ -121,7 +123,7 @@ function useEmbeddedPages({ projectId, setEmbeddedPage }: Props) {
     onSuccess: async () => {
       await refetch();
       onDeleted();
-      setDeleteOpen(false);
+      setDeleteOpen({});
     },
   });
 
