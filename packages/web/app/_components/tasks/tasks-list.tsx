@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Box, Stack } from '@mantine/core';
+import { Box } from '@mantine/core';
+import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import { Task } from '@/domain/queries/tasks-query';
 import { Text } from '../base/text';
 import { TaskItem } from './task-item';
@@ -12,8 +13,14 @@ type Props = {
 };
 
 export const TasksList: FC<Props> = ({ title, tasks, onEdit, onDelete }) => {
-  const renderTask = (task: Task) => (
-    <TaskItem key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
+  const renderTask = (task: Task, index: number) => (
+    <Draggable key={task.id} draggableId={task.id} index={index}>
+      {({ innerRef, dragHandleProps, draggableProps }) => (
+        <div {...dragHandleProps} {...draggableProps} ref={innerRef}>
+          <TaskItem task={task} onEdit={onEdit} onDelete={onDelete} />
+        </div>
+      )}
+    </Draggable>
   );
 
   return (
@@ -21,7 +28,16 @@ export const TasksList: FC<Props> = ({ title, tasks, onEdit, onDelete }) => {
       <Text size="lg" fw={600}>
         {title}
       </Text>
-      <Stack gap={0}>{tasks.map(renderTask)}</Stack>
+      <DragDropContext onDragEnd={(result) => console.log(result)}>
+        <Droppable droppableId="tasks">
+          {({ droppableProps, innerRef, placeholder }) => (
+            <div {...droppableProps} ref={innerRef}>
+              {tasks.map(renderTask)}
+              {placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </Box>
   );
 };
