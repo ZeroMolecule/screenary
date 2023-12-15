@@ -27,11 +27,9 @@ import {
 import { ConfirmDeleteModal } from '../../modals/confirm-delete-modal';
 import { Link } from '../../base/link';
 import { paths } from '@/navigation/paths';
+import { useRouter } from '@/navigation';
 import classNames from 'classnames';
 import styles from '@/styles/components/embedded-pages.module.scss';
-import { useRouter } from '@/navigation';
-
-const ICON_CONTAINER_DIMENSIONS_IN_PIXELS = 64;
 
 type Props = {
   item: EmbeddedPage;
@@ -91,8 +89,8 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
           >
             <Link href={navigatePath}>
               <Card
-                w={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
-                h={ICON_CONTAINER_DIMENSIONS_IN_PIXELS}
+                w={64}
+                h={64}
                 p={0}
                 radius="lg"
                 pos="relative"
@@ -111,6 +109,7 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
                     onLoad={handleImageOnLoad}
                     onError={handleImageOnError}
                     unoptimized
+                    className={styles.image}
                   />
                 ) : (
                   <IconLink size={32} color="var(--mantine-color-primary-5)" />
@@ -169,8 +168,8 @@ function useEmbeddedPageItem({
     const { naturalWidth, naturalHeight } = e.currentTarget;
     setImage((prev) => ({
       ...prev,
-      width: Math.min(naturalWidth, ICON_CONTAINER_DIMENSIONS_IN_PIXELS - 1),
-      height: Math.min(naturalHeight, ICON_CONTAINER_DIMENSIONS_IN_PIXELS - 1),
+      width: naturalWidth,
+      height: naturalHeight,
     }));
   };
   const handleImageOnError = () => {
