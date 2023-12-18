@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Button } from '@mantine/core';
 import { IconLink } from '@tabler/icons-react';
 import { QuickLink } from '@prisma/client';
-import { ProjectMenu } from './project-menu';
+import { ProjectMenu } from '../project-menu';
 import { QuickLinkType } from './quick-links';
 import classNames from 'classnames';
 import styles from '@/styles/components/quick-links.module.scss';

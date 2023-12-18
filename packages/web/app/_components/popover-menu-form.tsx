@@ -14,6 +14,7 @@ type Props<T extends FieldValues> = {
   isSubmitting: boolean;
   children: ReactNode;
   stackProps?: StackProps;
+  headerActions?: ReactNode;
 };
 
 export function PopoverMenuForm<T extends FieldValues>(props: Props<T>) {
@@ -26,6 +27,7 @@ export function PopoverMenuForm<T extends FieldValues>(props: Props<T>) {
     isSubmitting,
     children,
     stackProps,
+    headerActions,
   } = usePopoverMenuForm(props);
 
   return (
@@ -48,9 +50,12 @@ export function PopoverMenuForm<T extends FieldValues>(props: Props<T>) {
             <Title order={6} fw={600} c="white">
               {title}
             </Title>
-            <ActionIcon variant="transparent" color="white" onClick={onClose}>
-              <IconX size={20} />
-            </ActionIcon>
+            <Group gap={0}>
+              {headerActions}
+              <ActionIcon variant="transparent" color="white" onClick={onClose}>
+                <IconX size={20} />
+              </ActionIcon>
+            </Group>
           </Group>
           <Stack p="md" pb="lg" className={styles.popoverContent}>
             {children}
@@ -82,6 +87,7 @@ function usePopoverMenuForm<T extends FieldValues>({
   isSubmitting,
   children,
   stackProps,
+  headerActions,
 }: Props<T>) {
   const t = useTranslations('shared.component.formPopover');
 
@@ -94,5 +100,6 @@ function usePopoverMenuForm<T extends FieldValues>({
     isSubmitting,
     children,
     stackProps,
+    headerActions,
   };
 }

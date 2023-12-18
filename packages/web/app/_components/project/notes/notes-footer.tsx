@@ -3,8 +3,8 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { Note as NoteModel } from '@prisma/client';
-import { ExpandedPopover } from './expanded-popover';
-import { Text } from '../base/text';
+import { ExpandedPopover } from '../expanded-popover';
+import { Text } from '../../base/text';
 import { Note } from './note';
 import styles from '@/styles/components/notes.module.scss';
 

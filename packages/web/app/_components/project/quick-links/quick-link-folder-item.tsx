@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Button, rgba } from '@mantine/core';
 import { Directory } from '@prisma/client';
-import { ProjectMenu } from './project-menu';
+import { ProjectMenu } from '../project-menu';
 import { QuickLinkType } from './quick-links';
-import { FolderIcon } from '../icons/folder-icon';
+import { FolderIcon } from '../../icons/folder-icon';
 import { useFolders } from '@/hooks/use-folders';
 import { useParams } from 'next/navigation';
 import classNames from 'classnames';
