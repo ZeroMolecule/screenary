@@ -28,6 +28,7 @@ export const TasksPage: FC = () => {
     onCreate,
     onEdit,
     onDelete,
+    onReorder,
   } = useTasksPage();
 
   const headerTitle = (
@@ -71,6 +72,7 @@ export const TasksPage: FC = () => {
           done={done}
           onEdit={onEdit}
           onDelete={onDelete}
+          onReorder={onReorder}
           hideCompleted={hideCompleted}
         />
       </Card>
@@ -84,9 +86,9 @@ function useTasksPage() {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
-  const [{ todos, done }, { onCreate, onEdit, onDelete }] = useTasks(
+  const [{ todos, done }, { onCreate, onEdit, onDelete, onReorder }] = useTasks(
     projectId!,
-    () => setPopoverOpen(false)
+    { onCreateSuccess: () => setPopoverOpen(false) }
   );
 
   const handleHideCompleted = () => {
@@ -108,5 +110,6 @@ function useTasksPage() {
     onCreate,
     onEdit,
     onDelete,
+    onReorder,
   };
 }

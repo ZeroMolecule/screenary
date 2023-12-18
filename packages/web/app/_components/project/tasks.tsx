@@ -22,6 +22,7 @@ export const Tasks: FC<Props> = (props) => {
     onCreate,
     onEdit,
     onDelete,
+    onReorder,
   } = useTasks(props);
 
   const headerTitle = (
@@ -44,7 +45,12 @@ export const Tasks: FC<Props> = (props) => {
         onPopoverChange={setPopoverOpen}
       />
       {results.length ? (
-        <TasksList tasks={results} onEdit={onEdit} onDelete={onDelete} />
+        <TasksList
+          tasks={results}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onReorder={onReorder}
+        />
       ) : (
         <TasksEmptyPlaceholder />
       )}
@@ -55,9 +61,9 @@ export const Tasks: FC<Props> = (props) => {
 function useTasks({ projectId }: Props) {
   const t = useTranslations('project.tasks');
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [{ results }, { onCreate, onEdit, onDelete }] = useTasksHook(
+  const [{ results }, { onCreate, onEdit, onDelete, onReorder }] = useTasksHook(
     projectId,
-    () => setPopoverOpen(false)
+    { onCreateSuccess: () => setPopoverOpen(false) }
   );
 
   return {
@@ -68,5 +74,6 @@ function useTasks({ projectId }: Props) {
     onCreate,
     onEdit,
     onDelete,
+    onReorder,
   };
 }

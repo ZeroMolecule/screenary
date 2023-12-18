@@ -3,19 +3,25 @@ import { TaskStatus } from '@prisma/client';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
-import { AddTaskData } from '@/domain/types/task-data';
+import { AddTaskData, ReorderTaskData } from '@/domain/types/task-data';
 import { useNotificationSuccess } from './use-notification-success';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
+import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
+
+type Config = {
+  onCreateSuccess?: () => void;
+};
 
 export const useTasks = (
   projectId: string,
-  onCreateSuccess: () => void
+  config?: Config
 ): [
   { results: Task[]; todos: Task[]; done: Task[] },
   {
     onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
     onEdit: (task: Task) => Promise<void>;
+    onReorder: (data: Pick<ReorderTaskData, 'data'>) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
   }
 ] => {
@@ -49,13 +55,24 @@ export const useTasks = (
     onSuccess: async () => {
       await refetchTodos();
       onCreated();
-      onCreateSuccess();
+      config?.onCreateSuccess?.();
     },
   });
   const { mutateAsync: editTask } = useMutation({
     mutationFn: editTaskMutation.fnc,
     onSuccess: async () => {
       await Promise.all([refetchTodos(), refetchDone()]);
+      onSaved();
+    },
+  });
+  const { mutateAsync: reorderTasks } = useMutation({
+    mutationFn: reorderTasksMutation.fnc,
+    onSuccess: async (data) => {
+      if (data[0].status === TaskStatus.TODO) {
+        await refetchTodos();
+      } else {
+        await refetchDone();
+      }
       onSaved();
     },
   });
@@ -82,6 +99,12 @@ export const useTasks = (
     await editTask({ id, projectId, title, status }).catch(() => null);
   };
 
+  const handleReorder = async ({ data }: Pick<ReorderTaskData, 'data'>) => {
+    await reorderTasks({ projectId, data }).catch((error) => {
+      throw error;
+    });
+  };
+
   const handleDelete = async (id: string) => {
     await deleteTask({ id, projectId }).catch(() => null);
   };
@@ -91,6 +114,7 @@ export const useTasks = (
     {
       onCreate: handleCreate,
       onEdit: handleEdit,
+      onReorder: handleReorder,
       onDelete: handleDelete,
     },
   ];
