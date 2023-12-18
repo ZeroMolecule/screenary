@@ -8,7 +8,7 @@ import { foldersQuery } from '@/domain/queries/folders-query';
 import { addFolderMutation } from '@/domain/mutations/add-folder-mutation';
 import { editFolderMutation } from '@/domain/mutations/edit-folder-mutation';
 import { deleteFolderMutation } from '@/domain/mutations/delete-folder-mutation';
-import { FolderFormValues } from '@/app/_components/project/quick-link-folder-popover-menu';
+import { FolderFormValues } from '@/app/_components/project/quick-links/quick-link-folder-popover-menu';
 import { usePathname, useRouter } from '@/navigation';
 import { folderQuery } from '@/domain/queries/folder-query';
 

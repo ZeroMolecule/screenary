@@ -11,6 +11,7 @@ import {
   Tabs,
   Checkbox,
   Popover,
+  Indicator,
 } from '@mantine/core';
 import tabStyles from '@/styles/base/tabs.module.scss';
 import { IconCircleFilled } from '@tabler/icons-react';
@@ -125,6 +126,13 @@ export const components: MantineThemeComponents = {
   Popover: Popover.extend({
     defaultProps: {
       zIndex: 1,
+    },
+  }),
+  Indicator: Indicator.extend({
+    styles: {
+      indicator: {
+        padding: 0,
+      },
     },
   }),
 };

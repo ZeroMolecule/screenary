@@ -82,6 +82,7 @@ export class EmbeddedPagesService {
 
     const [list, total] = await Promise.all([
       this.prismaService.embeddedPage.findMany({
+        where,
         ...pagination,
       }),
       this.prismaService.embeddedPage.count({ where }),

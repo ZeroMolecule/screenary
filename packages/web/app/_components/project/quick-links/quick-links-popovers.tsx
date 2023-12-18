@@ -10,7 +10,7 @@ import {
   PopoverTarget,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
-import { Text } from '../base/text';
+import { Text } from '../../base/text';
 import {
   QuickLinkFormValues,
   QuickLinkPopoverMenu,

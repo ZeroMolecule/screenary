@@ -2,7 +2,7 @@ import { ChangeEvent, FC } from 'react';
 import { ActionIcon, Box, Card, Group, Textarea } from '@mantine/core';
 import { IconCircleXFilled } from '@tabler/icons-react';
 import { Note as NoteModel } from '@prisma/client';
-import { Text } from '../base/text';
+import { Text } from '../../base/text';
 import { formatDate } from '@/utils/datetime';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';

@@ -5,7 +5,7 @@ import { redirect } from '@/navigation';
 import { paths } from '@/navigation/paths';
 
 type Props = {
-  params: { locale: string; id: string };
+  params: { locale: string; id: string; pageId: string };
   searchParams: { [key: string]: string | undefined };
 };
 
