@@ -1,0 +1,24 @@
+.card {
+  border: 1px solid var(--mantine-color-neutral-3);
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--mantine-color-neutral-1);
+  box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.1),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+  cursor: pointer;
+}
+.itemHover {
+  opacity: 0.3;
+}
+
+.image {
+  max-width: 100%;
+}
+
+.iframe {
+  border: 0;
+}

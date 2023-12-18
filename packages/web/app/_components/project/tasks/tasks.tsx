@@ -1,12 +1,12 @@
 import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Group } from '@mantine/core';
-import { TasksHeader } from '../tasks/tasks-header';
+import { TasksHeader } from '../../tasks/tasks-header';
 import { IconCircleCheckFilled } from '@tabler/icons-react';
-import { Text } from '../base/text';
+import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
-import { TasksList } from '../tasks/tasks-list';
-import { TasksEmptyPlaceholder } from '../tasks/tasks-empty-placeholder';
+import { TasksList } from '../../tasks/tasks-list';
+import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {

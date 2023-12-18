@@ -3,8 +3,8 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { PopoverMenuForm } from '../popover-menu-form';
-import { FormTextInput } from '../base/form/text-input';
+import { PopoverMenuForm } from '../../popover-menu-form';
+import { FormTextInput } from '../../base/form/text-input';
 import { QuickLink } from '@prisma/client';
 import styles from '@/styles/components/input.module.scss';
 
