@@ -75,7 +75,7 @@ function useTasksList({ title, tasks, onEdit, onDelete, onReorder }: Props) {
     setItems(updatedTasks);
 
     await onReorder({
-      data: updatedTasks.map(({ id, order }) => ({ id, order: order })),
+      data: updatedTasks.map(({ id, order }) => ({ id, order })),
     }).catch(() => setItems(tasks));
   };
 

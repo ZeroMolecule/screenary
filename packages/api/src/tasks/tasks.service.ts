@@ -46,17 +46,23 @@ export class TasksService {
   }
 
   async updateMany(dto: UpdateTasksDto, projectId: string, userId: string) {
-    return this.prismaService.$transaction(
-      async (tx) =>
-        await Promise.all(
-          dto.map((elem) =>
-            tx.task.update({
-              where: { id: elem.id, projectId, userId },
-              data: { order: { set: elem.order } },
-            })
-          )
-        )
-    );
+    const ids = dto.map((el) => el.id);
+
+    return this.prismaService.$transaction(async (tx) => {
+      const tasks = await tx.task.findMany({
+        where: { id: { in: ids }, projectId, userId },
+      });
+
+      await tx.task.deleteMany({ where: { id: { in: ids } } });
+
+      const reorderedTasks = tasks.map((task) => ({
+        ...task,
+        order: dto.find((el) => el.id === task.id)?.order ?? task.order,
+      }));
+      await tx.task.createMany({ data: reorderedTasks });
+
+      return reorderedTasks;
+    });
   }
 
   async findOne(id: string, projectId: string, userId: string) {

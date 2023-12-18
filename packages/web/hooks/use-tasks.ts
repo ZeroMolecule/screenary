@@ -8,6 +8,7 @@ import { useNotificationSuccess } from './use-notification-success';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
+import { orderBy } from 'lodash';
 
 type Config = {
   onCreateSuccess?: () => void;
@@ -48,7 +49,7 @@ export const useTasks = (
   });
   const todos = todoData?.data ?? [];
   const done = doneData?.data ?? [];
-  const results = [...done, ...todos];
+  const results = orderBy([...done, ...todos], 'order');
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
@@ -68,10 +69,13 @@ export const useTasks = (
   const { mutateAsync: reorderTasks } = useMutation({
     mutationFn: reorderTasksMutation.fnc,
     onSuccess: async (data) => {
-      if (data[0].status === TaskStatus.TODO) {
+      console.log(data);
+      if (data.every((el) => el.status === TaskStatus.TODO)) {
         await refetchTodos();
-      } else {
+      } else if (data.every((el) => el.status === TaskStatus.DONE)) {
         await refetchDone();
+      } else {
+        await Promise.all([refetchTodos(), refetchDone()]);
       }
       onSaved();
     },
