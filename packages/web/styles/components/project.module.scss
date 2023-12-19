@@ -1,7 +1,29 @@
 .embedGridCol {
   flex-basis: rem(96);
+
+  @media (min-width: $mantine-breakpoint-2560) {
+    flex-basis: rem(210);
+  }
+  @media (min-width: $mantine-breakpoint-3440) {
+    flex-basis: rem(280);
+  }
+  @media (min-width: $mantine-breakpoint-3880) {
+    flex-basis: rem(316);
+  }
 }
 
 .tasksGridCol {
   flex: 1;
+}
+
+.notesLinksGridCol {
+  @media (min-width: $mantine-breakpoint-2560) {
+    min-width: rem(895);
+  }
+  @media (min-width: $mantine-breakpoint-3440) {
+    min-width: rem(1203);
+  }
+  @media (min-width: $mantine-breakpoint-3880) {
+    min-width: rem(1356);
+  }
 }

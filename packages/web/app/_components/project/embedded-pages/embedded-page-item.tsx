@@ -89,8 +89,6 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
           >
             <Link href={navigatePath}>
               <Card
-                w={64}
-                h={64}
                 p={0}
                 radius="lg"
                 pos="relative"
@@ -112,7 +110,7 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
                     className={styles.image}
                   />
                 ) : (
-                  <IconLink size={32} color="var(--mantine-color-primary-5)" />
+                  <IconLink className={styles.placeholderLinkIcon} />
                 )}
               </Card>
             </Link>

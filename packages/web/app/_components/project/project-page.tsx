@@ -18,7 +18,7 @@ export const ProjectPage: FC<Props> = ({ id }) => {
       <GridCol span={9} h="100%" className={styles.tasksGridCol}>
         <Tasks projectId={id} />
       </GridCol>
-      <GridCol span={3} h="100%">
+      <GridCol span={3} h="100%" className={styles.notesLinksGridCol}>
         <Box h="100%" pos="relative">
           <Stack h="100%" gap="xs" className={overflowStyles['overflow-auto']}>
             <Notes projectId={id} />

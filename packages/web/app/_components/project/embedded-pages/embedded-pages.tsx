@@ -24,9 +24,9 @@ import { deleteEmbeddedPageMutation } from '@/domain/mutations/delete-embedded-p
 import { EmbeddedPageItem } from './embedded-page-item';
 import { EmbeddedPageCreate } from './embedded-page-create';
 import { useRouter } from '@/navigation';
+import { paths } from '@/navigation/paths';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/embedded-pages.module.scss';
-import { paths } from '@/navigation/paths';
 
 type Props = {
   projectId: string;
@@ -63,7 +63,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
   return (
     <Card h="100%" pos="unset" p={4} radius={24} className={styles.card}>
       <Box p="sm" className={overflowStyles['overflow-auto']}>
-        <Stack gap={20}>
+        <Stack gap={20} align="center">
           {embeddedPages.map(renderEmbeddedPage)}
           <Popover
             opened={popoverOpenCreate}
