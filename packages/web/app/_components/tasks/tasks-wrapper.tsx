@@ -7,7 +7,6 @@ import { TasksList } from './tasks-list';
 import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
 import { ReorderTaskData } from '@/domain/types/task-data';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
-import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
@@ -20,22 +19,15 @@ type Props = {
 
 export const TasksWrapper: FC<Props> = (props) => {
   const {
-   
     t,
-   
     isEmpty,
-   
     todos,
-   
     done,
-   
     onEdit,
-   
     onDelete,
     onReorder,
-   
     hideCompleted,
- , handleHideCompleted,
+    handleHideCompleted,
   } = useTasksWrapper(props);
 
   return (
@@ -77,7 +69,7 @@ export const TasksWrapper: FC<Props> = (props) => {
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onReorder={onReorder}
-            />
+              />
             )}
           </Stack>
         </Stack>
@@ -86,7 +78,7 @@ export const TasksWrapper: FC<Props> = (props) => {
   );
 };
 
-function useTasksWrapper({ todos, done, onEdit, onDelete }: Props) {
+function useTasksWrapper({ todos, done, onEdit, onDelete, onReorder }: Props) {
   const t = useTranslations('tasks');
   const [hideCompleted, setHideCompleted] = useState(false);
 
@@ -103,6 +95,7 @@ function useTasksWrapper({ todos, done, onEdit, onDelete }: Props) {
     done,
     onEdit,
     onDelete,
+    onReorder,
     hideCompleted,
     handleHideCompleted,
   };
