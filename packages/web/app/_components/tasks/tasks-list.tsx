@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box } from '@mantine/core';
 import {
   DragDropContext,
@@ -76,8 +76,12 @@ function useTasksList({ title, tasks, onEdit, onDelete, onReorder }: Props) {
 
     await onReorder({
       data: updatedTasks.map(({ id, order }) => ({ id, order })),
-    }).catch(() => setItems(tasks));
+    });
   };
+
+  useEffect(() => {
+    setItems(tasks ?? []);
+  }, [tasks]);
 
   return { title, tasks: items, onEdit, onDelete, handleOnDragEnd };
 }
