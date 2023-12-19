@@ -26,5 +26,5 @@
 
 .inputDone {
   text-decoration: line-through 2px solid var(--mantine-color-black);
-  color: var(--mantine-color-neutral-4);
+  color: var(--mantine-color-neutral-4) !important;
 }

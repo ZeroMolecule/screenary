@@ -38,7 +38,13 @@ export const TaskItem: FC<Props> = (props) => {
       />
       <Stack gap={4} className={flexStyles['flex-1']}>
         {inputHidden ? (
-          <Text size="lg" fw={600} lh="unset" onClick={handleShowInput}>
+          <Text
+            size="lg"
+            fw={600}
+            lh="unset"
+            onClick={handleShowInput}
+            className={classNames({ [styles.inputDone]: isDone })}
+          >
             {task.title}
           </Text>
         ) : (
