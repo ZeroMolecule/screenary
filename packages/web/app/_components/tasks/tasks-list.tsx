@@ -10,6 +10,7 @@ import { Task } from '@/domain/queries/tasks-query';
 import { Text } from '../base/text';
 import { TaskItem } from './task-item';
 import { ReorderTaskData } from '@/domain/types/task-data';
+import { TaskStatus } from '@prisma/client';
 
 type Props = {
   tasks: Task[];
@@ -80,7 +81,12 @@ function useTasksList({ title, tasks, onEdit, onDelete, onReorder }: Props) {
   };
 
   useEffect(() => {
-    setItems(tasks ?? []);
+    if (
+      tasks.every((task) => task.status === TaskStatus.DONE) ||
+      tasks.every((task) => task.status === TaskStatus.TODO)
+    ) {
+      setItems(tasks ?? []);
+    }
   }, [tasks]);
 
   return { title, tasks: items, onEdit, onDelete, handleOnDragEnd };
