@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Box } from '@mantine/core';
 import {
   DragDropContext,
@@ -10,7 +10,6 @@ import { Task } from '@/domain/queries/tasks-query';
 import { Text } from '../base/text';
 import { TaskItem } from './task-item';
 import { ReorderTaskData } from '@/domain/types/task-data';
-import { TaskStatus } from '@prisma/client';
 
 type Props = {
   tasks: Task[];
@@ -54,7 +53,7 @@ export const TasksList: FC<Props> = (props) => {
 };
 
 function useTasksList({ title, tasks, onEdit, onDelete, onReorder }: Props) {
-  const [items, setItems] = useState(tasks ?? []);
+  const [items, setItems] = useState<Task[]>([]);
 
   const handleOnDragEnd = async (result: DropResult) => {
     if (!result.destination) {
@@ -77,17 +76,15 @@ function useTasksList({ title, tasks, onEdit, onDelete, onReorder }: Props) {
 
     await onReorder({
       data: updatedTasks.map(({ id, order }) => ({ id, order })),
-    }).catch(() => setItems(tasks));
+    });
+    setItems([]);
   };
 
-  useEffect(() => {
-    if (
-      tasks.every((task) => task.status === TaskStatus.DONE) ||
-      tasks.every((task) => task.status === TaskStatus.TODO)
-    ) {
-      setItems(tasks ?? []);
-    }
-  }, [tasks]);
-
-  return { title, tasks: items, onEdit, onDelete, handleOnDragEnd };
+  return {
+    title,
+    tasks: items.length ? items : tasks,
+    onEdit,
+    onDelete,
+    handleOnDragEnd,
+  };
 }

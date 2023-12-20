@@ -103,9 +103,7 @@ export const useTasks = (
   };
 
   const handleReorder = async ({ data }: Pick<ReorderTaskData, 'data'>) => {
-    await reorderTasks({ projectId, data }).catch((error) => {
-      throw error;
-    });
+    await reorderTasks({ projectId, data }).catch(() => null);
   };
 
   const handleDelete = async (id: string) => {
