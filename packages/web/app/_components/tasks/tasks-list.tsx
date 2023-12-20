@@ -53,7 +53,7 @@ export const TasksList: FC<Props> = (props) => {
 };
 
 function useTasksList({ title, tasks, onEdit, onDelete, onReorder }: Props) {
-  const [items, setItems] = useState(tasks ?? []);
+  const [items, setItems] = useState<Task[]>([]);
 
   const handleOnDragEnd = async (result: DropResult) => {
     if (!result.destination) {
@@ -76,8 +76,15 @@ function useTasksList({ title, tasks, onEdit, onDelete, onReorder }: Props) {
 
     await onReorder({
       data: updatedTasks.map(({ id, order }) => ({ id, order })),
-    }).catch(() => setItems(tasks));
+    });
+    setItems([]);
   };
 
-  return { title, tasks: items, onEdit, onDelete, handleOnDragEnd };
+  return {
+    title,
+    tasks: items.length ? items : tasks,
+    onEdit,
+    onDelete,
+    handleOnDragEnd,
+  };
 }

@@ -1,4 +1,4 @@
-import { FC, KeyboardEvent, useMemo, useRef } from 'react';
+import { FC, KeyboardEvent, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Checkbox, Group, Stack, TextInput } from '@mantine/core';
 import { Task } from '@/domain/queries/tasks-query';
@@ -18,13 +18,15 @@ type Props = {
 
 export const TaskItem: FC<Props> = (props) => {
   const {
+    inputHidden,
     inputRef,
     task,
     isDone,
     date,
-    handleFocus,
+    handleShowInput,
+    handleHideInput,
     handleStatusChange,
-    handleEnter,
+    handleKeyDown,
   } = useTaskItem(props);
 
   return (
@@ -34,21 +36,40 @@ export const TaskItem: FC<Props> = (props) => {
         defaultChecked={isDone}
         onClick={handleStatusChange}
       />
-      <Stack gap={4} className={flexStyles['flex-1']} onClick={handleFocus}>
-        <TextInput
-          ref={inputRef}
-          size="lg"
-          fw={600}
-          defaultValue={task.title}
-          classNames={{
-            input: classNames(styles.input, {
-              [styles.inputDone]: isDone,
-            }),
-            wrapper: styles.inputWrapper,
-          }}
-          onKeyDown={handleEnter}
-        />
-        <Text ff="secondary" size="sm" c="primary.8">
+      <Stack gap={4} className={flexStyles['flex-1']}>
+        {inputHidden ? (
+          <Text
+            size="lg"
+            fw={600}
+            lh="unset"
+            onClick={handleShowInput}
+            className={classNames({ [styles.inputDone]: isDone })}
+          >
+            {task.title}
+          </Text>
+        ) : (
+          <TextInput
+            ref={inputRef}
+            size="lg"
+            fw={600}
+            defaultValue={task.title}
+            classNames={{
+              input: classNames(styles.input, {
+                [styles.inputDone]: isDone,
+              }),
+              wrapper: styles.inputWrapper,
+            }}
+            onKeyDown={handleKeyDown}
+            onBlur={handleHideInput}
+          />
+        )}
+        <Text
+          ff="secondary"
+          size="sm"
+          c="primary.8"
+          aria-readonly="false"
+          role="textbox"
+        >
           {date}
         </Text>
       </Stack>
@@ -60,6 +81,7 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
   const t = useTranslations('task');
   const isDone = task.status === TaskStatus.DONE;
   const inputRef = useRef<HTMLInputElement>(null);
+  const [inputHidden, setIsInputHidden] = useState(true);
 
   const formatDateMessage = useMemo(() => {
     if (!task.dueDate) {
@@ -80,8 +102,14 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
     });
   }, [t, task.dueDate]);
 
-  const handleFocus = () => {
-    inputRef.current?.focus();
+  const handleShowInput = () => {
+    setIsInputHidden(false);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 1);
+  };
+  const handleHideInput = () => {
+    setIsInputHidden(true);
   };
 
   const handleStatusChange = async () => {
@@ -91,7 +119,10 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
     });
   };
 
-  const handleEnter = async (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      handleHideInput();
+    }
     if (e.key === 'Enter') {
       const value = e.currentTarget.value;
       if (!value) {
@@ -104,12 +135,14 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
   };
 
   return {
+    inputHidden,
     inputRef,
     task,
     isDone,
     date: formatDateMessage,
-    handleFocus,
+    handleShowInput,
+    handleHideInput,
     handleStatusChange,
-    handleEnter,
+    handleKeyDown,
   };
 }
