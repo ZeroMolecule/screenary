@@ -19,7 +19,7 @@ import { UpdateTaskDto, updateTaskSchema } from './dtos/update-task.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { ProjectGuard } from '../shared/guards/project.guard';
-import { flattenDeep, isArray, uniq } from 'lodash';
+import { UpdateTasksDto, updateTasksSchema } from './dtos/update-tasks.dto';
 
 @Controller('tasks')
 @UseGuards(ProjectGuard)
@@ -43,6 +43,15 @@ export class TasksController {
     @AuthUser() user: User
   ) {
     return this.tasksService.update(id, data, project.id, user.id);
+  }
+
+  @Put()
+  async updateMany(
+    @Body(new ZodValidationPipe(updateTasksSchema)) data: UpdateTasksDto,
+    @Project() project: Project,
+    @AuthUser() user: User
+  ) {
+    return this.tasksService.updateMany(data, project.id, user.id);
   }
 
   @Get(':id')

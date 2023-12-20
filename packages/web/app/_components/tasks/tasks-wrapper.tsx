@@ -5,6 +5,7 @@ import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import { Task } from '@/domain/queries/tasks-query';
 import { TasksList } from './tasks-list';
 import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
+import { ReorderTaskData } from '@/domain/types/task-data';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
 
@@ -13,6 +14,7 @@ type Props = {
   done: Task[];
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  onReorder: (data: Pick<ReorderTaskData, 'data'>) => Promise<void>;
 };
 
 export const TasksWrapper: FC<Props> = (props) => {
@@ -23,6 +25,7 @@ export const TasksWrapper: FC<Props> = (props) => {
     done,
     onEdit,
     onDelete,
+    onReorder,
     hideCompleted,
     handleHideCompleted,
   } = useTasksWrapper(props);
@@ -41,6 +44,7 @@ export const TasksWrapper: FC<Props> = (props) => {
               tasks={todos}
               onEdit={onEdit}
               onDelete={onDelete}
+              onReorder={onReorder}
             />
           )}
           <Stack>
@@ -64,6 +68,7 @@ export const TasksWrapper: FC<Props> = (props) => {
                 tasks={done}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onReorder={onReorder}
               />
             )}
           </Stack>
@@ -73,7 +78,7 @@ export const TasksWrapper: FC<Props> = (props) => {
   );
 };
 
-function useTasksWrapper({ todos, done, onEdit, onDelete }: Props) {
+function useTasksWrapper({ todos, done, onEdit, onDelete, onReorder }: Props) {
   const t = useTranslations('tasks');
   const [hideCompleted, setHideCompleted] = useState(false);
 
@@ -90,6 +95,7 @@ function useTasksWrapper({ todos, done, onEdit, onDelete }: Props) {
     done,
     onEdit,
     onDelete,
+    onReorder,
     hideCompleted,
     handleHideCompleted,
   };
