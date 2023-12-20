@@ -41,10 +41,6 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
     }
   }
 
-  findTitle($: CheerioAPI) {
-    return $('title').text();
-  }
-
   async findManifestIcon($: CheerioAPI, baseUrl: string) {
     let manifestUrl = $('link[rel="manifest"]').attr('href');
     if (!manifestUrl) {
@@ -102,5 +98,9 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
     } catch (e) {
       return false;
     }
+  }
+
+  private findTitle($: CheerioAPI) {
+    return $('title').text();
   }
 }
