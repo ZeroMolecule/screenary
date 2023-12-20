@@ -19,7 +19,10 @@ import { UpdateTaskDto, updateTaskSchema } from './dtos/update-task.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { ProjectGuard } from '../shared/guards/project.guard';
-import { UpdateTasksDto, updateTasksSchema } from './dtos/update-tasks.dto';
+import {
+  ReorderItemsDto,
+  reorderItemsSchema,
+} from '../shared/dtos/reorder-items.dto';
 
 @Controller('tasks')
 @UseGuards(ProjectGuard)
@@ -47,7 +50,7 @@ export class TasksController {
 
   @Put()
   async updateMany(
-    @Body(new ZodValidationPipe(updateTasksSchema)) data: UpdateTasksDto,
+    @Body(new ZodValidationPipe(reorderItemsSchema)) data: ReorderItemsDto,
     @Project() project: Project,
     @AuthUser() user: User
   ) {
