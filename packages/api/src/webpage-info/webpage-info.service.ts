@@ -30,7 +30,7 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
       .catch(() => ({}));
   }
 
-  async findAlternativeIcon(baseUrl: string) {
+  private async findAlternativeIcon(baseUrl: string) {
     let iconUrl = `${baseUrl}/favicon.ico`;
     if (await this.validateUrl(iconUrl)) {
       return iconUrl;
@@ -41,7 +41,7 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
     }
   }
 
-  async findManifestIcon($: CheerioAPI, baseUrl: string) {
+  private async findManifestIcon($: CheerioAPI, baseUrl: string) {
     let manifestUrl = $('link[rel="manifest"]').attr('href');
     if (!manifestUrl) {
       return undefined;
@@ -73,7 +73,7 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
     }
   }
 
-  async findMetaIcon($: CheerioAPI, baseUrl: string) {
+  private async findMetaIcon($: CheerioAPI, baseUrl: string) {
     let iconUrl =
       $('link[rel="icon"]').attr('href') ??
       $('link[rel="shortcut icon"]').attr('href');
@@ -91,16 +91,16 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
     }
   }
 
-  async validateUrl(url: string): Promise<boolean> {
+  private findTitle($: CheerioAPI) {
+    return $('title').text();
+  }
+
+  private async validateUrl(url: string): Promise<boolean> {
     try {
       await axios.head(url);
       return true;
     } catch (e) {
       return false;
     }
-  }
-
-  private findTitle($: CheerioAPI) {
-    return $('title').text();
   }
 }
