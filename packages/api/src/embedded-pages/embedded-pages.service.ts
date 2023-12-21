@@ -69,7 +69,9 @@ export class EmbeddedPagesService {
         where: { id: { in: ids }, projectId, userId },
       });
 
-      await tx.embeddedPage.deleteMany({ where: { id: { in: ids } } });
+      await tx.embeddedPage.deleteMany({
+        where: { id: { in: ids }, projectId, userId },
+      });
 
       const reorderedEmbeddedPages = embeddedPages.map((page) => ({
         ...page,

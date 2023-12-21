@@ -53,7 +53,9 @@ export class TasksService {
         where: { id: { in: ids }, projectId, userId },
       });
 
-      await tx.task.deleteMany({ where: { id: { in: ids } } });
+      await tx.task.deleteMany({
+        where: { id: { in: ids }, projectId, userId },
+      });
 
       const reorderedTasks = tasks.map((task) => ({
         ...task,
