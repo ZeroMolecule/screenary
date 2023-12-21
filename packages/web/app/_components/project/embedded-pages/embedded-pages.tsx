@@ -70,7 +70,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
                 onEdit={handleEdit}
               />
             )}
-            itemWrapper={<Box mb={20} />}
+            itemWrapper={<Box mb={20} align="center" />}
           />
           <Popover
             opened={popoverOpenCreate}

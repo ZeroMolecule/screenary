@@ -1,11 +1,5 @@
 @use 'sass:math';
 
-$mantine-breakpoint-xs: '36em';
-$mantine-breakpoint-sm: '48em';
-$mantine-breakpoint-md: '62em';
-$mantine-breakpoint-lg: '75em';
-$mantine-breakpoint-xl: '88em';
-
 @function rem($value) {
   @return #{math.div(math.div($value, $value * 0 + 1), 16)}rem;
 }
@@ -47,3 +41,12 @@ $mantine-breakpoint-xl: '88em';
     @content;
   }
 }
+
+$mantine-breakpoint-xs: '36em';
+$mantine-breakpoint-sm: '48em';
+$mantine-breakpoint-md: '62em';
+$mantine-breakpoint-lg: '75em';
+$mantine-breakpoint-xl: '88em';
+$mantine-breakpoint-2xl: rem(2560);
+$mantine-breakpoint-3xl: rem(3440);
+$mantine-breakpoint-4xl: rem(3880);
