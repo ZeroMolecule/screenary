@@ -5,6 +5,7 @@ import { PaginationQuery } from '../shared/decorators/pagination-query.decorator
 import { UpdateQuickLinkDto } from './dtos/update-quick-link.dto';
 import { FindManyQuickLinkDto } from './dtos/find-many-quick-link.dto';
 import { WebpageInfoService } from '../shared/services/webpage-info.service';
+import { ReorderItemsDto } from '../shared/dtos/reorder-items.dto';
 
 @Injectable()
 export class QuickLinksService {
@@ -59,6 +60,28 @@ export class QuickLinksService {
         ...pageInfo,
         ...dto,
       },
+    });
+  }
+
+  async updateMany(dto: ReorderItemsDto, projectId: string, userId: string) {
+    const ids = dto.map((el) => el.id);
+
+    return this.prismaService.$transaction(async (tx) => {
+      const quickLinks = await tx.quickLink.findMany({
+        where: { id: { in: ids }, projectId, userId },
+      });
+
+      await tx.quickLink.deleteMany({
+        where: { id: { in: ids }, projectId, userId },
+      });
+
+      const reorderedQuickLinks = quickLinks.map((link) => ({
+        ...link,
+        order: dto.find((el) => el.id === link.id)?.order ?? link.order,
+      }));
+      await tx.quickLink.createMany({ data: reorderedQuickLinks });
+
+      return reorderedQuickLinks;
     });
   }
 
