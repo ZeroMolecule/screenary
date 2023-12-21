@@ -6,9 +6,7 @@
   flex-shrink: 0;
 }
 .quickLinkWrapper {
-  &:not(:last-child) {
-    margin-bottom: var(--mantine-spacing-md);
-  }
+  margin-bottom: var(--mantine-spacing-md);
 }
 .quickLinkWrapperExpanded {
   top: auto !important;
