@@ -5,6 +5,7 @@ import { UpdateDirectoryDto } from './dtos/update-directory.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { FindManyDirectoryDto } from './dtos/find-many-directory.dto';
 import { ReorderItemsDto } from '../shared/dtos/reorder-items.dto';
+import { orderBy } from 'lodash';
 
 @Injectable()
 export class DirectoriesService {
@@ -43,19 +44,22 @@ export class DirectoriesService {
       const directories = await tx.directory.findMany({
         where: { id: { in: ids }, projectId, userId },
       });
+      const updatedDirectories = orderBy(
+        directories.map((directory) => ({
+          ...directory,
+          order: dto.find((el) => el.id === directory.id)?.order,
+        })),
+        'order'
+      );
 
-      await tx.directory.deleteMany({
-        where: { id: { in: ids }, projectId, userId },
-      });
-
-      const reorderedDirectories = directories.map((directory) => ({
-        ...directory,
-        order:
-          dto.find((el) => el.id === directory.id)?.order ?? directory.order,
-      }));
-      await tx.directory.createMany({ data: reorderedDirectories });
-
-      return reorderedDirectories;
+      return await Promise.all(
+        updatedDirectories.map((directory) =>
+          tx.directory.update({
+            where: { id: directory.id },
+            data: directory,
+          })
+        )
+      );
     });
   }
 
