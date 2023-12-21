@@ -34,16 +34,8 @@
   max-width: 100%;
 
   @media (min-width: $mantine-breakpoint-2xl) {
-    min-width: rem(60);
-    min-height: rem(60);
-  }
-  @media (min-width: $mantine-breakpoint-3xl) {
-    min-width: rem(76);
-    min-height: rem(76);
-  }
-  @media (min-width: $mantine-breakpoint-4xl) {
-    min-width: rem(86);
-    min-height: rem(86);
+    min-width: 52%;
+    min-height: 52%;
   }
 }
 
@@ -53,16 +45,8 @@
   color: var(--mantine-color-primary-5);
 
   @media (min-width: $mantine-breakpoint-2xl) {
-    width: rem(60);
-    height: rem(60);
-  }
-  @media (min-width: $mantine-breakpoint-3xl) {
-    width: rem(76);
-    height: rem(76);
-  }
-  @media (min-width: $mantine-breakpoint-4xl) {
-    width: rem(86);
-    height: rem(86);
+    min-width: 52%;
+    min-height: 52%;
   }
 }
 
@@ -70,16 +54,8 @@
   color: var(--mantine-color-neutral-3);
 
   @media (min-width: $mantine-breakpoint-2xl) {
-    width: rem(42);
-    height: rem(42);
-  }
-  @media (min-width: $mantine-breakpoint-3xl) {
-    width: rem(58);
-    height: rem(58);
-  }
-  @media (min-width: $mantine-breakpoint-4xl) {
-    width: rem(64);
-    height: rem(64);
+    width: 38%;
+    height: 38%;
   }
 }
 
