@@ -70,7 +70,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
                 onEdit={handleEdit}
               />
             )}
-            itemsWrapper={<Stack gap={20} />}
+            itemWrapper={<Box className={styles.itemWrapper} />}
           />
           <Popover
             opened={popoverOpenCreate}

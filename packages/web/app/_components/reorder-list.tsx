@@ -15,6 +15,7 @@ type Props<T extends BaseType> = {
   onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
   renderComponentItem: (item: T) => ReactNode;
   itemsWrapper?: ReactElement;
+  itemWrapper?: ReactElement;
 };
 
 export function ReorderList<T extends BaseType>(props: Props<T>) {
@@ -24,15 +25,20 @@ export function ReorderList<T extends BaseType>(props: Props<T>) {
     renderComponentItem,
     handleOnDragEnd,
     ItemsWrapper,
+    ItemWrapper,
   } = useReorderList(props);
 
   const renderItem = (item: T, index: number) => (
     <Draggable key={item.id} draggableId={item.id} index={index}>
-      {({ innerRef, dragHandleProps, draggableProps }) => (
-        <div {...dragHandleProps} {...draggableProps} ref={innerRef}>
-          {renderComponentItem(item)}
-        </div>
-      )}
+      {({ innerRef, dragHandleProps, draggableProps }) =>
+        cloneElement(
+          ItemWrapper,
+          { ref: innerRef },
+          <div {...dragHandleProps} {...draggableProps}>
+            {renderComponentItem(item)}
+          </div>
+        )
+      }
     </Draggable>
   );
 
@@ -56,6 +62,7 @@ function useReorderList<T extends BaseType>({
   onReorder,
   renderComponentItem,
   itemsWrapper = <></>,
+  itemWrapper = <div />,
 }: Props<T>) {
   const [items, setItems] = useState<T[]>([]);
 
@@ -90,5 +97,6 @@ function useReorderList<T extends BaseType>({
     renderComponentItem,
     handleOnDragEnd,
     ItemsWrapper: itemsWrapper,
+    ItemWrapper: itemWrapper,
   };
 }
