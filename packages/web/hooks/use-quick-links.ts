@@ -10,6 +10,8 @@ import { deleteQuickLinkMutation } from '@/domain/mutations/delete-quick-link-mu
 import { QuickLinkFormValues } from '@/app/_components/project/quick-links/quick-link-popover-menu';
 import { useFolders } from './use-folders';
 import { refreshQuickLinkMutation } from '@/domain/mutations/refresh-quick-link-mutation';
+import { reorderQuickLinksMutation } from '@/domain/mutations/reorder-quick-links-mutation';
+import { ReorderData } from '@/domain/types/reorder-data';
 
 export const useQuickLinks = (
   projectId: string,
@@ -24,6 +26,7 @@ export const useQuickLinks = (
     onSubmit: (values: QuickLinkFormValues) => Promise<void>;
     onDelete: () => Promise<void>;
     onRefresh: (id: string) => void;
+    onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
     setEditItem: Dispatch<SetStateAction<QuickLink | null>>;
     setDeleteId: Dispatch<SetStateAction<string | null>>;
   }
@@ -57,6 +60,13 @@ export const useQuickLinks = (
       onSuccess();
     },
   });
+  const { mutateAsync: reorderQuickLinks } = useMutation({
+    mutationFn: reorderQuickLinksMutation.fnc,
+    onSuccess: async () => {
+      await refetch();
+      onEdited();
+    },
+  });
   const { mutate: refreshQuickLink } = useMutation({
     mutationFn: refreshQuickLinkMutation.fnc,
     onSuccess: () => null,
@@ -88,6 +98,9 @@ export const useQuickLinks = (
   const handleRefresh = (id: string) => {
     refreshQuickLink({ id, projectId });
   };
+  const handleReorder = async ({ data }: Pick<ReorderData, 'data'>) => {
+    await reorderQuickLinks({ projectId, data }).catch(() => null);
+  };
   const handleDelete = async () => {
     if (deleteId) {
       await deleteQuickLink({ id: deleteId, projectId }).catch(() => null);
@@ -99,6 +112,7 @@ export const useQuickLinks = (
     {
       onSubmit: handleSubmit,
       onRefresh: handleRefresh,
+      onReorder: handleReorder,
       onDelete: handleDelete,
       setEditItem,
       setDeleteId,

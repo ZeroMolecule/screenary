@@ -20,6 +20,9 @@ import { QuickLinkPopover, QuickLinkType } from './quick-links';
 import { Text } from '../../base/text';
 import { EmptyPlaceholder } from '../../empty-placeholder';
 import { FolderIcon } from '../../icons/folder-icon';
+import { ReorderList } from '../../reorder-list';
+import { ReorderData } from '@/domain/types/reorder-data';
+import classNames from 'classnames';
 import emptyIcon from '@/public/images/link-icon.svg';
 import stylesOverflow from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/quick-links.module.scss';
@@ -33,6 +36,7 @@ type Props = {
   onEditOpen: (item: QuickLink | Directory, type: QuickLinkType) => void;
   setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
   onLinkRefresh: (id: string) => void;
+  onLinkReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
   onClearFolderParams?: () => void;
   selectedFolder?: Directory | null;
 };
@@ -48,6 +52,7 @@ export const QuickLinksFooter: FC<Props> = (props) => {
     onEditOpen,
     setPopoverOpen,
     onLinkRefresh,
+    onLinkReorder,
     onClearFolderParams,
     selectedFolder,
   } = useQuickLinksFooter(props);
@@ -61,17 +66,6 @@ export const QuickLinksFooter: FC<Props> = (props) => {
         inExpandedView
       />
     </GridCol>
-  );
-
-  const renderQuickLink = (item: QuickLink) => (
-    <QuickLinkItem
-      key={item.id}
-      item={item}
-      onEditOpen={onEditOpen}
-      onDeleteOpen={onDeleteOpen}
-      onRefresh={onLinkRefresh}
-      inExpandedView
-    />
   );
 
   return (
@@ -121,7 +115,29 @@ export const QuickLinksFooter: FC<Props> = (props) => {
             />
           </Center>
         ) : (
-          quickLinks.map(renderQuickLink)
+          <ReorderList<QuickLink>
+            data={quickLinks}
+            droppableId="quick-links"
+            onReorder={onLinkReorder}
+            renderComponentItem={(item) => (
+              <QuickLinkItem
+                key={item.id}
+                item={item}
+                onEditOpen={onEditOpen}
+                onDeleteOpen={onDeleteOpen}
+                onRefresh={onLinkRefresh}
+                inExpandedView
+              />
+            )}
+            itemWrapper={
+              <Box
+                className={classNames(
+                  styles.quickLinkWrapper,
+                  styles.quickLinkWrapperExpanded
+                )}
+              />
+            }
+          />
         )}
       </Stack>
       <Group mt="auto" gap="xs">
@@ -161,6 +177,7 @@ function useQuickLinksFooter({
   onEditOpen,
   setPopoverOpen,
   onLinkRefresh,
+  onLinkReorder,
   onClearFolderParams,
   selectedFolder,
 }: Props) {
@@ -176,6 +193,7 @@ function useQuickLinksFooter({
     onEditOpen,
     setPopoverOpen,
     onLinkRefresh,
+    onLinkReorder,
     onClearFolderParams,
     selectedFolder,
   };

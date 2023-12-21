@@ -33,10 +33,8 @@ export function ReorderList<T extends BaseType>(props: Props<T>) {
       {({ innerRef, dragHandleProps, draggableProps }) =>
         cloneElement(
           ItemWrapper,
-          { ref: innerRef },
-          <div {...dragHandleProps} {...draggableProps}>
-            {renderComponentItem(item)}
-          </div>
+          { ...dragHandleProps, ...draggableProps, ref: innerRef },
+          renderComponentItem(item)
         )
       }
     </Draggable>

@@ -5,6 +5,15 @@
 .quickLink {
   flex-shrink: 0;
 }
+.quickLinkWrapper {
+  &:not(:last-child) {
+    margin-bottom: var(--mantine-spacing-md);
+  }
+}
+.quickLinkWrapperExpanded {
+  top: auto !important;
+  left: auto !important;
+}
 
 .quickLinkExpandedView {
   padding-inline: 0 !important;
