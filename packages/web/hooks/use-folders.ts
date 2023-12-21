@@ -11,8 +11,6 @@ import { deleteFolderMutation } from '@/domain/mutations/delete-folder-mutation'
 import { FolderFormValues } from '@/app/_components/project/quick-links/quick-link-folder-popover-menu';
 import { usePathname, useRouter } from '@/navigation';
 import { folderQuery } from '@/domain/queries/folder-query';
-import { ReorderData } from '@/domain/types/reorder-data';
-import { reorderFoldersMutation } from '@/domain/mutations/reorder-folders-mutation';
 
 const FOLDER_TAB_PARAMS_KEY = 'folder';
 
@@ -30,7 +28,6 @@ export const useFolders = (
   {
     onSubmit: (values: FolderFormValues) => Promise<void>;
     onDelete: () => Promise<void>;
-    onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
     setEditItem: Dispatch<SetStateAction<Directory | null>>;
     setDeleteId: Dispatch<SetStateAction<string | null>>;
     onFolderSelect: (value: string | null) => void;
@@ -75,13 +72,6 @@ export const useFolders = (
       onSuccess?.();
     },
   });
-  const { mutateAsync: reorderFolders } = useMutation({
-    mutationFn: reorderFoldersMutation.fnc,
-    onSuccess: async () => {
-      await refetch();
-      onEdited();
-    },
-  });
   const { mutateAsync: deleteFolder } = useMutation({
     mutationFn: deleteFolderMutation.fnc,
     onSuccess: async () => {
@@ -103,9 +93,6 @@ export const useFolders = (
     } else {
       await createFolder({ ...values, projectId, parentId }).catch(() => null);
     }
-  };
-  const handleReorder = async ({ data }: Pick<ReorderData, 'data'>) => {
-    await reorderFolders({ projectId, data }).catch(() => null);
   };
   const handleDelete = async () => {
     if (deleteId) {
@@ -140,7 +127,6 @@ export const useFolders = (
     {
       onSubmit: handleSubmit,
       onDelete: handleDelete,
-      onReorder: handleReorder,
       setEditItem,
       setDeleteId,
       onFolderSelect: handleFolderSelect,

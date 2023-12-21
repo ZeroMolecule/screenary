@@ -5,7 +5,7 @@ import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import { Task } from '@/domain/queries/tasks-query';
 import { TasksList } from './tasks-list';
 import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
-import { ReorderTaskData } from '@/domain/types/task-data';
+import { ReorderData } from '@/domain/types/reorder-data';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
 
@@ -14,7 +14,7 @@ type Props = {
   done: Task[];
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
-  onReorder: (data: Pick<ReorderTaskData, 'data'>) => Promise<void>;
+  onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
 };
 
 export const TasksWrapper: FC<Props> = (props) => {

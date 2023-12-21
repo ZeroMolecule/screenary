@@ -29,10 +29,6 @@ import {
   FindManyDirectoryDto,
   findManyDirectorySchema,
 } from './dtos/find-many-directory.dto';
-import {
-  ReorderItemsDto,
-  reorderItemsSchema,
-} from '../shared/dtos/reorder-items.dto';
 
 @Controller('directories')
 @UseGuards(ProjectGuard)
@@ -58,15 +54,6 @@ export class DirectoriesController {
     @AuthUser() user: User
   ) {
     return this.directoriesService.update(id, data, project.id, user.id);
-  }
-
-  @Put()
-  async updateMany(
-    @Body(new ZodValidationPipe(reorderItemsSchema)) data: ReorderItemsDto,
-    @Project() project: Project,
-    @AuthUser() user: User
-  ) {
-    return this.directoriesService.updateMany(data, project.id, user.id);
   }
 
   @Get(':id')
