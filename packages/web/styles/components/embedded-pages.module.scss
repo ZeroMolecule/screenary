@@ -14,11 +14,6 @@
 .itemHover {
   opacity: 0.3;
 }
-.itemWrapper {
-  &:not(:last-child) {
-    margin-bottom: rem(20);
-  }
-}
 
 .image {
   max-width: 100%;
