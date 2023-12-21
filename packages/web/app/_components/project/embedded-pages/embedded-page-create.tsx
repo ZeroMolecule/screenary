@@ -12,15 +12,13 @@ export const EmbeddedPageCreate = forwardRef<HTMLDivElement, Props>(
     return (
       <Card
         ref={ref}
-        w={64}
-        h={64}
         p={0}
         radius="lg"
         pos="relative"
         className={styles.item}
         onClick={onOpen}
       >
-        <IconPlus color="var(--mantine-color-neutral-3)" />
+        <IconPlus className={styles.plusIcon} />
       </Card>
     );
   }
