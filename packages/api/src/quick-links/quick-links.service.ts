@@ -111,6 +111,9 @@ export class QuickLinksService {
       this.prismaService.quickLink.findMany({
         where,
         ...pagination,
+        orderBy: {
+          order: 'asc',
+        },
       }),
       this.prismaService.quickLink.count({ where }),
     ]);
