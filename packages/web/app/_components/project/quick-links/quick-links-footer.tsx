@@ -38,6 +38,7 @@ type Props = {
   onLinkRefresh: (id: string) => void;
   onLinkReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
   onClearFolderParams?: () => void;
+  onFolderReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
   selectedFolder?: Directory | null;
 };
 
@@ -54,19 +55,9 @@ export const QuickLinksFooter: FC<Props> = (props) => {
     onLinkRefresh,
     onLinkReorder,
     onClearFolderParams,
+    onFolderReorder,
     selectedFolder,
   } = useQuickLinksFooter(props);
-
-  const renderFolder = (item: Directory) => (
-    <GridCol key={item.id} span={4}>
-      <QuickLinkFolderItem
-        item={item}
-        onEditOpen={onEditOpen}
-        onDeleteOpen={onDeleteOpen}
-        inExpandedView
-      />
-    </GridCol>
-  );
 
   return (
     <ExpandedPopover
@@ -77,7 +68,12 @@ export const QuickLinksFooter: FC<Props> = (props) => {
       portalTarget={PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID}
       onTitleClick={onClearFolderParams}
     >
-      <Stack h="100%" my="lg" className={stylesOverflow['overflow-auto']}>
+      <Stack
+        h="100%"
+        my="lg"
+        gap={0}
+        className={stylesOverflow['overflow-auto']}
+      >
         {(!!folders.length || selectedFolder) && (
           <Stack>
             <Group gap="xs">
@@ -101,7 +97,26 @@ export const QuickLinksFooter: FC<Props> = (props) => {
                 {selectedFolder ? selectedFolder.name : t('foldersTitle')}
               </Text>
             </Group>
-            <Grid>{folders.map(renderFolder)}</Grid>
+            <ReorderList<Directory>
+              data={folders}
+              droppableId="folders"
+              onReorder={onFolderReorder}
+              renderComponentItem={(item) => (
+                <QuickLinkFolderItem
+                  item={item}
+                  onEditOpen={onEditOpen}
+                  onDeleteOpen={onDeleteOpen}
+                  inExpandedView
+                />
+              )}
+              itemsWrapper={<Grid mb="md" />}
+              itemWrapper={
+                <GridCol
+                  span={4}
+                  className={classNames(styles.quickLinkWrapperExpanded)}
+                />
+              }
+            />
           </Stack>
         )}
         {!quickLinks.length ? (
@@ -121,7 +136,6 @@ export const QuickLinksFooter: FC<Props> = (props) => {
             onReorder={onLinkReorder}
             renderComponentItem={(item) => (
               <QuickLinkItem
-                key={item.id}
                 item={item}
                 onEditOpen={onEditOpen}
                 onDeleteOpen={onDeleteOpen}
@@ -179,6 +193,7 @@ function useQuickLinksFooter({
   onLinkRefresh,
   onLinkReorder,
   onClearFolderParams,
+  onFolderReorder,
   selectedFolder,
 }: Props) {
   const t = useTranslations('project.quickLinks');
@@ -195,6 +210,7 @@ function useQuickLinksFooter({
     onLinkRefresh,
     onLinkReorder,
     onClearFolderParams,
+    onFolderReorder,
     selectedFolder,
   };
 }

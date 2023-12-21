@@ -44,6 +44,7 @@ export const QuickLinks: FC<Props> = (props) => {
     onLinkRefresh,
     onLinkReorder,
     onFolderSubmit,
+    onFolderReorder,
     handleEditOpen,
     handleEditClose,
     isDeleteOpen,
@@ -53,15 +54,6 @@ export const QuickLinks: FC<Props> = (props) => {
     deleteModalTitle,
     deleteModalOnSubmit,
   } = useQuickLinks(props);
-
-  const renderFolder = (item: Directory) => (
-    <QuickLinkFolderItem
-      key={item.id}
-      item={item}
-      onEditOpen={handleEditOpen}
-      onDeleteOpen={handleOpenDelete}
-    />
-  );
 
   return (
     <Box h="100%" className={overflowStyles['overflow-auto']} mih={300}>
@@ -84,12 +76,26 @@ export const QuickLinks: FC<Props> = (props) => {
             isExpanded={expanded}
           />
           <Stack
+            gap={0}
             className={classNames(
               flexStyles['flex-1'],
               overflowStyles['overflow-auto']
             )}
           >
-            {folders.map(renderFolder)}
+            <ReorderList<Directory>
+              data={folders}
+              droppableId="folders"
+              onReorder={onFolderReorder}
+              renderComponentItem={(item) => (
+                <QuickLinkFolderItem
+                  key={item.id}
+                  item={item}
+                  onEditOpen={handleEditOpen}
+                  onDeleteOpen={handleOpenDelete}
+                />
+              )}
+              itemWrapper={<Box mb="md" />}
+            />
             {!quickLinks.length && !folders.length ? (
               <Center h="100%" className={styles.emptySmallBlock}>
                 <Text>{t('empty.shortText')}</Text>
@@ -101,7 +107,6 @@ export const QuickLinks: FC<Props> = (props) => {
                 onReorder={onLinkReorder}
                 renderComponentItem={(item) => (
                   <QuickLinkItem
-                    key={item.id}
                     item={item}
                     onEditOpen={handleEditOpen}
                     onDeleteOpen={handleOpenDelete}
@@ -124,6 +129,7 @@ export const QuickLinks: FC<Props> = (props) => {
             selectedFolder={selectedFolder}
             onLinkRefresh={onLinkRefresh}
             onLinkReorder={onLinkReorder}
+            onFolderReorder={onFolderReorder}
           />
         </Stack>
       </Card>
@@ -168,6 +174,7 @@ function useQuickLinks({ projectId }: Props) {
       setDeleteId: setDeleteFolderId,
       onDelete: onFolderDelete,
       onSubmit: onFolderSubmit,
+      onReorder: onFolderReorder,
       onClearFolderParams,
     },
   ] = useFolders(projectId, () => {
@@ -225,6 +232,7 @@ function useQuickLinks({ projectId }: Props) {
     onLinkRefresh,
     onLinkReorder,
     onFolderSubmit,
+    onFolderReorder,
     handleEditOpen,
     handleEditClose,
     isDeleteOpen,
