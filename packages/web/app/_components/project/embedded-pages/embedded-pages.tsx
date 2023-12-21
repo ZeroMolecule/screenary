@@ -54,7 +54,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
   return (
     <Card h="100%" pos="unset" p={4} radius={24} className={styles.card}>
       <Box p="sm" className={overflowStyles['overflow-auto']}>
-        <Stack gap={0}>
+        <Stack gap={0} align="center">
           <ReorderList<EmbeddedPage>
             data={embeddedPages}
             droppableId="embedded-pages"
@@ -70,7 +70,7 @@ export const EmbeddedPages: FC<Props> = (props) => {
                 onEdit={handleEdit}
               />
             )}
-            itemWrapper={<Box mb={20} align="center" />}
+            itemWrapper={<Box mb={20} />}
           />
           <Popover
             opened={popoverOpenCreate}
