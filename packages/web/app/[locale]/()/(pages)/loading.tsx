@@ -1,14 +1,13 @@
-import { Text } from '@/app/_components/base/text';
-import { Center } from '@mantine/core';
+'use client';
 
-// TODO: add custom loader (see with design)
+import { Center } from '@mantine/core';
+import Lottie from 'lottie-react';
+import loadingLottie from '@/public/lottie/loading.json';
 
 export default function Loading() {
   return (
     <Center h="100%">
-      <Text ff="secondary" fz={42} fw={700}>
-        Loading...
-      </Text>
+      <Lottie animationData={loadingLottie} width={300} height={300} />
     </Center>
   );
 }
