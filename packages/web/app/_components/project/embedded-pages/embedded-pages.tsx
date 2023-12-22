@@ -21,10 +21,13 @@ import { addEmbeddedPageMutation } from '@/domain/mutations/add-embedded-page-mu
 import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { editEmbeddedPageMutation } from '@/domain/mutations/edit-embedded-page-mutation';
 import { deleteEmbeddedPageMutation } from '@/domain/mutations/delete-embedded-page-mutation';
-import { EmbeddedPageItem } from './embedded-page-item';
 import { EmbeddedPageCreate } from './embedded-page-create';
 import { useRouter } from '@/navigation';
 import { paths } from '@/navigation/paths';
+import { reorderEmbeddedPagesMutation } from '@/domain/mutations/reorder-embedded-pages-mutation';
+import { ReorderData } from '@/domain/types/reorder-data';
+import { ReorderList } from '../../reorder-list';
+import { EmbeddedPageItem } from './embedded-page-item';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/embedded-pages.module.scss';
 
@@ -44,27 +47,31 @@ export const EmbeddedPages: FC<Props> = (props) => {
     setDeleteOpen,
     handleCreate,
     handleEdit,
+    handleReorder,
     handleDelete,
   } = useEmbeddedPages(props);
-
-  const renderEmbeddedPage = (item: EmbeddedPage) => (
-    <EmbeddedPageItem
-      key={item.id}
-      item={item}
-      popoverOpen={popoverOpenEdit[item.id] || false}
-      setPopoverOpen={setPopoverOpenEdit}
-      deleteOpen={deleteOpen[item.id] || false}
-      setDeleteOpen={setDeleteOpen}
-      onDelete={handleDelete}
-      onEdit={handleEdit}
-    />
-  );
 
   return (
     <Card h="100%" pos="unset" p={4} radius={24} className={styles.card}>
       <Box p="sm" className={overflowStyles['overflow-auto']}>
-        <Stack gap={20} align="center">
-          {embeddedPages.map(renderEmbeddedPage)}
+        <Stack gap={0} align="center">
+          <ReorderList<EmbeddedPage>
+            data={embeddedPages}
+            droppableId="embedded-pages"
+            onReorder={handleReorder}
+            renderComponentItem={(item) => (
+              <EmbeddedPageItem
+                item={item}
+                popoverOpen={popoverOpenEdit[item.id] || false}
+                setPopoverOpen={setPopoverOpenEdit}
+                deleteOpen={deleteOpen[item.id] || false}
+                setDeleteOpen={setDeleteOpen}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
+            )}
+            itemWrapper={<Box mb={20} />}
+          />
           <Popover
             opened={popoverOpenCreate}
             onChange={setPopoverOpenCreate}
@@ -123,6 +130,13 @@ function useEmbeddedPages({ projectId }: Props) {
       setPopoverOpenEdit({});
     },
   });
+  const { mutateAsync: reorderEmbeddedPages } = useMutation({
+    mutationFn: reorderEmbeddedPagesMutation.fnc,
+    onSuccess: async () => {
+      await refetch();
+      onEdited();
+    },
+  });
   const { mutateAsync: deleteEmbeddedPage } = useMutation({
     mutationFn: deleteEmbeddedPageMutation.fnc,
     onSuccess: async ({ id }) => {
@@ -141,6 +155,9 @@ function useEmbeddedPages({ projectId }: Props) {
   const handleEdit = async ({ id, projectId, url }: EmbeddedPage) => {
     await editEmbeddedPage({ id, projectId, url }).catch(() => null);
   };
+  const handleReorder = async ({ data }: Pick<ReorderData, 'data'>) => {
+    await reorderEmbeddedPages({ projectId, data }).catch(() => null);
+  };
   const handleDelete = async (id: string) => {
     await deleteEmbeddedPage({ id, projectId }).catch(() => null);
   };
@@ -156,6 +173,7 @@ function useEmbeddedPages({ projectId }: Props) {
     setDeleteOpen,
     handleCreate,
     handleEdit,
+    handleReorder,
     handleDelete,
   };
 }

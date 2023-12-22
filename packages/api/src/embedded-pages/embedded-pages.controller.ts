@@ -24,6 +24,10 @@ import {
 } from './dtos/updated-embedded-page.dto';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import {
+  ReorderItemsDto,
+  reorderItemsSchema,
+} from '../shared/dtos/reorder-items.dto';
 
 @Controller('embedded-pages')
 @UseGuards(ProjectGuard)
@@ -49,6 +53,15 @@ export class EmbeddedPagesController {
     @AuthUser() user: User
   ) {
     return this.embeddedPagesService.update(id, data, project.id, user.id);
+  }
+
+  @Put()
+  async updateMany(
+    @Body(new ZodValidationPipe(reorderItemsSchema)) data: ReorderItemsDto,
+    @Project() project: Project,
+    @AuthUser() user: User
+  ) {
+    return this.embeddedPagesService.updateMany(data, project.id, user.id);
   }
 
   @Get(':id')
