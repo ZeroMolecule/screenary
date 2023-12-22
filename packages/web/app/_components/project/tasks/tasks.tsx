@@ -1,12 +1,14 @@
 import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, Group } from '@mantine/core';
+import { Card, Group, Stack } from '@mantine/core';
+import { TaskStatus } from '@prisma/client';
 import { TasksHeader } from '../../tasks/tasks-header';
 import { IconCircleCheckFilled } from '@tabler/icons-react';
 import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
 import { TasksList } from '../../tasks/tasks-list';
 import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
+import { HideCompletedTasksButton } from '../../tasks/hide-completed-tasks-button';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
@@ -18,6 +20,8 @@ export const Tasks: FC<Props> = (props) => {
     t,
     popoverOpen,
     results,
+    hideCompleted,
+    handleHideCompleted,
     setPopoverOpen,
     onCreate,
     onEdit,
@@ -45,12 +49,18 @@ export const Tasks: FC<Props> = (props) => {
         onPopoverChange={setPopoverOpen}
       />
       {results.length ? (
-        <TasksList
-          tasks={results}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onReorder={onReorder}
-        />
+        <Stack gap="xs">
+          <HideCompletedTasksButton
+            isHidden={hideCompleted}
+            onClick={handleHideCompleted}
+          />
+          <TasksList
+            tasks={results}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReorder={onReorder}
+          />
+        </Stack>
       ) : (
         <TasksEmptyPlaceholder />
       )}
@@ -61,15 +71,24 @@ export const Tasks: FC<Props> = (props) => {
 function useTasks({ projectId }: Props) {
   const t = useTranslations('project.tasks');
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(false);
   const [{ results }, { onCreate, onEdit, onDelete, onReorder }] = useTasksHook(
     projectId,
     { onCreateSuccess: () => setPopoverOpen(false) }
   );
 
+  const handleHideCompleted = () => {
+    setHideCompleted(!hideCompleted);
+  };
+
   return {
     t,
     popoverOpen,
-    results,
+    results: hideCompleted
+      ? results.filter(({ status }) => status === TaskStatus.TODO)
+      : results,
+    hideCompleted,
+    handleHideCompleted,
     setPopoverOpen,
     onCreate,
     onEdit,

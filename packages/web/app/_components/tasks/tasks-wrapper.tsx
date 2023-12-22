@@ -1,13 +1,12 @@
 import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Box, Button, Flex, Stack } from '@mantine/core';
-import { IconEye, IconEyeOff } from '@tabler/icons-react';
+import { Box, Flex, Stack } from '@mantine/core';
 import { Task } from '@/domain/queries/tasks-query';
 import { TasksList } from './tasks-list';
 import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
 import { ReorderData } from '@/domain/types/reorder-data';
+import { HideCompletedTasksButton } from './hide-completed-tasks-button';
 import overflowStyles from '@/styles/utils/overflow.module.scss';
-import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
   todos: Task[];
@@ -48,28 +47,22 @@ export const TasksWrapper: FC<Props> = (props) => {
             />
           )}
           <Stack>
-            <Button
-              size="sm"
-              variant="subtle"
-              bg="white"
-              c="neutral.7"
-              radius={6}
-              leftSection={
-                hideCompleted ? <IconEye size={20} /> : <IconEyeOff size={20} />
-              }
-              className={styles.hideButton}
-              onClick={handleHideCompleted}
-            >
-              {hideCompleted ? t('showAction') : t('hideAction')}
-            </Button>
-            {!hideCompleted && !!done.length && (
-              <TasksList
-                title={t('done')}
-                tasks={done}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onReorder={onReorder}
-              />
+            {!!done.length && (
+              <>
+                <HideCompletedTasksButton
+                  isHidden={hideCompleted}
+                  onClick={handleHideCompleted}
+                />
+                {!hideCompleted && (
+                  <TasksList
+                    title={t('done')}
+                    tasks={done}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onReorder={onReorder}
+                  />
+                )}
+              </>
             )}
           </Stack>
         </Stack>
