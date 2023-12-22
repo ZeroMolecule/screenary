@@ -1,7 +1,8 @@
 import { z } from 'zod';
+import { urlWithPrefixField } from '../../shared/zod';
 
 export const createEmbeddedPageSchema = z.object({
-  url: z.string().url(),
+  url: urlWithPrefixField,
   order: z.number().optional(),
   name: z.string().optional(),
   icon: z.string().optional(),
