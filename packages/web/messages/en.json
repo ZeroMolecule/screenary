@@ -80,7 +80,6 @@
     "navigation": {
       "home": "Home",
       "todo": "To Do",
-      "inbox": "Inbox",
       "calendar": "Calendar"
     },
     "userMenu": {
