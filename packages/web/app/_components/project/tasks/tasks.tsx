@@ -16,6 +16,7 @@ type Props = {
 export const Tasks: FC<Props> = (props) => {
   const {
     t,
+    projectId,
     popoverOpen,
     results,
     setPopoverOpen,
@@ -39,9 +40,10 @@ export const Tasks: FC<Props> = (props) => {
   return (
     <Card h="100%" radius={24} className={styles.tasks}>
       <TasksHeader
+        projectId={projectId}
         title={headerTitle}
         onCreate={onCreate}
-        isPopoverOpen={popoverOpen}
+        isPopoverOpen={popoverOpen[projectId] || false}
         onPopoverChange={setPopoverOpen}
       />
       {results.length ? (
@@ -60,14 +62,17 @@ export const Tasks: FC<Props> = (props) => {
 
 function useTasks({ projectId }: Props) {
   const t = useTranslations('project.tasks');
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const [{ results }, { onCreate, onEdit, onDelete, onReorder }] = useTasksHook(
     projectId,
-    { onCreateSuccess: () => setPopoverOpen(false) }
+    { onCreateSuccess: () => setPopoverOpen({}) }
   );
 
   return {
     t,
+    projectId,
     popoverOpen,
     results,
     setPopoverOpen,

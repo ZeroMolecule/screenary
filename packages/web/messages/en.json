@@ -25,6 +25,9 @@
       "formPopover": {
         "cancelAction": "Cancel",
         "applyAction": "Apply"
+      },
+      "projectTabs": {
+        "all": "All"
       }
     },
     "welcomeMessage": {
