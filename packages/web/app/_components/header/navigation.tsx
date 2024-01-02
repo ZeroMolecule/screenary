@@ -24,7 +24,6 @@ function useNavigation() {
   const navigationLinks: NavigationLinkProps[] = [
     { href: paths.projects(), label: t('navigation.home') },
     { href: paths.todo(), label: t('navigation.todo') },
-    { href: paths.inbox(), label: t('navigation.inbox') },
     { href: paths.calendar(), label: t('navigation.calendar') },
   ];
 
