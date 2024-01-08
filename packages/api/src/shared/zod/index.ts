@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const protocolPrefixes = ['http://', 'https://', 'ftp://'];
+const protocolPrefixes = ['http://', 'https://'];
 
 const urlField = z
   .string()
