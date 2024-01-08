@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { urlWithPrefixField } from '../../shared/zod';
+import { urlSchema } from '../../shared/zod';
 
 export const createProjectSchema = z.object({
   name: z.string().min(1).max(255),
-  emailUrl: urlWithPrefixField,
-  calendarUrl: urlWithPrefixField,
+  emailUrl: urlSchema,
+  calendarUrl: urlSchema,
 });
 
 export type CreateProjectDto = z.infer<typeof createProjectSchema>;

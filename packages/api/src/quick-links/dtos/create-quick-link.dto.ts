@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { urlWithPrefixField } from '../../shared/zod';
+import { urlSchema } from '../../shared/zod';
 
 export const createQuickLinkSchema = z.object({
-  url: urlWithPrefixField,
+  url: urlSchema,
   directoryId: z.string().nullish(),
   name: z.string().optional(),
   icon: z.string().optional(),
