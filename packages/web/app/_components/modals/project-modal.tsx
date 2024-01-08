@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { FormTextInput } from '../base/form/text-input';
 import { Modal } from './modal';
 import { Project } from '@/domain/queries/project-query';
+import { zodUrlField } from '@/utils/zod';
 
 type Props = {
   opened: boolean;
@@ -100,6 +101,6 @@ function useProjectModal({ opened, onClose, onSubmit, project }: Props) {
 export type ProjectFormValues = z.infer<typeof projectSchema>;
 const projectSchema = z.object({
   name: z.string().min(1),
-  emailUrl: z.string().url().min(1),
-  calendarUrl: z.string().url().min(1),
+  emailUrl: zodUrlField,
+  calendarUrl: zodUrlField,
 });

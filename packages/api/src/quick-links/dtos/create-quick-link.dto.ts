@@ -1,7 +1,8 @@
 import { z } from 'zod';
+import { urlSchema } from '../../shared/zod';
 
 export const createQuickLinkSchema = z.object({
-  url: z.string().url(),
+  url: urlSchema,
   directoryId: z.string().nullish(),
   name: z.string().optional(),
   icon: z.string().optional(),
