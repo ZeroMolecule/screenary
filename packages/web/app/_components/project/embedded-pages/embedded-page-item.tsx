@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
@@ -26,8 +25,6 @@ import {
 } from './embedded-page-popover';
 import { ConfirmDeleteModal } from '../../modals/confirm-delete-modal';
 import { Link } from '../../base/link';
-import { paths } from '@/navigation/paths';
-import { useRouter } from '@/navigation';
 import classNames from 'classnames';
 import styles from '@/styles/components/embedded-pages.module.scss';
 
@@ -52,7 +49,6 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
     hovered,
     popoverOpen,
     deleteOpen,
-    navigatePath,
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
@@ -61,7 +57,6 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
     handleDeleteOpen,
     handleDelete,
   } = useEmbeddedPageItem(props);
-  const { push } = useRouter();
 
   return (
     <>
@@ -87,7 +82,7 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
             }
             offset={3}
           >
-            <Link href={navigatePath}>
+            <Link href={item.url} target="_blank">
               <Card
                 p={0}
                 radius="lg"
@@ -95,7 +90,6 @@ export const EmbeddedPageItem: FC<Props> = (props) => {
                 className={classNames(styles.item, {
                   [styles.itemHover]: hovered,
                 })}
-                onClick={() => push(navigatePath)}
               >
                 {icon && !image.isError ? (
                   <Image
@@ -147,20 +141,12 @@ function useEmbeddedPageItem({
 }: Props) {
   const t = useTranslations('project.embeddedPages');
   const { id, url, title, icon } = item;
-  const { id: projectId, pageId } = useParams();
   const [image, setImage] = useState<{
     width: number;
     height: number;
     isError: boolean;
   }>({ width: 0, height: 0, isError: false });
   const { hovered, ref } = useHover();
-
-  const navigatePath = (() => {
-    if (pageId && pageId === id) {
-      return paths.project(projectId);
-    }
-    return paths.embeddedPage(projectId, id);
-  })();
 
   const handleImageOnLoad = (e: SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = e.currentTarget;
@@ -202,7 +188,6 @@ function useEmbeddedPageItem({
     hovered,
     popoverOpen,
     deleteOpen,
-    navigatePath,
     handleImageOnLoad,
     handleImageOnError,
     handleChange,
