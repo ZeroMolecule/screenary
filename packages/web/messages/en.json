@@ -105,11 +105,11 @@
     "deleteTitle": "Delete Project",
     "deleteDescription": "Are you sure you want to delete {projectName} project?",
     "embeddedPages": {
-      "deleteTitle": "Delete Embedded Page",
+      "deleteTitle": "Delete Shortcut",
       "form": {
-        "createTitle": "New Embedded Page",
-        "editTitle": "Edit Embedded Page",
-        "urlLabel": "Page URL",
+        "createTitle": "New Shortcut",
+        "editTitle": "Edit Shortcut",
+        "urlLabel": "Shortcut URL",
         "urlPlaceholder": "https://"
       }
     },
