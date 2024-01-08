@@ -5,7 +5,7 @@ const protocolPrefixes = ['http://', 'https://'];
 export const urlSchema = z
   .string()
   .transform((value) => {
-    if (!protocolPrefixes.some((el) => value.includes(el))) {
+    if (!protocolPrefixes.some((el) => value.startsWith(el))) {
       return `https://${value}`;
     }
     return value;
