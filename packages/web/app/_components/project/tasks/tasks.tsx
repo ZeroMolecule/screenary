@@ -48,22 +48,22 @@ export const Tasks: FC<Props> = (props) => {
         isPopoverOpen={popoverOpen}
         onPopoverChange={setPopoverOpen}
       />
-      {results.length ? (
-        <Stack gap="xs">
-          <HideCompletedTasksButton
-            isHidden={hideCompleted}
-            onClick={handleHideCompleted}
-          />
+      <Stack gap="xs">
+        <HideCompletedTasksButton
+          isHidden={hideCompleted}
+          onClick={handleHideCompleted}
+        />
+        {results.length ? (
           <TasksList
             tasks={results}
             onEdit={onEdit}
             onDelete={onDelete}
             onReorder={onReorder}
           />
-        </Stack>
-      ) : (
-        <TasksEmptyPlaceholder />
-      )}
+        ) : (
+          <TasksEmptyPlaceholder />
+        )}
+      </Stack>
     </Card>
   );
 };
