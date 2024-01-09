@@ -8,6 +8,7 @@ import { PopoverMenuForm } from '../../popover-menu-form';
 import { FormTextInput } from '../../base/form/text-input';
 import { ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
+import { zodUrlField } from '@/utils/zod';
 import inputStyles from '@/styles/components/input.module.scss';
 
 type Props = {
@@ -95,5 +96,5 @@ function useEmbeddedPagePopover({
 
 export type EmbeddedPageFormValues = z.infer<typeof embeddedPageSchema>;
 const embeddedPageSchema = z.object({
-  url: z.string().url().min(1),
+  url: zodUrlField,
 });
