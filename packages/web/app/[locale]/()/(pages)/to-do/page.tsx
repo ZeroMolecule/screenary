@@ -12,6 +12,7 @@ import { tasksQuery } from '@/domain/queries/tasks-query';
 import { PageContainer } from '@/app/_components/page-container';
 import { authOptions } from '@/domain/auth';
 import { NotificationsWidget } from '@/app/_components/notifications-widget';
+import { PROJECT_TAB_ALL_VALUE } from '@/hooks/use-projects-tabs';
 
 type Props = {
   params: { locale: string };
@@ -48,18 +49,32 @@ async function useTasksPage({ searchParams }: Props) {
       queryKey: projectsQuery.key,
     }),
   ]);
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-        status: TaskStatus.TODO,
+  if (!searchParams.tab || searchParams.tab === PROJECT_TAB_ALL_VALUE) {
+    const queryPromises = projects.map(({ id }) =>
+      Promise.all([
+        queryClient.prefetchQuery({
+          queryKey: tasksQuery.key(id, { status: TaskStatus.TODO }),
+        }),
+        queryClient.prefetchQuery({
+          queryKey: tasksQuery.key(id, { status: TaskStatus.DONE }),
+        }),
+      ])
+    );
+    await Promise.all(queryPromises);
+  } else {
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
+          status: TaskStatus.TODO,
+        }),
       }),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-        status: TaskStatus.DONE,
+      queryClient.prefetchQuery({
+        queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
+          status: TaskStatus.DONE,
+        }),
       }),
-    }),
-  ]);
+    ]);
+  }
   const dehydratedState = dehydrate(queryClient);
 
   return { username: session?.user?.name, dehydratedState };
