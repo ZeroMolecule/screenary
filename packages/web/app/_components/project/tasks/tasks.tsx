@@ -84,7 +84,7 @@ function useTasks({ projectId }: Props) {
 
   const handleTaskSelect = (task: Task) => {
     onSelectTask(task);
-    setPopoverOpen(true);
+    setPopoverOpen({ [projectId]: true });
   };
 
   const handlePopoverAfterClose = () => onSelectTask(null);

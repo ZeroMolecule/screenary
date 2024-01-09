@@ -27,7 +27,7 @@ export const TasksHeader: FC<Props> = (props) => {
     title,
     onSubmit,
     isPopoverOpen,
-    onPopoverChange,
+    handlePopoverChange,
     task,
     popoverAfterClose,
   } = useTasksHeader(props);
@@ -53,7 +53,7 @@ export const TasksHeader: FC<Props> = (props) => {
         <PopoverDropdown w="auto" pos="absolute" top={0} right={0} left="unset">
           <TaskPopoverMenu
             title={task ? t('form.edit.title') : t('form.create.title')}
-            onClose={() => onPopoverChange(false)}
+            onClose={() => handlePopoverChange(false)}
             onSubmit={onSubmit}
             task={task}
           />
@@ -64,6 +64,7 @@ export const TasksHeader: FC<Props> = (props) => {
 };
 
 function useTasksHeader({
+  projectId,
   title,
   onSubmit,
   isPopoverOpen,
@@ -73,27 +74,17 @@ function useTasksHeader({
 }: Props) {
   const t = useTranslations('task');
 
+  const handlePopoverChange = (value: boolean) => {
+    onPopoverChange({ [projectId]: value });
+  };
+
   return {
     t,
     title,
     onSubmit,
     isPopoverOpen,
-    onPopoverChange,
+    handlePopoverChange,
     task,
     popoverAfterClose,
   };
-}
-
-function useTasksHeader({
-  projectId,
-  title,
-  onCreate,
-  isPopoverOpen,
-  onPopoverChange,
-}: Props) {
-  const handlePopoverChange = (value: boolean) => {
-    onPopoverChange({ [projectId]: value });
-  };
-
-  return { title, onCreate, isPopoverOpen, handlePopoverChange };
 }
