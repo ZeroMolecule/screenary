@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { PopoverMenuForm } from '../../popover-menu-form';
 import { FormTextInput } from '../../base/form/text-input';
 import { QuickLink } from '@prisma/client';
+import { zodUrlField } from '@/utils/zod';
 import styles from '@/styles/components/input.module.scss';
 
 type Props = {
@@ -73,5 +74,5 @@ function useQuickLinkPopoverMenu({
 
 export type QuickLinkFormValues = z.infer<typeof quickLinkSchema>;
 const quickLinkSchema = z.object({
-  url: z.string().url().min(1),
+  url: zodUrlField,
 });

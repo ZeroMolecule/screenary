@@ -18,6 +18,7 @@ type Props = {
 export const Tasks: FC<Props> = (props) => {
   const {
     t,
+    projectId,
     popoverOpen,
     results,
     hideCompleted,
@@ -43,9 +44,10 @@ export const Tasks: FC<Props> = (props) => {
   return (
     <Card h="100%" radius={24} className={styles.tasks}>
       <TasksHeader
+        projectId={projectId}
         title={headerTitle}
         onCreate={onCreate}
-        isPopoverOpen={popoverOpen}
+        isPopoverOpen={popoverOpen[projectId] || false}
         onPopoverChange={setPopoverOpen}
       />
       <Stack gap="xs">
@@ -70,11 +72,13 @@ export const Tasks: FC<Props> = (props) => {
 
 function useTasks({ projectId }: Props) {
   const t = useTranslations('project.tasks');
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const [hideCompleted, setHideCompleted] = useState(false);
   const [{ results }, { onCreate, onEdit, onDelete, onReorder }] = useTasksHook(
     projectId,
-    { includeAllResults: true, onCreateSuccess: () => setPopoverOpen(false) }
+    { includeAllResults: true, onCreateSuccess: () => setPopoverOpen({}) }
   );
 
   const handleHideCompleted = () => {
@@ -83,6 +87,7 @@ function useTasks({ projectId }: Props) {
 
   return {
     t,
+    projectId,
     popoverOpen,
     results: hideCompleted
       ? results.filter(({ status }) => status === TaskStatus.TODO)
