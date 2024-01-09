@@ -4,7 +4,6 @@ import { ProjectPage as ClientProjectPage } from '@/app/_components/project/proj
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { notesQuery } from '@/domain/queries/notes-query';
 import { tasksQuery } from '@/domain/queries/tasks-query';
-import { TaskStatus } from '@prisma/client';
 import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 import { foldersQuery } from '@/domain/queries/folders-query';
 import { folderQuery } from '@/domain/queries/folder-query';
@@ -31,14 +30,7 @@ async function useProjectPage({ params: { id }, searchParams }: Props) {
   await Promise.all([
     queryClient.prefetchQuery({ queryKey: notesQuery.key(id) }),
     queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(id, {
-        status: TaskStatus.TODO,
-      }),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(id, {
-        status: TaskStatus.DONE,
-      }),
+      queryKey: tasksQuery.key(id),
     }),
     queryClient.prefetchQuery({
       queryKey: quickLinksQuery.key(id, { directoryId: folderParamsId }),

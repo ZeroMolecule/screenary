@@ -74,7 +74,7 @@ function useTasks({ projectId }: Props) {
   const [hideCompleted, setHideCompleted] = useState(false);
   const [{ results }, { onCreate, onEdit, onDelete, onReorder }] = useTasksHook(
     projectId,
-    { onCreateSuccess: () => setPopoverOpen(false) }
+    { includeAllResults: true, onCreateSuccess: () => setPopoverOpen(false) }
   );
 
   const handleHideCompleted = () => {

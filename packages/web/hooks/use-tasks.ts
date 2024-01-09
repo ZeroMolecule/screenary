@@ -8,10 +8,10 @@ import { useNotificationSuccess } from './use-notification-success';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
-import { orderBy } from 'lodash';
 import { ReorderData } from '@/domain/types/reorder-data';
 
 type Config = {
+  includeAllResults?: boolean;
   onCreateSuccess?: () => void;
 };
 
@@ -34,28 +34,35 @@ export const useTasks = (
   const [
     { data: todoData, refetch: refetchTodos },
     { data: doneData, refetch: refetchDone },
+    { data: resultsData, refetch: refetchResults },
   ]: Array<UseQueryResult<Data<Task[]>>> = useQueries({
     queries: [
       {
         queryKey: tasksQuery.key(projectId, {
           status: TaskStatus.TODO,
         }),
+        enabled: !config?.includeAllResults,
       },
       {
         queryKey: tasksQuery.key(projectId, {
           status: TaskStatus.DONE,
         }),
+        enabled: !config?.includeAllResults,
+      },
+      {
+        queryKey: tasksQuery.key(projectId),
+        enabled: !!config?.includeAllResults,
       },
     ],
   });
   const todos = todoData?.data ?? [];
   const done = doneData?.data ?? [];
-  const results = orderBy([...done, ...todos], 'order');
+  const results = resultsData?.data ?? [];
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
     onSuccess: async () => {
-      await refetchTodos();
+      await (config?.includeAllResults ? refetchResults() : refetchTodos());
       onCreated();
       config?.onCreateSuccess?.();
     },
@@ -63,19 +70,25 @@ export const useTasks = (
   const { mutateAsync: editTask } = useMutation({
     mutationFn: editTaskMutation.fnc,
     onSuccess: async () => {
-      await Promise.all([refetchTodos(), refetchDone()]);
+      await (config?.includeAllResults
+        ? refetchResults()
+        : Promise.all([refetchTodos(), refetchDone()]));
       onSaved();
     },
   });
   const { mutateAsync: reorderTasks } = useMutation({
     mutationFn: reorderTasksMutation.fnc,
     onSuccess: async (data) => {
-      if (data.every((el) => el.status === TaskStatus.TODO)) {
-        await refetchTodos();
-      } else if (data.every((el) => el.status === TaskStatus.DONE)) {
-        await refetchDone();
+      if (config?.includeAllResults) {
+        await refetchResults();
       } else {
-        await Promise.all([refetchTodos(), refetchDone()]);
+        if (data.every((el) => el.status === TaskStatus.TODO)) {
+          await refetchTodos();
+        } else if (data.every((el) => el.status === TaskStatus.DONE)) {
+          await refetchDone();
+        } else {
+          await Promise.all([refetchTodos(), refetchDone()]);
+        }
       }
       onSaved();
     },
@@ -83,10 +96,12 @@ export const useTasks = (
   const { mutateAsync: deleteTask } = useMutation({
     mutationFn: deleteTaskMutation.fnc,
     onSuccess: async (data) => {
-      if (data.status === TaskStatus.TODO) {
-        await refetchTodos();
+      if (config?.includeAllResults) {
+        await refetchResults();
       } else {
-        await refetchDone();
+        await (data.status === TaskStatus.TODO
+          ? refetchTodos()
+          : refetchDone());
       }
       onDeleted();
     },

@@ -29,7 +29,7 @@ export function ReorderList<T extends BaseType>(props: Props<T>) {
   } = useReorderList(props);
 
   const renderItem = (item: T, index: number) => (
-    <Draggable key={`${item.id}-${index}`} draggableId={item.id} index={index}>
+    <Draggable key={item.id} draggableId={item.id} index={index}>
       {({ innerRef, dragHandleProps, draggableProps }) =>
         cloneElement(
           ItemWrapper,
