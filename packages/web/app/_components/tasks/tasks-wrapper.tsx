@@ -6,7 +6,6 @@ import { Task } from '@/domain/queries/tasks-query';
 import { TasksList } from './tasks-list';
 import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
 import { ReorderData } from '@/domain/types/reorder-data';
-import overflowStyles from '@/styles/utils/overflow.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
@@ -33,7 +32,7 @@ export const TasksWrapper: FC<Props> = (props) => {
   } = useTasksWrapper(props);
 
   return (
-    <Box h="100%" className={overflowStyles['overflow-auto']}>
+    <Box h="100%">
       {isEmpty ? (
         <Flex mih="100%" align="center">
           <TasksEmptyPlaceholder />

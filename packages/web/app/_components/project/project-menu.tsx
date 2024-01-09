@@ -5,6 +5,7 @@ import {
   FloatingPosition,
   Menu,
   MenuDropdown,
+  MenuDropdownProps,
   MenuTarget,
   Stack,
 } from '@mantine/core';
@@ -17,6 +18,7 @@ type Props = {
   position?: FloatingPosition;
   withinPortal?: boolean;
   small?: boolean;
+  dropdownProps?: MenuDropdownProps;
 };
 
 export const ProjectMenu: FC<Props> = (props) => {
@@ -24,6 +26,7 @@ export const ProjectMenu: FC<Props> = (props) => {
     position,
     withinPortal,
     small,
+    dropdownProps,
     isOpen,
     toggle,
     close,
@@ -49,7 +52,7 @@ export const ProjectMenu: FC<Props> = (props) => {
           <IconDots size={small ? 24 : 32} />
         </ActionIcon>
       </MenuTarget>
-      <MenuDropdown>
+      <MenuDropdown {...dropdownProps}>
         <Stack p="xs" gap="sm">
           <ActionIcon
             variant="transparent"
@@ -88,6 +91,7 @@ function useProjectMenu({
   position,
   withinPortal = true,
   small,
+  dropdownProps,
 }: Props) {
   const [isOpen, { toggle, close }] = useDisclosure(false);
 
@@ -111,6 +115,7 @@ function useProjectMenu({
     position,
     withinPortal,
     small,
+    dropdownProps,
     isOpen,
     toggle,
     close,

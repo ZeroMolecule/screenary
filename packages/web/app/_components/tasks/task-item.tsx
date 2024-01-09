@@ -1,6 +1,6 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { Checkbox, Group, Stack } from '@mantine/core';
+import { Box, Checkbox, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Task } from '@/domain/queries/tasks-query';
 import { TaskStatus } from '@prisma/client';
@@ -24,8 +24,6 @@ export const TaskItem: FC<Props> = (props) => {
   const {
     t,
     isDone,
-    hovered,
-    setHovered,
     task,
     isDeleteOpen,
     openDelete,
@@ -38,14 +36,7 @@ export const TaskItem: FC<Props> = (props) => {
 
   return (
     <>
-      <Group
-        py="md"
-        align="flex-start"
-        gap="xs"
-        className={styles.taskItem}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
+      <Group py="md" align="flex-start" gap="xs" className={styles.taskItem}>
         <Checkbox
           size="md"
           defaultChecked={isDone}
@@ -64,15 +55,19 @@ export const TaskItem: FC<Props> = (props) => {
             {date}
           </Text>
         </Stack>
-        {hovered && (
+        <Box pos="relative">
           <ProjectMenu
             openEditModal={handleSelect}
             openDeleteModal={openDelete}
-            position="left-start"
             withinPortal={false}
             small
+            dropdownProps={{
+              pos: 'absolute',
+              top: -16,
+              right: 0,
+            }}
           />
-        )}
+        </Box>
       </Group>
       <ConfirmDeleteModal
         opened={isDeleteOpen}
@@ -87,7 +82,6 @@ export const TaskItem: FC<Props> = (props) => {
 function useTaskItem({ task, onSelect, onEdit, onDelete }: Props) {
   const t = useTranslations('task');
   const isDone = task.status === TaskStatus.DONE;
-  const [hovered, setHovered] = useState(false);
   const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
 
@@ -112,7 +106,6 @@ function useTaskItem({ task, onSelect, onEdit, onDelete }: Props) {
 
   const handleSelect = () => {
     onSelect(task);
-    setHovered(false);
   };
 
   const handleStatusChange = async () => {
@@ -129,8 +122,6 @@ function useTaskItem({ task, onSelect, onEdit, onDelete }: Props) {
   return {
     t,
     isDone,
-    hovered,
-    setHovered,
     task,
     isDeleteOpen,
     openDelete,
