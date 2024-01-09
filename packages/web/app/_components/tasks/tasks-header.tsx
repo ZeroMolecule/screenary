@@ -12,10 +12,11 @@ import { TaskPopoverMenu } from './task-popover-menu';
 import { Popover } from '../base/popover';
 
 type Props = {
+  projectId: string;
   title: ReactNode;
   onSubmit: (task: Pick<Task, 'title' | 'dueDate'>) => Promise<void>;
   isPopoverOpen: boolean;
-  onPopoverChange: (value: boolean) => void;
+  onPopoverChange: (value: { [key: string]: boolean }) => void;
   popoverAfterClose?: () => void;
   task?: Task;
 };
@@ -36,7 +37,7 @@ export const TasksHeader: FC<Props> = (props) => {
       {title}
       <Popover
         opened={isPopoverOpen}
-        onChange={onPopoverChange}
+        onChange={handlePopoverChange}
         withinPortal={false}
         afterClose={popoverAfterClose}
       >
@@ -44,7 +45,7 @@ export const TasksHeader: FC<Props> = (props) => {
           <ActionIcon
             variant="transparent"
             color="var(--mantine-color-neutral-9)"
-            onClick={() => onPopoverChange(true)}
+            onClick={() => handlePopoverChange(true)}
           >
             <IconPlus />
           </ActionIcon>
@@ -81,4 +82,18 @@ function useTasksHeader({
     task,
     popoverAfterClose,
   };
+}
+
+function useTasksHeader({
+  projectId,
+  title,
+  onCreate,
+  isPopoverOpen,
+  onPopoverChange,
+}: Props) {
+  const handlePopoverChange = (value: boolean) => {
+    onPopoverChange({ [projectId]: value });
+  };
+
+  return { title, onCreate, isPopoverOpen, handlePopoverChange };
 }

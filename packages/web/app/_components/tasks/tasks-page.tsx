@@ -4,20 +4,17 @@ import { FC, useState } from 'react';
 import { Card, Group, Stack } from '@mantine/core';
 import { Task } from '@prisma/client';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
-import { useTasks } from '@/hooks/use-tasks';
+import { Project } from '@prisma/client';
 import { ProjectsTabs } from '../projects-tabs';
-import { TasksHeader } from './tasks-header';
-import { TasksWrapper } from './tasks-wrapper';
-import { Title } from '../base/title';
+import { ProjectTasks } from './project-tasks';
 import styles from '@/styles/components/tasks.module.scss';
 
 export const TasksPage: FC = () => {
   const {
+    projects,
     projectId,
     projectName,
     tabs,
-    todos,
-    done,
     selectedTask,
     popoverOpen,
     handleChange,
@@ -30,10 +27,23 @@ export const TasksPage: FC = () => {
     handlePopoverAfterClose,
   } = useTasksPage();
 
-  const headerTitle = (
-    <Title order={3} fw={600}>
-      {projectName}
-    </Title>
+  const renderProject = ({ id, name }: Project) => (
+    <Stack
+      key={id}
+      h="100%"
+      pos="relative"
+      miw={600}
+      className={styles.projectsTasksContainerItem}
+    >
+      <Stack h="100%" pos="relative">
+        <ProjectTasks
+          projectId={id}
+          projectName={name}
+          isPopoverOpen={popoverOpen[id] || false}
+          onPopoverChange={setPopoverOpen}
+        />
+      </Stack>
+    </Stack>
   );
 
   return (
@@ -46,30 +56,36 @@ export const TasksPage: FC = () => {
         />
       </Group>
       <Card h="100%" radius={24} className={styles.tasks}>
-        <TasksHeader
-          title={headerTitle}
-          onSubmit={onSubmit}
-          isPopoverOpen={popoverOpen}
-          onPopoverChange={setPopoverOpen}
-          task={selectedTask ?? undefined}
-          popoverAfterClose={handlePopoverAfterClose}
-        />
-        <TasksWrapper
-          todos={todos}
-          done={done}
-          onSelect={handleTaskSelect}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onReorder={onReorder}
-        />
+        {!projectId ? (
+          <Group
+            h="100%"
+            align="flex-start"
+            wrap="nowrap"
+            gap={0}
+            mb="sm"
+            className={styles.projectsTasksContainer}
+          >
+            {projects.map(renderProject)}
+          </Group>
+        ) : (
+          <ProjectTasks
+            projectId={projectId}
+            projectName={projectName!}
+            isPopoverOpen={popoverOpen[projectId] || false}
+            onPopoverChange={setPopoverOpen}
+          />
+        )}
       </Card>
     </Stack>
   );
 };
 
 function useTasksPage() {
-  const [popoverOpen, setPopoverOpen] = useState(false);
-  const { selectedProject, tabs, handleChange } = useProjectsTabs();
+  const [popoverOpen, setPopoverOpen] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const { projects, selectedProject, tabs, handleChange } =
+    useProjectsTabs(true);
   const { id: projectId, name: projectName } = selectedProject ?? {};
   const [
     { todos, done, selectedTask },
@@ -89,11 +105,10 @@ function useTasksPage() {
   const handlePopoverAfterClose = () => onSelectTask(null);
 
   return {
+    projects: projects?.data ?? [],
     projectId,
     projectName,
     tabs,
-    todos,
-    done,
     selectedTask,
     popoverOpen,
     handleChange,
