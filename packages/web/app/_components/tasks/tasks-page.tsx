@@ -2,6 +2,7 @@
 
 import { FC, useState } from 'react';
 import { Card, Group, Stack } from '@mantine/core';
+import { Task } from '@prisma/client';
 import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { useTasks } from '@/hooks/use-tasks';
 import { ProjectsTabs } from '../projects-tabs';
@@ -17,13 +18,15 @@ export const TasksPage: FC = () => {
     tabs,
     todos,
     done,
+    selectedTask,
     popoverOpen,
-    setPopoverOpen,
+    handlePopoverChange,
     handleChange,
-    onCreate,
     onEdit,
     onDelete,
     onReorder,
+    onSubmit,
+    handleTaskSelect,
   } = useTasksPage();
 
   const headerTitle = (
@@ -44,13 +47,15 @@ export const TasksPage: FC = () => {
       <Card h="100%" radius={24} className={styles.tasks}>
         <TasksHeader
           title={headerTitle}
-          onCreate={onCreate}
+          onSubmit={onSubmit}
           isPopoverOpen={popoverOpen}
-          onPopoverChange={setPopoverOpen}
+          onPopoverChange={handlePopoverChange}
+          task={selectedTask ?? undefined}
         />
         <TasksWrapper
           todos={todos}
           done={done}
+          onSelect={handleTaskSelect}
           onEdit={onEdit}
           onDelete={onDelete}
           onReorder={onReorder}
@@ -64,10 +69,29 @@ function useTasksPage() {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const { selectedProject, tabs, handleChange } = useProjectsTabs();
   const { id: projectId, name: projectName } = selectedProject ?? {};
-  const [{ todos, done }, { onCreate, onEdit, onDelete, onReorder }] = useTasks(
-    projectId!,
-    { onCreateSuccess: () => setPopoverOpen(false) }
-  );
+  const [
+    { todos, done, selectedTask },
+    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+  ] = useTasks(projectId!, {
+    onSubmitSuccess: () => {
+      onSelectTask(null);
+      setPopoverOpen(false);
+    },
+  });
+
+  const handleTaskSelect = (task: Task) => {
+    onSelectTask(task);
+    setPopoverOpen(true);
+  };
+
+  const handlePopoverChange = (value: boolean) => {
+    if (!value) {
+      setTimeout(() => {
+        onSelectTask(null);
+      }, 200);
+    }
+    setPopoverOpen(value);
+  };
 
   return {
     projectId,
@@ -75,12 +99,14 @@ function useTasksPage() {
     tabs,
     todos,
     done,
+    selectedTask,
     popoverOpen,
-    setPopoverOpen,
+    handlePopoverChange,
     handleChange,
-    onCreate,
     onEdit,
     onDelete,
     onReorder,
+    onSubmit,
+    handleTaskSelect,
   };
 }

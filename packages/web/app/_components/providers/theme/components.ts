@@ -127,6 +127,11 @@ export const components: MantineThemeComponents = {
     defaultProps: {
       zIndex: 1,
     },
+    styles: {
+      dropdown: {
+        border: 0,
+      },
+    },
   }),
   Indicator: Indicator.extend({
     styles: {

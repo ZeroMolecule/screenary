@@ -7,6 +7,7 @@ import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
 import { TasksList } from '../../tasks/tasks-list';
 import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
+import { Task } from '@prisma/client';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
@@ -18,11 +19,13 @@ export const Tasks: FC<Props> = (props) => {
     t,
     popoverOpen,
     results,
-    setPopoverOpen,
-    onCreate,
+    selectedTask,
     onEdit,
     onDelete,
     onReorder,
+    onSubmit,
+    handleTaskSelect,
+    handlePopoverChange,
   } = useTasks(props);
 
   const headerTitle = (
@@ -40,13 +43,15 @@ export const Tasks: FC<Props> = (props) => {
     <Card h="100%" radius={24} className={styles.tasks}>
       <TasksHeader
         title={headerTitle}
-        onCreate={onCreate}
+        onSubmit={onSubmit}
         isPopoverOpen={popoverOpen}
-        onPopoverChange={setPopoverOpen}
+        onPopoverChange={handlePopoverChange}
+        task={selectedTask ?? undefined}
       />
       {results.length ? (
         <TasksList
           tasks={results}
+          onSelect={handleTaskSelect}
           onEdit={onEdit}
           onDelete={onDelete}
           onReorder={onReorder}
@@ -61,19 +66,40 @@ export const Tasks: FC<Props> = (props) => {
 function useTasks({ projectId }: Props) {
   const t = useTranslations('project.tasks');
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [{ results }, { onCreate, onEdit, onDelete, onReorder }] = useTasksHook(
-    projectId,
-    { onCreateSuccess: () => setPopoverOpen(false) }
-  );
+  const [
+    { results, selectedTask },
+    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+  ] = useTasksHook(projectId, {
+    onSubmitSuccess: () => {
+      onSelectTask(null);
+      setPopoverOpen(false);
+    },
+  });
+
+  const handleTaskSelect = (task: Task) => {
+    onSelectTask(task);
+    setPopoverOpen(true);
+  };
+
+  const handlePopoverChange = (value: boolean) => {
+    if (!value) {
+      setTimeout(() => {
+        onSelectTask(null);
+      }, 200);
+    }
+    setPopoverOpen(value);
+  };
 
   return {
     t,
     popoverOpen,
     results,
-    setPopoverOpen,
-    onCreate,
+    selectedTask,
     onEdit,
     onDelete,
     onReorder,
+    onSubmit,
+    handleTaskSelect,
+    handlePopoverChange,
   };
 }

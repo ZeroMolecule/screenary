@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { UseQueryResult, useMutation, useQueries } from '@tanstack/react-query';
 import { TaskStatus } from '@prisma/client';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
@@ -12,21 +13,25 @@ import { orderBy } from 'lodash';
 import { ReorderData } from '@/domain/types/reorder-data';
 
 type Config = {
-  onCreateSuccess?: () => void;
+  onSubmitSuccess?: () => void;
 };
 
 export const useTasks = (
   projectId: string,
   config?: Config
 ): [
-  { results: Task[]; todos: Task[]; done: Task[] },
+  { results: Task[]; todos: Task[]; done: Task[]; selectedTask: Task | null },
   {
+    onSelectTask: (task: Task | null) => void;
     onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
     onEdit: (task: Task) => Promise<void>;
     onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
+    onSubmit: (task: Pick<Task, 'title' | 'dueDate'>) => Promise<void>;
   }
 ] => {
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
   const onCreated = useNotificationSuccess('created');
   const onSaved = useNotificationSuccess('saved');
   const onDeleted = useNotificationSuccess('deleted');
@@ -57,7 +62,7 @@ export const useTasks = (
     onSuccess: async () => {
       await refetchTodos();
       onCreated();
-      config?.onCreateSuccess?.();
+      config?.onSubmitSuccess?.();
     },
   });
   const { mutateAsync: editTask } = useMutation({
@@ -65,6 +70,7 @@ export const useTasks = (
     onSuccess: async () => {
       await Promise.all([refetchTodos(), refetchDone()]);
       onSaved();
+      config?.onSubmitSuccess?.();
     },
   });
   const { mutateAsync: reorderTasks } = useMutation({
@@ -92,32 +98,49 @@ export const useTasks = (
     },
   });
 
+  const handleSelectTask = (value: Task | null) => setSelectedTask(value);
+
   const handleCreate = async ({
     title,
     dueDate,
   }: Pick<AddTaskData, 'title' | 'dueDate'>) => {
     await createTask({ projectId, title, dueDate }).catch(() => null);
   };
-
-  const handleEdit = async ({ id, projectId, title, status }: Task) => {
-    await editTask({ id, projectId, title, status }).catch(() => null);
+  const handleEdit = async ({
+    id,
+    projectId,
+    title,
+    status,
+    dueDate,
+  }: Task) => {
+    await editTask({ id, projectId, title, status, dueDate }).catch(() => null);
   };
-
   const handleReorder = async ({ data }: Pick<ReorderData, 'data'>) => {
     await reorderTasks({ projectId, data }).catch(() => null);
   };
-
   const handleDelete = async (id: string) => {
     await deleteTask({ id, projectId }).catch(() => null);
   };
+  const handleSubmit = async ({
+    title,
+    dueDate,
+  }: Pick<Task, 'title' | 'dueDate'>) => {
+    if (selectedTask) {
+      await editTask({ ...selectedTask, title, dueDate }).catch(() => null);
+    } else {
+      await createTask({ projectId, title, dueDate }).catch(() => null);
+    }
+  };
 
   return [
-    { results, todos, done },
+    { results, todos, done, selectedTask },
     {
+      onSelectTask: handleSelectTask,
       onCreate: handleCreate,
       onEdit: handleEdit,
       onReorder: handleReorder,
       onDelete: handleDelete,
+      onSubmit: handleSubmit,
     },
   ];
 };

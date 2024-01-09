@@ -15,12 +15,14 @@ type Props = {
   openEditModal: () => void;
   openDeleteModal: () => void;
   position?: FloatingPosition;
+  withinPortal?: boolean;
   small?: boolean;
 };
 
 export const ProjectMenu: FC<Props> = (props) => {
   const {
     position,
+    withinPortal,
     small,
     isOpen,
     toggle,
@@ -31,7 +33,12 @@ export const ProjectMenu: FC<Props> = (props) => {
   } = useProjectMenu(props);
 
   return (
-    <Menu opened={isOpen} onChange={toggle} position={position}>
+    <Menu
+      opened={isOpen}
+      onChange={toggle}
+      position={position}
+      withinPortal={withinPortal}
+    >
       <MenuTarget>
         <ActionIcon
           size={small ? 'md' : 'xl'}
@@ -79,6 +86,7 @@ function useProjectMenu({
   openEditModal,
   openDeleteModal,
   position,
+  withinPortal = true,
   small,
 }: Props) {
   const [isOpen, { toggle, close }] = useDisclosure(false);
@@ -101,6 +109,7 @@ function useProjectMenu({
 
   return {
     position,
+    withinPortal,
     small,
     isOpen,
     toggle,

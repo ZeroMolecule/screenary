@@ -1,4 +1,5 @@
-import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
+import { FC, ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
   Group,
@@ -7,22 +8,21 @@ import {
   PopoverTarget,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
+import { Task } from '@prisma/client';
 import { TaskPopoverMenu } from './task-popover-menu';
-import { AddTaskData } from '@/domain/types/task-data';
 
 type Props = {
   title: ReactNode;
-  onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
+  onSubmit: (task: Pick<Task, 'title' | 'dueDate'>) => Promise<void>;
   isPopoverOpen: boolean;
-  onPopoverChange: Dispatch<SetStateAction<boolean>>;
+  onPopoverChange: (value: boolean) => void;
+  task?: Task;
 };
 
-export const TasksHeader: FC<Props> = ({
-  title,
-  onCreate,
-  isPopoverOpen,
-  onPopoverChange,
-}) => {
+export const TasksHeader: FC<Props> = (props) => {
+  const { t, title, onSubmit, isPopoverOpen, onPopoverChange, task } =
+    useTasksHeader(props);
+
   return (
     <Group justify="space-between">
       {title}
@@ -42,11 +42,32 @@ export const TasksHeader: FC<Props> = ({
         </PopoverTarget>
         <PopoverDropdown w="auto" pos="absolute" top={0} right={0} left="unset">
           <TaskPopoverMenu
+            title={task ? t('form.edit.title') : t('form.create.title')}
             onClose={() => onPopoverChange(false)}
-            onCreate={onCreate}
+            onSubmit={onSubmit}
+            task={task}
           />
         </PopoverDropdown>
       </Popover>
     </Group>
   );
 };
+
+function useTasksHeader({
+  title,
+  onSubmit,
+  isPopoverOpen,
+  onPopoverChange,
+  task,
+}: Props) {
+  const t = useTranslations('task');
+
+  return {
+    t,
+    title,
+    onSubmit,
+    isPopoverOpen,
+    onPopoverChange,
+    task,
+  };
+}

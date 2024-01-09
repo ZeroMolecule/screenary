@@ -173,8 +173,14 @@
     "showAction": "Show Completed"
   },
   "task": {
+    "deleteTitle": "Delete Task",
     "form": {
-      "title": "New Task",
+      "create": {
+        "title": "New Task"
+      },
+      "edit": {
+        "title": "Edit Task"
+      },
       "titlePlaceholder": "Title",
       "dateTimeLabel": "Date & Time"
     },
