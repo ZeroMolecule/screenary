@@ -10,4 +10,14 @@ export const urlSchema = z
     }
     return value;
   })
-  .refine((value) => z.string().url().parse(value));
+  .refine(
+    (value) => {
+      try {
+        z.string().url().parse(value);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    { message: 'Invalid url' }
+  );
