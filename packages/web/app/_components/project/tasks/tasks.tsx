@@ -24,8 +24,9 @@ export const Tasks: FC<Props> = (props) => {
     onDelete,
     onReorder,
     onSubmit,
+    setPopoverOpen,
     handleTaskSelect,
-    handlePopoverChange,
+    handlePopoverAfterClose,
   } = useTasks(props);
 
   const headerTitle = (
@@ -45,8 +46,9 @@ export const Tasks: FC<Props> = (props) => {
         title={headerTitle}
         onSubmit={onSubmit}
         isPopoverOpen={popoverOpen}
-        onPopoverChange={handlePopoverChange}
+        onPopoverChange={setPopoverOpen}
         task={selectedTask ?? undefined}
+        popoverAfterClose={handlePopoverAfterClose}
       />
       {results.length ? (
         <TasksList
@@ -81,14 +83,7 @@ function useTasks({ projectId }: Props) {
     setPopoverOpen(true);
   };
 
-  const handlePopoverChange = (value: boolean) => {
-    if (!value) {
-      setTimeout(() => {
-        onSelectTask(null);
-      }, 200);
-    }
-    setPopoverOpen(value);
-  };
+  const handlePopoverAfterClose = () => onSelectTask(null);
 
   return {
     t,
@@ -99,7 +94,8 @@ function useTasks({ projectId }: Props) {
     onDelete,
     onReorder,
     onSubmit,
+    setPopoverOpen,
     handleTaskSelect,
-    handlePopoverChange,
+    handlePopoverAfterClose,
   };
 }

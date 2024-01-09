@@ -3,25 +3,33 @@ import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
   Group,
-  Popover,
   PopoverDropdown,
   PopoverTarget,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { Task } from '@prisma/client';
 import { TaskPopoverMenu } from './task-popover-menu';
+import { Popover } from '../base/popover';
 
 type Props = {
   title: ReactNode;
   onSubmit: (task: Pick<Task, 'title' | 'dueDate'>) => Promise<void>;
   isPopoverOpen: boolean;
   onPopoverChange: (value: boolean) => void;
+  popoverAfterClose?: () => void;
   task?: Task;
 };
 
 export const TasksHeader: FC<Props> = (props) => {
-  const { t, title, onSubmit, isPopoverOpen, onPopoverChange, task } =
-    useTasksHeader(props);
+  const {
+    t,
+    title,
+    onSubmit,
+    isPopoverOpen,
+    onPopoverChange,
+    task,
+    popoverAfterClose,
+  } = useTasksHeader(props);
 
   return (
     <Group justify="space-between">
@@ -30,6 +38,7 @@ export const TasksHeader: FC<Props> = (props) => {
         opened={isPopoverOpen}
         onChange={onPopoverChange}
         withinPortal={false}
+        afterClose={popoverAfterClose}
       >
         <PopoverTarget>
           <ActionIcon
@@ -59,6 +68,7 @@ function useTasksHeader({
   isPopoverOpen,
   onPopoverChange,
   task,
+  popoverAfterClose,
 }: Props) {
   const t = useTranslations('task');
 
@@ -69,5 +79,6 @@ function useTasksHeader({
     isPopoverOpen,
     onPopoverChange,
     task,
+    popoverAfterClose,
   };
 }

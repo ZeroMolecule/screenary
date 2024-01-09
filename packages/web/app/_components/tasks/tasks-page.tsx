@@ -20,13 +20,14 @@ export const TasksPage: FC = () => {
     done,
     selectedTask,
     popoverOpen,
-    handlePopoverChange,
     handleChange,
     onEdit,
     onDelete,
     onReorder,
     onSubmit,
+    setPopoverOpen,
     handleTaskSelect,
+    handlePopoverAfterClose,
   } = useTasksPage();
 
   const headerTitle = (
@@ -49,8 +50,9 @@ export const TasksPage: FC = () => {
           title={headerTitle}
           onSubmit={onSubmit}
           isPopoverOpen={popoverOpen}
-          onPopoverChange={handlePopoverChange}
+          onPopoverChange={setPopoverOpen}
           task={selectedTask ?? undefined}
+          popoverAfterClose={handlePopoverAfterClose}
         />
         <TasksWrapper
           todos={todos}
@@ -84,14 +86,7 @@ function useTasksPage() {
     setPopoverOpen(true);
   };
 
-  const handlePopoverChange = (value: boolean) => {
-    if (!value) {
-      setTimeout(() => {
-        onSelectTask(null);
-      }, 200);
-    }
-    setPopoverOpen(value);
-  };
+  const handlePopoverAfterClose = () => onSelectTask(null);
 
   return {
     projectId,
@@ -101,12 +96,13 @@ function useTasksPage() {
     done,
     selectedTask,
     popoverOpen,
-    handlePopoverChange,
     handleChange,
     onEdit,
     onDelete,
     onReorder,
     onSubmit,
+    setPopoverOpen,
     handleTaskSelect,
+    handlePopoverAfterClose,
   };
 }
