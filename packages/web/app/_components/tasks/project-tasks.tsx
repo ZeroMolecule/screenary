@@ -3,6 +3,7 @@ import { useTasks } from '@/hooks/use-tasks';
 import { Title } from '../base/title';
 import { TasksHeader } from './tasks-header';
 import { TasksWrapper } from './tasks-wrapper';
+import { Task } from '@prisma/client';
 
 type Props = {
   projectId: string;
@@ -17,12 +18,15 @@ export const ProjectTasks: FC<Props> = (props) => {
     projectName,
     todos,
     done,
+    selectedTask,
     isPopoverOpen,
     onPopoverChange,
-    onCreate,
+    onSubmit,
     onEdit,
     onDelete,
     onReorder,
+    handleTaskSelect,
+    handlePopoverAfterClose,
   } = useProjectTasks(props);
 
   const headerTitle = (
@@ -36,13 +40,16 @@ export const ProjectTasks: FC<Props> = (props) => {
       <TasksHeader
         projectId={projectId}
         title={headerTitle}
-        onCreate={onCreate}
+        onSubmit={onSubmit}
         isPopoverOpen={isPopoverOpen}
         onPopoverChange={onPopoverChange}
+        task={selectedTask ?? undefined}
+        popoverAfterClose={handlePopoverAfterClose}
       />
       <TasksWrapper
         todos={todos}
         done={done}
+        onSelect={handleTaskSelect}
         onEdit={onEdit}
         onDelete={onDelete}
         onReorder={onReorder}
@@ -57,21 +64,36 @@ function useProjectTasks({
   isPopoverOpen,
   onPopoverChange,
 }: Props) {
-  const [{ todos, done }, { onCreate, onEdit, onDelete, onReorder }] = useTasks(
-    projectId,
-    { onCreateSuccess: () => onPopoverChange({}) }
-  );
+  const [
+    { todos, done, selectedTask },
+    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+  ] = useTasks(projectId!, {
+    onSubmitSuccess: () => {
+      onSelectTask(null);
+      onPopoverChange({});
+    },
+  });
+
+  const handleTaskSelect = (task: Task) => {
+    onSelectTask(task);
+    onPopoverChange({ [projectId]: true });
+  };
+
+  const handlePopoverAfterClose = () => onSelectTask(null);
 
   return {
     projectId,
     projectName,
     todos,
     done,
+    selectedTask,
     isPopoverOpen,
     onPopoverChange,
-    onCreate,
+    onSubmit,
     onEdit,
     onDelete,
     onReorder,
+    handleTaskSelect,
+    handlePopoverAfterClose,
   };
 }

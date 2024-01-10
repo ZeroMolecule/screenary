@@ -7,6 +7,7 @@ import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
 import { TasksList } from '../../tasks/tasks-list';
 import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
+import { Task } from '@prisma/client';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
@@ -19,11 +20,14 @@ export const Tasks: FC<Props> = (props) => {
     projectId,
     popoverOpen,
     results,
-    setPopoverOpen,
-    onCreate,
+    selectedTask,
     onEdit,
     onDelete,
     onReorder,
+    onSubmit,
+    setPopoverOpen,
+    handleTaskSelect,
+    handlePopoverAfterClose,
   } = useTasks(props);
 
   const headerTitle = (
@@ -42,13 +46,16 @@ export const Tasks: FC<Props> = (props) => {
       <TasksHeader
         projectId={projectId}
         title={headerTitle}
-        onCreate={onCreate}
+        onSubmit={onSubmit}
         isPopoverOpen={popoverOpen[projectId] || false}
         onPopoverChange={setPopoverOpen}
+        task={selectedTask ?? undefined}
+        popoverAfterClose={handlePopoverAfterClose}
       />
       {results.length ? (
         <TasksList
           tasks={results}
+          onSelect={handleTaskSelect}
           onEdit={onEdit}
           onDelete={onDelete}
           onReorder={onReorder}
@@ -65,20 +72,35 @@ function useTasks({ projectId }: Props) {
   const [popoverOpen, setPopoverOpen] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const [{ results }, { onCreate, onEdit, onDelete, onReorder }] = useTasksHook(
-    projectId,
-    { onCreateSuccess: () => setPopoverOpen({}) }
-  );
+  const [
+    { results, selectedTask },
+    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+  ] = useTasksHook(projectId, {
+    onSubmitSuccess: () => {
+      onSelectTask(null);
+      setPopoverOpen({});
+    },
+  });
+
+  const handleTaskSelect = (task: Task) => {
+    onSelectTask(task);
+    setPopoverOpen({ [projectId]: true });
+  };
+
+  const handlePopoverAfterClose = () => onSelectTask(null);
 
   return {
     t,
     projectId,
     popoverOpen,
     results,
-    setPopoverOpen,
-    onCreate,
+    selectedTask,
     onEdit,
     onDelete,
     onReorder,
+    onSubmit,
+    setPopoverOpen,
+    handleTaskSelect,
+    handlePopoverAfterClose,
   };
 }
