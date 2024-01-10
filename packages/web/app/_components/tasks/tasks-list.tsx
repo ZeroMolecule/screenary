@@ -8,6 +8,7 @@ import { ReorderList } from '../reorder-list';
 
 type Props = {
   tasks: Task[];
+  onSelect: (task: Task) => void;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
@@ -17,6 +18,7 @@ type Props = {
 export const TasksList: FC<Props> = ({
   title,
   tasks,
+  onSelect,
   onEdit,
   onDelete,
   onReorder,
@@ -31,7 +33,12 @@ export const TasksList: FC<Props> = ({
         droppableId="tasks"
         onReorder={onReorder}
         renderComponentItem={(item) => (
-          <TaskItem task={item} onEdit={onEdit} onDelete={onDelete} />
+          <TaskItem
+            task={item}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onSelect={onSelect}
+          />
         )}
       />
     </Box>

@@ -1,26 +1,36 @@
-import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
+import { FC, ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
   Group,
-  Popover,
   PopoverDropdown,
   PopoverTarget,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
+import { Task } from '@prisma/client';
 import { TaskPopoverMenu } from './task-popover-menu';
-import { AddTaskData } from '@/domain/types/task-data';
+import { Popover } from '../base/popover';
 
 type Props = {
   projectId: string;
   title: ReactNode;
-  onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
+  onSubmit: (task: Pick<Task, 'title' | 'dueDate'>) => Promise<void>;
   isPopoverOpen: boolean;
-  onPopoverChange: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
+  onPopoverChange: (value: { [key: string]: boolean }) => void;
+  popoverAfterClose?: () => void;
+  task?: Task;
 };
 
 export const TasksHeader: FC<Props> = (props) => {
-  const { title, onCreate, isPopoverOpen, handlePopoverChange } =
-    useTasksHeader(props);
+  const {
+    t,
+    title,
+    onSubmit,
+    isPopoverOpen,
+    handlePopoverChange,
+    task,
+    popoverAfterClose,
+  } = useTasksHeader(props);
 
   return (
     <Group justify="space-between">
@@ -29,6 +39,7 @@ export const TasksHeader: FC<Props> = (props) => {
         opened={isPopoverOpen}
         onChange={handlePopoverChange}
         withinPortal={false}
+        afterClose={popoverAfterClose}
       >
         <PopoverTarget>
           <ActionIcon
@@ -41,8 +52,10 @@ export const TasksHeader: FC<Props> = (props) => {
         </PopoverTarget>
         <PopoverDropdown w="auto" pos="absolute" top={0} right={0} left="unset">
           <TaskPopoverMenu
+            title={task ? t('form.edit.title') : t('form.create.title')}
             onClose={() => handlePopoverChange(false)}
-            onCreate={onCreate}
+            onSubmit={onSubmit}
+            task={task}
           />
         </PopoverDropdown>
       </Popover>
@@ -53,13 +66,25 @@ export const TasksHeader: FC<Props> = (props) => {
 function useTasksHeader({
   projectId,
   title,
-  onCreate,
+  onSubmit,
   isPopoverOpen,
   onPopoverChange,
+  task,
+  popoverAfterClose,
 }: Props) {
+  const t = useTranslations('task');
+
   const handlePopoverChange = (value: boolean) => {
     onPopoverChange({ [projectId]: value });
   };
 
-  return { title, onCreate, isPopoverOpen, handlePopoverChange };
+  return {
+    t,
+    title,
+    onSubmit,
+    isPopoverOpen,
+    handlePopoverChange,
+    task,
+    popoverAfterClose,
+  };
 }

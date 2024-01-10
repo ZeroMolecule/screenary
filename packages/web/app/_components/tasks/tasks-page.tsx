@@ -15,8 +15,8 @@ export const TasksPage: FC = () => {
     projectName,
     tabs,
     popoverOpen,
-    setPopoverOpen,
     handleChange,
+    setPopoverOpen,
   } = useTasksPage();
 
   const renderProject = ({ id, name }: Project) => (

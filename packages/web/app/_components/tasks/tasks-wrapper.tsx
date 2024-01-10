@@ -6,11 +6,11 @@ import { TasksList } from './tasks-list';
 import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
 import { ReorderData } from '@/domain/types/reorder-data';
 import { HideCompletedTasksButton } from './hide-completed-tasks-button';
-import overflowStyles from '@/styles/utils/overflow.module.scss';
 
 type Props = {
   todos: Task[];
   done: Task[];
+  onSelect: (task: Task) => void;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
@@ -22,6 +22,7 @@ export const TasksWrapper: FC<Props> = (props) => {
     isEmpty,
     todos,
     done,
+    onSelect,
     onEdit,
     onDelete,
     onReorder,
@@ -30,7 +31,7 @@ export const TasksWrapper: FC<Props> = (props) => {
   } = useTasksWrapper(props);
 
   return (
-    <Box h="100%" className={overflowStyles['overflow-auto']}>
+    <Box h="100%">
       {isEmpty ? (
         <Flex mih="100%" align="center">
           <TasksEmptyPlaceholder />
@@ -41,6 +42,7 @@ export const TasksWrapper: FC<Props> = (props) => {
             <TasksList
               title={t('todo')}
               tasks={todos}
+              onSelect={onSelect}
               onEdit={onEdit}
               onDelete={onDelete}
               onReorder={onReorder}
@@ -57,6 +59,7 @@ export const TasksWrapper: FC<Props> = (props) => {
                   <TasksList
                     title={t('done')}
                     tasks={done}
+                    onSelect={onSelect}
                     onEdit={onEdit}
                     onDelete={onDelete}
                     onReorder={onReorder}
@@ -71,7 +74,14 @@ export const TasksWrapper: FC<Props> = (props) => {
   );
 };
 
-function useTasksWrapper({ todos, done, onEdit, onDelete, onReorder }: Props) {
+function useTasksWrapper({
+  todos,
+  done,
+  onSelect,
+  onEdit,
+  onDelete,
+  onReorder,
+}: Props) {
   const t = useTranslations('tasks');
   const [hideCompleted, setHideCompleted] = useState(false);
 
@@ -86,6 +96,7 @@ function useTasksWrapper({ todos, done, onEdit, onDelete, onReorder }: Props) {
     isEmpty,
     todos,
     done,
+    onSelect,
     onEdit,
     onDelete,
     onReorder,
