@@ -1,14 +1,13 @@
 import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Group, Stack } from '@mantine/core';
-import { TaskStatus } from '@prisma/client';
 import { TasksHeader } from '../../tasks/tasks-header';
 import { IconCircleCheckFilled } from '@tabler/icons-react';
 import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
 import { TasksList } from '../../tasks/tasks-list';
 import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
-import { Task } from '@prisma/client';
+import { Task, TaskStatus } from '@prisma/client';
 import { HideCompletedTasksButton } from '../../tasks/hide-completed-tasks-button';
 import styles from '@/styles/components/tasks.module.scss';
 
@@ -82,10 +81,12 @@ function useTasks({ projectId }: Props) {
   const [popoverOpen, setPopoverOpen] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const [hideCompleted, setHideCompleted] = useState(false);
   const [
     { results, selectedTask },
     { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
   ] = useTasksHook(projectId, {
+    includeAllResults: true,
     onSubmitSuccess: () => {
       onSelectTask(null);
       setPopoverOpen({});
@@ -99,6 +100,10 @@ function useTasks({ projectId }: Props) {
 
   const handlePopoverAfterClose = () => onSelectTask(null);
 
+  const handleHideCompleted = () => {
+    setHideCompleted(!hideCompleted);
+  };
+
   return {
     t,
     projectId,
@@ -106,9 +111,9 @@ function useTasks({ projectId }: Props) {
     results: hideCompleted
       ? results.filter(({ status }) => status === TaskStatus.TODO)
       : results,
+    selectedTask,
     hideCompleted,
     handleHideCompleted,
-    selectedTask,
     onEdit,
     onDelete,
     onReorder,
