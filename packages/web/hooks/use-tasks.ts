@@ -5,7 +5,6 @@ import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { AddTaskData } from '@/domain/types/task-data';
-import { useNotificationSuccess } from './use-notification-success';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
@@ -32,10 +31,6 @@ export const useTasks = (
 ] => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const onCreated = useNotificationSuccess('created');
-  const onSaved = useNotificationSuccess('saved');
-  const onDeleted = useNotificationSuccess('deleted');
-
   const [
     { data: todoData, refetch: refetchTodos },
     { data: doneData, refetch: refetchDone },
@@ -61,7 +56,6 @@ export const useTasks = (
     mutationFn: addTaskMutation.fnc,
     onSuccess: async () => {
       await refetchTodos();
-      onCreated();
       config?.onSubmitSuccess?.();
     },
   });
@@ -69,7 +63,6 @@ export const useTasks = (
     mutationFn: editTaskMutation.fnc,
     onSuccess: async () => {
       await Promise.all([refetchTodos(), refetchDone()]);
-      onSaved();
       config?.onSubmitSuccess?.();
     },
   });
@@ -83,7 +76,6 @@ export const useTasks = (
       } else {
         await Promise.all([refetchTodos(), refetchDone()]);
       }
-      onSaved();
     },
   });
   const { mutateAsync: deleteTask } = useMutation({
@@ -94,7 +86,6 @@ export const useTasks = (
       } else {
         await refetchDone();
       }
-      onDeleted();
     },
   });
 

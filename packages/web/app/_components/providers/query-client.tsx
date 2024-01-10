@@ -6,7 +6,6 @@ import {
   QueryClientProvider as QCProvider,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { useNotificationError } from '@/hooks/use-notification-error';
 import { remoteApi } from '@/domain/remote';
 import { getAxiosData } from '@/domain/remote/response/data';
@@ -27,7 +26,6 @@ export const QueryClientProvider: FC<Props> = ({ children }) => {
 };
 
 function useQueryClientProvider() {
-  const onSuccess = useNotificationSuccess('saved');
   const { showNotification: onError } = useNotificationError();
 
   const [queryClient] = useState(
@@ -42,7 +40,6 @@ function useQueryClientProvider() {
             retry: false,
           },
           mutations: {
-            onSuccess,
             onError,
           },
         },

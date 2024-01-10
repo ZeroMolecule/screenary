@@ -11,20 +11,14 @@
 }
 
 .projectsTasksContainerItem {
-  &:not(:first-child) {
-    padding-left: rem(25);
-  }
+  overflow: auto;
 
+  &:not(:first-child) {
+    padding-left: rem(9);
+  }
   &:not(:last-child) {
-    padding-right: rem(25);
-    &::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      width: 1px;
-      height: 100%;
-      background-color: var(--mantine-color-neutral-3);
-    }
+    padding-right: rem(9);
+    border-right: 1px solid var(--mantine-color-neutral-3);
   }
 }
 
