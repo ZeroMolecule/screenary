@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Group,
-  Popover,
   PopoverDropdown,
   PopoverTarget,
 } from '@mantine/core';
@@ -21,6 +20,7 @@ import {
   QuickLinkFolderPopoverMenu,
 } from './quick-link-folder-popover-menu';
 import { QuickLinkPopover } from './quick-links';
+import { Popover } from '../../base/popover';
 
 type Props = {
   popoverOpen: QuickLinkPopover;
@@ -39,7 +39,7 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
     t,
     popoverOpen,
     expandedSpacing,
-    handleOnClose,
+    handleAfterClose,
     handleLinkChange,
     handleFolderChange,
     onLinkSubmit,
@@ -65,10 +65,10 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
       <Popover
         opened={popoverOpen.link}
         onChange={handleLinkChange}
-        onClose={handleOnClose}
         withinPortal={false}
         radius={24}
         zIndex={2}
+        afterClose={handleAfterClose}
       >
         <PopoverTarget>
           <ActionIcon
@@ -110,10 +110,10 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
       <Popover
         opened={popoverOpen.folder}
         onChange={handleFolderChange}
-        onClose={handleOnClose}
         withinPortal={false}
         radius={24}
         zIndex={2}
+        afterClose={handleAfterClose}
       >
         <PopoverTarget>
           <Box display="none" />
@@ -164,15 +164,7 @@ function useQuickLinksPopovers({
   const t = useTranslations('project.quickLinks');
   const expandedSpacing = isExpanded ? 3 : 0;
 
-  const handleOnClose = () => {
-    if (quickLink || folder) {
-      setTimeout(() => {
-        onEditClose();
-      }, 250);
-    } else {
-      onEditClose();
-    }
-  };
+  const handleAfterClose = () => onEditClose();
 
   const handleLinkChange = (value: boolean) => {
     setPopoverOpen((prev) => ({ ...prev, link: value }));
@@ -185,7 +177,7 @@ function useQuickLinksPopovers({
     t,
     popoverOpen,
     expandedSpacing,
-    handleOnClose,
+    handleAfterClose,
     handleLinkChange,
     handleFolderChange,
     onLinkSubmit,
