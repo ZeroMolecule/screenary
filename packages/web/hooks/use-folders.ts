@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Directory } from '@prisma/client';
-import { useNotificationSuccess } from './use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { foldersQuery } from '@/domain/queries/folders-query';
 import { addFolderMutation } from '@/domain/mutations/add-folder-mutation';
@@ -42,10 +41,6 @@ export const useFolders = (
   const searchParams = useSearchParams();
   const selectedFolderId = searchParams.get(FOLDER_TAB_PARAMS_KEY);
 
-  const onCreated = useNotificationSuccess('created');
-  const onEdited = useNotificationSuccess('saved');
-  const onDeleted = useNotificationSuccess('deleted');
-
   const { data: folders, refetch } = useQuery<Data<Directory[]>>({
     queryKey: foldersQuery.key(projectId, {
       parentId: selectedFolderId ?? 'null',
@@ -60,7 +55,6 @@ export const useFolders = (
     mutationFn: addFolderMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onCreated();
       onSuccess?.();
     },
   });
@@ -68,7 +62,6 @@ export const useFolders = (
     mutationFn: editFolderMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onEdited();
       onSuccess?.();
     },
   });
@@ -76,7 +69,6 @@ export const useFolders = (
     mutationFn: deleteFolderMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onDeleted();
       onSuccess?.();
     },
   });

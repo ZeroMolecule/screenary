@@ -18,7 +18,6 @@ import {
   EmbeddedPagePopover,
 } from './embedded-page-popover';
 import { addEmbeddedPageMutation } from '@/domain/mutations/add-embedded-page-mutation';
-import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { editEmbeddedPageMutation } from '@/domain/mutations/edit-embedded-page-mutation';
 import { deleteEmbeddedPageMutation } from '@/domain/mutations/delete-embedded-page-mutation';
 import { EmbeddedPageCreate } from './embedded-page-create';
@@ -107,10 +106,6 @@ function useEmbeddedPages({ projectId }: Props) {
     [key: string]: boolean;
   }>({});
 
-  const onCreated = useNotificationSuccess('created');
-  const onEdited = useNotificationSuccess('saved');
-  const onDeleted = useNotificationSuccess('deleted');
-
   const { data: embeddedPages, refetch } = useQuery<Data<EmbeddedPage[]>>({
     queryKey: embeddedPagesQuery.key(projectId),
   });
@@ -118,7 +113,6 @@ function useEmbeddedPages({ projectId }: Props) {
     mutationFn: addEmbeddedPageMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onCreated();
       setPopoverOpenCreate(false);
     },
   });
@@ -126,7 +120,6 @@ function useEmbeddedPages({ projectId }: Props) {
     mutationFn: editEmbeddedPageMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onEdited();
       setPopoverOpenEdit({});
     },
   });
@@ -134,14 +127,12 @@ function useEmbeddedPages({ projectId }: Props) {
     mutationFn: reorderEmbeddedPagesMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onEdited();
     },
   });
   const { mutateAsync: deleteEmbeddedPage } = useMutation({
     mutationFn: deleteEmbeddedPageMutation.fnc,
     onSuccess: async ({ id }) => {
       await refetch();
-      onDeleted();
       setDeleteOpen({});
       if (pageId && pageId === id) {
         replace(paths.project(projectId));

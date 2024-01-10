@@ -14,7 +14,6 @@ import { ProjectMenu } from './project-menu';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import { useRouter } from '@/navigation';
-import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { projectQuery } from '@/domain/queries/project-query';
 import { editProjectMutation } from '@/domain/mutations/edit-project-mutation';
@@ -99,9 +98,6 @@ function useProjectPage({ id }: Props) {
   const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
 
-  const onEdit = useNotificationSuccess('saved');
-  const onDelete = useNotificationSuccess('deleted');
-
   const { data: project, refetch } = useQuery<Data<Project>>({
     queryKey: projectQuery.key(id),
   });
@@ -110,7 +106,6 @@ function useProjectPage({ id }: Props) {
     mutationFn: editProjectMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onEdit();
       closeEdit();
     },
   });
@@ -118,7 +113,6 @@ function useProjectPage({ id }: Props) {
   const { mutateAsync: deleteProject } = useMutation({
     mutationFn: deleteProjectMutation.fnc,
     onSuccess: () => {
-      onDelete();
       closeDelete();
       replace(paths.projects());
     },

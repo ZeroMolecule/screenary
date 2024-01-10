@@ -9,13 +9,12 @@ import { Text } from '../../base/text';
 import { notesQuery } from '@/domain/queries/notes-query';
 import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
 import { ConfirmDeleteModal } from '../../modals/confirm-delete-modal';
-import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
 import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
 import { Note as NoteModel } from '@prisma/client';
 import { Data } from '@/domain/remote/response/data';
-import styles from '@/styles/components/notes.module.scss';
 import { NotesFooter } from './notes-footer';
+import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
   projectId: string;
@@ -90,8 +89,6 @@ function useNotes({ projectId }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [isModalOpen, { open: openModal, close: closeModal }] =
     useDisclosure(false);
-  const onCreated = useNotificationSuccess('created');
-  const onDelete = useNotificationSuccess('deleted');
 
   const { data: notes, refetch } = useQuery<Data<NoteModel[]>>({
     queryKey: notesQuery.key(projectId),
@@ -100,7 +97,6 @@ function useNotes({ projectId }: Props) {
     mutationFn: addNoteMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onCreated();
     },
   });
   const { mutateAsync: editNote } = useMutation({
@@ -125,7 +121,6 @@ function useNotes({ projectId }: Props) {
     mutationFn: deleteNoteMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onDelete();
       handleCloseModal();
     },
   });

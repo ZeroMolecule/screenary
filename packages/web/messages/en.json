@@ -6,12 +6,6 @@
     "description": "All your screens and apps in one place."
   },
   "notification": {
-    "success": {
-      "added": "Added!",
-      "created": "Created!",
-      "saved": "Saved!",
-      "deleted": "Deleted!"
-    },
     "error": {
       "somethingWentWrong": "Something went wrong."
     }
