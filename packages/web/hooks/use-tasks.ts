@@ -78,12 +78,16 @@ export const useTasks = (
   const { mutateAsync: reorderTasks } = useMutation({
     mutationFn: reorderTasksMutation.fnc,
     onSuccess: async (data) => {
-      if (data.every((el) => el.status === TaskStatus.TODO)) {
-        await refetchTodos();
-      } else if (data.every((el) => el.status === TaskStatus.DONE)) {
-        await refetchDone();
+      if (config?.includeAllResults) {
+        await refetchResults();
       } else {
-        await Promise.all([refetchTodos(), refetchDone()]);
+        if (data.every((el) => el.status === TaskStatus.TODO)) {
+          await refetchTodos();
+        } else if (data.every((el) => el.status === TaskStatus.DONE)) {
+          await refetchDone();
+        } else {
+          await Promise.all([refetchTodos(), refetchDone()]);
+        }
       }
     },
   });
