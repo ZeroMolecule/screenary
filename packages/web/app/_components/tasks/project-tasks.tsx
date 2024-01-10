@@ -4,6 +4,7 @@ import { Title } from '../base/title';
 import { TasksHeader } from './tasks-header';
 import { TasksWrapper } from './tasks-wrapper';
 import { Task } from '@prisma/client';
+import { Stack } from '@mantine/core';
 
 type Props = {
   projectId: string;
@@ -36,7 +37,7 @@ export const ProjectTasks: FC<Props> = (props) => {
   );
 
   return (
-    <>
+    <Stack h="100%" pos="relative" p="md">
       <TasksHeader
         projectId={projectId}
         title={headerTitle}
@@ -54,7 +55,7 @@ export const ProjectTasks: FC<Props> = (props) => {
         onDelete={onDelete}
         onReorder={onReorder}
       />
-    </>
+    </Stack>
   );
 };
 

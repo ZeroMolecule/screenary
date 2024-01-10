@@ -5,7 +5,6 @@ import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { Task, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { AddTaskData } from '@/domain/types/task-data';
-import { useNotificationSuccess } from './use-notification-success';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
@@ -31,10 +30,6 @@ export const useTasks = (
   }
 ] => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-
-  const onCreated = useNotificationSuccess('created');
-  const onSaved = useNotificationSuccess('saved');
-  const onDeleted = useNotificationSuccess('deleted');
 
   const [
     { data: todoData, refetch: refetchTodos },
@@ -68,7 +63,6 @@ export const useTasks = (
     mutationFn: addTaskMutation.fnc,
     onSuccess: async () => {
       await (config?.includeAllResults ? refetchResults() : refetchTodos());
-      onCreated();
       config?.onSubmitSuccess?.();
     },
   });
@@ -78,25 +72,19 @@ export const useTasks = (
       await (config?.includeAllResults
         ? refetchResults()
         : Promise.all([refetchTodos(), refetchDone()]));
-      onSaved();
       config?.onSubmitSuccess?.();
     },
   });
   const { mutateAsync: reorderTasks } = useMutation({
     mutationFn: reorderTasksMutation.fnc,
     onSuccess: async (data) => {
-      if (config?.includeAllResults) {
-        await refetchResults();
+      if (data.every((el) => el.status === TaskStatus.TODO)) {
+        await refetchTodos();
+      } else if (data.every((el) => el.status === TaskStatus.DONE)) {
+        await refetchDone();
       } else {
-        if (data.every((el) => el.status === TaskStatus.TODO)) {
-          await refetchTodos();
-        } else if (data.every((el) => el.status === TaskStatus.DONE)) {
-          await refetchDone();
-        } else {
-          await Promise.all([refetchTodos(), refetchDone()]);
-        }
+        await Promise.all([refetchTodos(), refetchDone()]);
       }
-      onSaved();
     },
   });
   const { mutateAsync: deleteTask } = useMutation({
@@ -109,7 +97,6 @@ export const useTasks = (
           ? refetchTodos()
           : refetchDone());
       }
-      onDeleted();
     },
   });
 

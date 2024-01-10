@@ -11,7 +11,6 @@ import { IconCirclePlus } from '@tabler/icons-react';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
 import { useDisclosure } from '@mantine/hooks';
 import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
-import { useNotificationSuccess } from '@/hooks/use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { useTranslations } from 'next-intl';
 import { EmptyPlaceholder } from '../empty-placeholder';
@@ -61,7 +60,6 @@ export const ProjectsPage: FC = () => {
 function useProjectsWrapper() {
   const t = useTranslations('projects');
   const [isOpen, { open, close }] = useDisclosure(false);
-  const onSuccess = useNotificationSuccess('added');
 
   const { data: projects, refetch } = useQuery<Data<Project[]>>({
     queryKey: projectsQuery.key,
@@ -71,7 +69,6 @@ function useProjectsWrapper() {
     mutationFn: addProjectMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onSuccess();
       close();
     },
   });

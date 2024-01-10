@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { QuickLink } from '@prisma/client';
-import { useNotificationSuccess } from './use-notification-success';
 import { Data } from '@/domain/remote/response/data';
 import { quickLinksQuery } from '@/domain/queries/quick-links-query';
 import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation';
@@ -35,10 +34,6 @@ export const useQuickLinks = (
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [{ selectedFolderId }] = useFolders(projectId);
 
-  const onCreated = useNotificationSuccess('created');
-  const onEdited = useNotificationSuccess('saved');
-  const onDeleted = useNotificationSuccess('deleted');
-
   const { data: quickLinks, refetch } = useQuery<Data<QuickLink[]>>({
     queryKey: quickLinksQuery.key(projectId, {
       directoryId: selectedFolderId ?? 'null',
@@ -48,7 +43,6 @@ export const useQuickLinks = (
     mutationFn: addQuickLinkMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onCreated();
       onSuccess();
     },
   });
@@ -56,7 +50,6 @@ export const useQuickLinks = (
     mutationFn: editQuickLinkMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onEdited();
       onSuccess();
     },
   });
@@ -64,7 +57,6 @@ export const useQuickLinks = (
     mutationFn: reorderQuickLinksMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onEdited();
     },
   });
   const { mutate: refreshQuickLink } = useMutation({
@@ -75,7 +67,6 @@ export const useQuickLinks = (
     mutationFn: deleteQuickLinkMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onDeleted();
       onSuccess();
     },
   });

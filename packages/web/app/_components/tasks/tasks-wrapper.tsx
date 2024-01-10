@@ -37,7 +37,7 @@ export const TasksWrapper: FC<Props> = (props) => {
           <TasksEmptyPlaceholder />
         </Flex>
       ) : (
-        <Stack gap={46}>
+        <Stack gap={46} pb="md">
           {!!todos.length && (
             <TasksList
               title={t('todo')}
