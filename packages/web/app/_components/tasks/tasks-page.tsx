@@ -27,14 +27,12 @@ export const TasksPage: FC = () => {
       miw={600}
       className={styles.projectsTasksContainerItem}
     >
-      <Stack h="100%" pos="relative">
-        <ProjectTasks
-          projectId={id}
-          projectName={name}
-          isPopoverOpen={popoverOpen[id] || false}
-          onPopoverChange={setPopoverOpen}
-        />
-      </Stack>
+      <ProjectTasks
+        projectId={id}
+        projectName={name}
+        isPopoverOpen={popoverOpen[id] || false}
+        onPopoverChange={setPopoverOpen}
+      />
     </Stack>
   );
 
@@ -47,14 +45,13 @@ export const TasksPage: FC = () => {
           onChange={handleChange}
         />
       </Group>
-      <Card h="100%" radius={24} className={styles.tasks}>
+      <Card h="100%" p={0} radius={24} className={styles.tasks}>
         {!projectId ? (
           <Group
             h="100%"
             align="flex-start"
             wrap="nowrap"
             gap={0}
-            mb="sm"
             className={styles.projectsTasksContainer}
           >
             {projects.map(renderProject)}
