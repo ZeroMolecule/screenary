@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { FormTextInput } from '../base/form/text-input';
 import { Modal } from './modal';
 import { Project } from '@/domain/queries/project-query';
-import { zodUrlField } from '@/utils/zod';
 
 type Props = {
   opened: boolean;
@@ -38,16 +37,6 @@ export const ProjectModal: FC<Props> = (props) => {
               label={t('nameLabel')}
               placeholder={t('namePlaceholder')}
             />
-            <FormTextInput
-              name="emailUrl"
-              label={t('emailLabel')}
-              placeholder={t('emailPlaceholder')}
-            />
-            <FormTextInput
-              name="calendarUrl"
-              label={t('calendarLabel')}
-              placeholder={t('calendarPlaceholder')}
-            />
             <Group grow gap="xs">
               <Button bg="neutral.7" fw={500} onClick={onClose}>
                 {t('cancelAction')}
@@ -75,8 +64,6 @@ function useProjectModal({ opened, onClose, onSubmit, project }: Props) {
     resolver: zodResolver(projectSchema),
     values: {
       name: project?.name ?? '',
-      emailUrl: project?.emailUrl ?? '',
-      calendarUrl: project?.calendarUrl ?? '',
     },
   });
   const {
@@ -101,6 +88,4 @@ function useProjectModal({ opened, onClose, onSubmit, project }: Props) {
 export type ProjectFormValues = z.infer<typeof projectSchema>;
 const projectSchema = z.object({
   name: z.string().min(1),
-  emailUrl: zodUrlField,
-  calendarUrl: zodUrlField,
 });
