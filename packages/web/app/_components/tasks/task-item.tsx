@@ -37,11 +37,7 @@ export const TaskItem: FC<Props> = (props) => {
   return (
     <>
       <Group py="md" align="flex-start" gap="xs" className={styles.taskItem}>
-        <Checkbox
-          size="md"
-          defaultChecked={isDone}
-          onClick={handleStatusChange}
-        />
+        <Checkbox size="md" checked={isDone} onChange={handleStatusChange} />
         <Stack gap={4} className={flexStyles['flex-1']}>
           <Text
             size="lg"

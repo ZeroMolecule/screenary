@@ -1,17 +1,23 @@
-import { useState } from 'react';
-import { UseQueryResult, useMutation, useQueries } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { TaskStatus } from '@prisma/client';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
-import { Task, tasksQuery } from '@/domain/queries/tasks-query';
+import { Task, TaskParams, tasksQuery } from '@/domain/queries/tasks-query';
 import { Data } from '@/domain/remote/response/data';
 import { AddTaskData } from '@/domain/types/task-data';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
 import { ReorderData } from '@/domain/types/reorder-data';
+import { usePathname, useRouter } from '@/navigation';
+
+type ParamKey = keyof TaskParams;
+function getParamKey(key: ParamKey) {
+  return key;
+}
 
 type Config = {
-  includeAllResults?: boolean;
   onSubmitSuccess?: () => void;
 };
 
@@ -19,9 +25,15 @@ export const useTasks = (
   projectId: string,
   config?: Config
 ): [
-  { results: Task[]; todos: Task[]; done: Task[]; selectedTask: Task | null },
+  {
+    results: Task[];
+    isLoading: boolean;
+    selectedTask: Task | null;
+    hiddenCompletedTasks: boolean;
+  },
   {
     onSelectTask: (task: Task | null) => void;
+    onHideCompletedTasks: () => void;
     onCreate: (task: Pick<AddTaskData, 'title' | 'dueDate'>) => Promise<void>;
     onEdit: (task: Task) => Promise<void>;
     onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
@@ -31,80 +43,64 @@ export const useTasks = (
 ] => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const [
-    { data: todoData, refetch: refetchTodos },
-    { data: doneData, refetch: refetchDone },
-    { data: resultsData, refetch: refetchResults },
-  ]: Array<UseQueryResult<Data<Task[]>>> = useQueries({
-    queries: [
-      {
-        queryKey: tasksQuery.key(projectId, {
-          status: TaskStatus.TODO,
-        }),
-        enabled: !config?.includeAllResults,
-      },
-      {
-        queryKey: tasksQuery.key(projectId, {
-          status: TaskStatus.DONE,
-        }),
-        enabled: !config?.includeAllResults,
-      },
-      {
-        queryKey: tasksQuery.key(projectId),
-        enabled: !!config?.includeAllResults,
-      },
-    ],
+  const pathname = usePathname();
+  const { replace } = useRouter();
+  const searchParams = useSearchParams();
+  const paramsRef = useRef<TaskParams>(
+    Object.fromEntries(searchParams.entries())
+  );
+  paramsRef.current = Object.fromEntries(searchParams.entries());
+
+  const hiddenCompletedTasks = !!searchParams.get(getParamKey('status'));
+
+  const { data, isLoading, refetch } = useQuery<Data<Task[]>>({
+    queryKey: tasksQuery.key(projectId, paramsRef.current),
   });
-  const todos = todoData?.data ?? [];
-  const done = doneData?.data ?? [];
-  const results = resultsData?.data ?? [];
+  const results = data?.data ?? [];
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
     onSuccess: async () => {
-      await (config?.includeAllResults ? refetchResults() : refetchTodos());
+      await refetch();
       config?.onSubmitSuccess?.();
     },
   });
   const { mutateAsync: editTask } = useMutation({
     mutationFn: editTaskMutation.fnc,
     onSuccess: async () => {
-      await (config?.includeAllResults
-        ? refetchResults()
-        : Promise.all([refetchTodos(), refetchDone()]));
+      await refetch();
       config?.onSubmitSuccess?.();
     },
   });
   const { mutateAsync: reorderTasks } = useMutation({
     mutationFn: reorderTasksMutation.fnc,
-    onSuccess: async (data) => {
-      if (config?.includeAllResults) {
-        await refetchResults();
-      } else {
-        if (data.every((el) => el.status === TaskStatus.TODO)) {
-          await refetchTodos();
-        } else if (data.every((el) => el.status === TaskStatus.DONE)) {
-          await refetchDone();
-        } else {
-          await Promise.all([refetchTodos(), refetchDone()]);
-        }
-      }
+    onSuccess: async () => {
+      await refetch();
     },
   });
   const { mutateAsync: deleteTask } = useMutation({
     mutationFn: deleteTaskMutation.fnc,
-    onSuccess: async (data) => {
-      if (config?.includeAllResults) {
-        await refetchResults();
-      } else {
-        await (data.status === TaskStatus.TODO
-          ? refetchTodos()
-          : refetchDone());
-      }
+    onSuccess: async () => {
+      await refetch();
     },
   });
 
   const handleSelectTask = (value: Task | null) => setSelectedTask(value);
+
+  const handleHideCompletedTasks = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    const currParams = paramsRef.current;
+    const key = getParamKey('status');
+
+    if (!params.get(key)) {
+      params.set(key, TaskStatus.TODO);
+      paramsRef.current = { ...currParams, status: TaskStatus.TODO };
+    } else {
+      params.delete(key);
+      paramsRef.current = { ...currParams, status: [] };
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
 
   const handleCreate = async ({
     title,
@@ -139,9 +135,15 @@ export const useTasks = (
   };
 
   return [
-    { results, todos, done, selectedTask },
+    {
+      results,
+      isLoading,
+      selectedTask,
+      hiddenCompletedTasks,
+    },
     {
       onSelectTask: handleSelectTask,
+      onHideCompletedTasks: handleHideCompletedTasks,
       onCreate: handleCreate,
       onEdit: handleEdit,
       onReorder: handleReorder,

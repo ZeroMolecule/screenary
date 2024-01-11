@@ -17,11 +17,13 @@ export const ProjectTasks: FC<Props> = (props) => {
   const {
     projectId,
     projectName,
-    todos,
-    done,
+    results,
+    isLoading,
     selectedTask,
+    hiddenCompletedTasks,
     isPopoverOpen,
     onPopoverChange,
+    onHideCompletedTasks,
     onSubmit,
     onEdit,
     onDelete,
@@ -48,8 +50,10 @@ export const ProjectTasks: FC<Props> = (props) => {
         popoverAfterClose={handlePopoverAfterClose}
       />
       <TasksWrapper
-        todos={todos}
-        done={done}
+        results={results}
+        isLoading={isLoading}
+        hiddenCompletedTasks={hiddenCompletedTasks}
+        onHideCompletedTasks={onHideCompletedTasks}
         onSelect={handleTaskSelect}
         onEdit={onEdit}
         onDelete={onDelete}
@@ -66,8 +70,15 @@ function useProjectTasks({
   onPopoverChange,
 }: Props) {
   const [
-    { todos, done, selectedTask },
-    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+    { results, isLoading, selectedTask, hiddenCompletedTasks },
+    {
+      onSelectTask,
+      onHideCompletedTasks,
+      onEdit,
+      onDelete,
+      onReorder,
+      onSubmit,
+    },
   ] = useTasks(projectId!, {
     onSubmitSuccess: () => {
       onSelectTask(null);
@@ -85,11 +96,13 @@ function useProjectTasks({
   return {
     projectId,
     projectName,
-    todos,
-    done,
+    results,
+    isLoading,
     selectedTask,
+    hiddenCompletedTasks,
     isPopoverOpen,
     onPopoverChange,
+    onHideCompletedTasks,
     onSubmit,
     onEdit,
     onDelete,

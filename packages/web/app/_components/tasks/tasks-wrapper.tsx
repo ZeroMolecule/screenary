@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useTranslations } from 'next-intl';
 import { Box, Flex, Stack } from '@mantine/core';
 import { Task } from '@/domain/queries/tasks-query';
@@ -6,10 +6,14 @@ import { TasksList } from './tasks-list';
 import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
 import { ReorderData } from '@/domain/types/reorder-data';
 import { HideCompletedTasksButton } from './hide-completed-tasks-button';
+import { TaskStatus } from '@prisma/client';
+import { Loader } from '../loader';
 
 type Props = {
-  todos: Task[];
-  done: Task[];
+  results: Task[];
+  isLoading: boolean;
+  hiddenCompletedTasks: boolean;
+  onHideCompletedTasks: () => void;
   onSelect: (task: Task) => void;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
@@ -19,23 +23,22 @@ type Props = {
 export const TasksWrapper: FC<Props> = (props) => {
   const {
     t,
+    isLoading,
     isEmpty,
     todos,
     done,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
     onSelect,
     onEdit,
     onDelete,
     onReorder,
-    hideCompleted,
-    handleHideCompleted,
   } = useTasksWrapper(props);
 
   return (
     <Box h="100%">
-      {isEmpty ? (
-        <Flex mih="100%" align="center">
-          <TasksEmptyPlaceholder />
-        </Flex>
+      {isLoading ? (
+        <Loader />
       ) : (
         <Stack gap={46} pb="md">
           {!!todos.length && (
@@ -49,58 +52,61 @@ export const TasksWrapper: FC<Props> = (props) => {
             />
           )}
           <Stack>
-            {!!done.length && (
-              <>
-                <HideCompletedTasksButton
-                  isHidden={hideCompleted}
-                  onClick={handleHideCompleted}
+            <>
+              <HideCompletedTasksButton
+                isHidden={hiddenCompletedTasks}
+                onClick={onHideCompletedTasks}
+              />
+              {!!done.length && (
+                <TasksList
+                  title={t('done')}
+                  tasks={done}
+                  onSelect={onSelect}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onReorder={onReorder}
                 />
-                {!hideCompleted && (
-                  <TasksList
-                    title={t('done')}
-                    tasks={done}
-                    onSelect={onSelect}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    onReorder={onReorder}
-                  />
-                )}
-              </>
-            )}
+              )}
+            </>
           </Stack>
         </Stack>
+      )}
+      {!isLoading && isEmpty && (
+        <Flex mih="100%" align="center">
+          <TasksEmptyPlaceholder />
+        </Flex>
       )}
     </Box>
   );
 };
 
 function useTasksWrapper({
-  todos,
-  done,
+  results,
+  isLoading,
+  hiddenCompletedTasks,
+  onHideCompletedTasks,
   onSelect,
   onEdit,
   onDelete,
   onReorder,
 }: Props) {
   const t = useTranslations('tasks');
-  const [hideCompleted, setHideCompleted] = useState(false);
 
-  const isEmpty = !todos.length && !done.length;
-
-  const handleHideCompleted = () => {
-    setHideCompleted(!hideCompleted);
-  };
+  const todos = results.filter((task) => task.status === TaskStatus.TODO);
+  const done = results.filter((task) => task.status === TaskStatus.DONE);
+  const isEmpty = !results.length;
 
   return {
     t,
+    isLoading,
     isEmpty,
     todos,
     done,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
     onSelect,
     onEdit,
     onDelete,
     onReorder,
-    hideCompleted,
-    handleHideCompleted,
   };
 }

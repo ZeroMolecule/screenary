@@ -7,8 +7,9 @@ import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
 import { TasksList } from '../../tasks/tasks-list';
 import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
-import { Task, TaskStatus } from '@prisma/client';
+import { Task } from '@prisma/client';
 import { HideCompletedTasksButton } from '../../tasks/hide-completed-tasks-button';
+import { Loader } from '../../loader';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
@@ -21,9 +22,10 @@ export const Tasks: FC<Props> = (props) => {
     projectId,
     popoverOpen,
     results,
-    hideCompleted,
-    handleHideCompleted,
+    isLoading,
     selectedTask,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
     onEdit,
     onDelete,
     onReorder,
@@ -57,10 +59,12 @@ export const Tasks: FC<Props> = (props) => {
       />
       <Stack gap="xs">
         <HideCompletedTasksButton
-          isHidden={hideCompleted}
-          onClick={handleHideCompleted}
+          isHidden={hiddenCompletedTasks}
+          onClick={onHideCompletedTasks}
         />
-        {results.length ? (
+        {isLoading ? (
+          <Loader />
+        ) : results.length ? (
           <TasksList
             tasks={results}
             onSelect={handleTaskSelect}
@@ -81,12 +85,17 @@ function useTasks({ projectId }: Props) {
   const [popoverOpen, setPopoverOpen] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const [hideCompleted, setHideCompleted] = useState(false);
   const [
-    { results, selectedTask },
-    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+    { results, isLoading, selectedTask, hiddenCompletedTasks },
+    {
+      onSelectTask,
+      onHideCompletedTasks,
+      onEdit,
+      onDelete,
+      onReorder,
+      onSubmit,
+    },
   ] = useTasksHook(projectId, {
-    includeAllResults: true,
     onSubmitSuccess: () => {
       onSelectTask(null);
       setPopoverOpen({});
@@ -100,20 +109,15 @@ function useTasks({ projectId }: Props) {
 
   const handlePopoverAfterClose = () => onSelectTask(null);
 
-  const handleHideCompleted = () => {
-    setHideCompleted(!hideCompleted);
-  };
-
   return {
     t,
     projectId,
     popoverOpen,
-    results: hideCompleted
-      ? results.filter(({ status }) => status === TaskStatus.TODO)
-      : results,
+    results,
+    isLoading,
     selectedTask,
-    hideCompleted,
-    handleHideCompleted,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
     onEdit,
     onDelete,
     onReorder,

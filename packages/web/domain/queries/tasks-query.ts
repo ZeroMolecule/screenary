@@ -2,7 +2,7 @@ import { Task as PrismaTask, TaskStatus } from '@prisma/client';
 import { PROJECTS_QUERY_KEY } from './projects-query';
 
 export type Task = PrismaTask;
-type TaskParams = {
+export type TaskParams = {
   status?: TaskStatus[] | TaskStatus;
 };
 

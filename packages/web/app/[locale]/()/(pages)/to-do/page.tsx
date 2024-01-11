@@ -42,6 +42,8 @@ async function TasksPage(props: Props) {
 }
 
 async function useTasksPage({ searchParams }: Props) {
+  const { tab: tabParamId, ...tasksParams } = searchParams;
+
   const queryClient = getQueryClient();
   const [session, { data: projects }] = await Promise.all([
     getServerSession(authOptions),
@@ -49,7 +51,7 @@ async function useTasksPage({ searchParams }: Props) {
       queryKey: projectsQuery.key,
     }),
   ]);
-  if (!searchParams.tab || searchParams.tab === PROJECT_TAB_ALL_VALUE) {
+  if (!tabParamId || tabParamId === PROJECT_TAB_ALL_VALUE) {
     const queryPromises = projects.map(({ id }) =>
       Promise.all([
         queryClient.prefetchQuery({
@@ -62,18 +64,9 @@ async function useTasksPage({ searchParams }: Props) {
     );
     await Promise.all(queryPromises);
   } else {
-    await Promise.all([
-      queryClient.prefetchQuery({
-        queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-          status: TaskStatus.TODO,
-        }),
-      }),
-      queryClient.prefetchQuery({
-        queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-          status: TaskStatus.DONE,
-        }),
-      }),
-    ]);
+    await queryClient.prefetchQuery({
+      queryKey: tasksQuery.key(tabParamId ?? projects[0].id, tasksParams),
+    });
   }
   const dehydratedState = dehydrate(queryClient);
 
