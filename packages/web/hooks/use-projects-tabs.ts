@@ -39,7 +39,7 @@ export const useProjectsTabs = (includeAll?: boolean) => {
     : tabs;
 
   const handleChange = (value: string | null) => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams.toString());
     if (value) {
       params.set(PROJECT_TAB_PARAMS_KEY, value);
     }

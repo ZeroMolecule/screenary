@@ -3,7 +3,7 @@ import { useTasks } from '@/hooks/use-tasks';
 import { Title } from '../base/title';
 import { TasksHeader } from './tasks-header';
 import { TasksWrapper } from './tasks-wrapper';
-import { Task } from '@prisma/client';
+import { Task, TaskStatus } from '@prisma/client';
 import { Stack } from '@mantine/core';
 
 type Props = {
@@ -20,6 +20,8 @@ export const ProjectTasks: FC<Props> = (props) => {
     results,
     isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
     hiddenCompletedTasks,
     isPopoverOpen,
     onPopoverChange,
@@ -52,6 +54,8 @@ export const ProjectTasks: FC<Props> = (props) => {
       <TasksWrapper
         results={results}
         isLoading={isLoading}
+        todosExist={todosExist}
+        doneExist={doneExist}
         hiddenCompletedTasks={hiddenCompletedTasks}
         onHideCompletedTasks={onHideCompletedTasks}
         onSelect={handleTaskSelect}
@@ -70,7 +74,7 @@ function useProjectTasks({
   onPopoverChange,
 }: Props) {
   const [
-    { results, isLoading, selectedTask, hiddenCompletedTasks },
+    { results, baseResults, isLoading, selectedTask, hiddenCompletedTasks },
     {
       onSelectTask,
       onHideCompletedTasks,
@@ -85,6 +89,8 @@ function useProjectTasks({
       onPopoverChange({});
     },
   });
+  const todosExist = baseResults.some((el) => el.status === TaskStatus.TODO);
+  const doneExist = baseResults.some((el) => el.status === TaskStatus.DONE);
 
   const handleTaskSelect = (task: Task) => {
     onSelectTask(task);
@@ -99,6 +105,8 @@ function useProjectTasks({
     results,
     isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
     hiddenCompletedTasks,
     isPopoverOpen,
     onPopoverChange,

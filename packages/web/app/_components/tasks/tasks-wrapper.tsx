@@ -12,6 +12,8 @@ import { Loader } from '../loader';
 type Props = {
   results: Task[];
   isLoading: boolean;
+  todosExist: boolean;
+  doneExist: boolean;
   hiddenCompletedTasks: boolean;
   onHideCompletedTasks: () => void;
   onSelect: (task: Task) => void;
@@ -24,9 +26,10 @@ export const TasksWrapper: FC<Props> = (props) => {
   const {
     t,
     isLoading,
-    isEmpty,
     todos,
     done,
+    todosExist,
+    doneExist,
     hiddenCompletedTasks,
     onHideCompletedTasks,
     onSelect,
@@ -41,7 +44,7 @@ export const TasksWrapper: FC<Props> = (props) => {
         <Loader />
       ) : (
         <Stack gap={46} pb="md">
-          {!!todos.length && (
+          {todosExist && (
             <TasksList
               title={t('todo')}
               tasks={todos}
@@ -51,8 +54,8 @@ export const TasksWrapper: FC<Props> = (props) => {
               onReorder={onReorder}
             />
           )}
-          <Stack>
-            <>
+          {doneExist && (
+            <Stack>
               <HideCompletedTasksButton
                 isHidden={hiddenCompletedTasks}
                 onClick={onHideCompletedTasks}
@@ -67,11 +70,11 @@ export const TasksWrapper: FC<Props> = (props) => {
                   onReorder={onReorder}
                 />
               )}
-            </>
-          </Stack>
+            </Stack>
+          )}
         </Stack>
       )}
-      {!isLoading && isEmpty && (
+      {!isLoading && !todosExist && !doneExist && (
         <Flex mih="100%" align="center">
           <TasksEmptyPlaceholder />
         </Flex>
@@ -83,6 +86,8 @@ export const TasksWrapper: FC<Props> = (props) => {
 function useTasksWrapper({
   results,
   isLoading,
+  todosExist,
+  doneExist,
   hiddenCompletedTasks,
   onHideCompletedTasks,
   onSelect,
@@ -94,12 +99,12 @@ function useTasksWrapper({
 
   const todos = results.filter((task) => task.status === TaskStatus.TODO);
   const done = results.filter((task) => task.status === TaskStatus.DONE);
-  const isEmpty = !results.length;
 
   return {
     t,
     isLoading,
-    isEmpty,
+    todosExist,
+    doneExist,
     todos,
     done,
     hiddenCompletedTasks,

@@ -32,7 +32,7 @@ async function ProjectPage(props: Props) {
 }
 
 async function useProjectPage({ params: { id }, searchParams }: Props) {
-  const { folder: folderParamsId = 'null', ...tasksParams } = searchParams;
+  const { folder: folderParamsId = 'null' } = searchParams;
 
   const queryClient = getQueryClient();
   await Promise.all([
@@ -42,7 +42,7 @@ async function useProjectPage({ params: { id }, searchParams }: Props) {
     }),
     queryClient.prefetchQuery({ queryKey: notesQuery.key(id) }),
     queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(id, tasksParams),
+      queryKey: tasksQuery.key(id, {}),
     }),
     queryClient.prefetchQuery({
       queryKey: quickLinksQuery.key(id, { directoryId: folderParamsId }),

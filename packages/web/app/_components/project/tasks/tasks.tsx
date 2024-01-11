@@ -7,7 +7,7 @@ import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
 import { TasksList } from '../../tasks/tasks-list';
 import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
-import { Task } from '@prisma/client';
+import { Task, TaskStatus } from '@prisma/client';
 import { HideCompletedTasksButton } from '../../tasks/hide-completed-tasks-button';
 import { Loader } from '../../loader';
 import styles from '@/styles/components/tasks.module.scss';
@@ -24,6 +24,8 @@ export const Tasks: FC<Props> = (props) => {
     results,
     isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
     hiddenCompletedTasks,
     onHideCompletedTasks,
     onEdit,
@@ -58,20 +60,24 @@ export const Tasks: FC<Props> = (props) => {
         popoverAfterClose={handlePopoverAfterClose}
       />
       <Stack gap="xs">
-        <HideCompletedTasksButton
-          isHidden={hiddenCompletedTasks}
-          onClick={onHideCompletedTasks}
-        />
         {isLoading ? (
           <Loader />
-        ) : results.length ? (
-          <TasksList
-            tasks={results}
-            onSelect={handleTaskSelect}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onReorder={onReorder}
-          />
+        ) : todosExist || doneExist ? (
+          <>
+            {doneExist && (
+              <HideCompletedTasksButton
+                isHidden={hiddenCompletedTasks}
+                onClick={onHideCompletedTasks}
+              />
+            )}
+            <TasksList
+              tasks={results}
+              onSelect={handleTaskSelect}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onReorder={onReorder}
+            />
+          </>
         ) : (
           <TasksEmptyPlaceholder />
         )}
@@ -86,7 +92,7 @@ function useTasks({ projectId }: Props) {
     {}
   );
   const [
-    { results, isLoading, selectedTask, hiddenCompletedTasks },
+    { results, baseResults, isLoading, selectedTask, hiddenCompletedTasks },
     {
       onSelectTask,
       onHideCompletedTasks,
@@ -101,6 +107,8 @@ function useTasks({ projectId }: Props) {
       setPopoverOpen({});
     },
   });
+  const todosExist = baseResults.some((el) => el.status === TaskStatus.TODO);
+  const doneExist = baseResults.some((el) => el.status === TaskStatus.DONE);
 
   const handleTaskSelect = (task: Task) => {
     onSelectTask(task);
@@ -116,6 +124,8 @@ function useTasks({ projectId }: Props) {
     results,
     isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
     hiddenCompletedTasks,
     onHideCompletedTasks,
     onEdit,

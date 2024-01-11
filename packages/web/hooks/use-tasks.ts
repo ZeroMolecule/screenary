@@ -1,6 +1,5 @@
-import { useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TaskStatus } from '@prisma/client';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
 import { Task, TaskParams, tasksQuery } from '@/domain/queries/tasks-query';
@@ -10,12 +9,6 @@ import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
 import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
 import { ReorderData } from '@/domain/types/reorder-data';
-import { usePathname, useRouter } from '@/navigation';
-
-type ParamKey = keyof TaskParams;
-function getParamKey(key: ParamKey) {
-  return key;
-}
 
 type Config = {
   onSubmitSuccess?: () => void;
@@ -27,6 +20,7 @@ export const useTasks = (
 ): [
   {
     results: Task[];
+    baseResults: Task[];
     isLoading: boolean;
     selectedTask: Task | null;
     hiddenCompletedTasks: boolean;
@@ -41,22 +35,22 @@ export const useTasks = (
     onSubmit: (task: Pick<Task, 'title' | 'dueDate'>) => Promise<void>;
   }
 ] => {
+  const queryClient = useQueryClient();
+
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-
-  const pathname = usePathname();
-  const { replace } = useRouter();
-  const searchParams = useSearchParams();
-  const paramsRef = useRef<TaskParams>(
-    Object.fromEntries(searchParams.entries())
-  );
-  paramsRef.current = Object.fromEntries(searchParams.entries());
-
-  const hiddenCompletedTasks = !!searchParams.get(getParamKey('status'));
+  const [params, setParams] = useState<TaskParams>({});
+  const hiddenCompletedTasks =
+    (typeof params.status === 'string'
+      ? params.status === TaskStatus.TODO
+      : params.status?.every((el) => el === TaskStatus.TODO)) ?? false;
 
   const { data, isLoading, refetch } = useQuery<Data<Task[]>>({
-    queryKey: tasksQuery.key(projectId, paramsRef.current),
+    queryKey: tasksQuery.key(projectId, params),
   });
   const results = data?.data ?? [];
+  const baseResults =
+    queryClient.getQueryData<Data<Task[]>>(tasksQuery.key(projectId, {}))
+      ?.data ?? [];
 
   const { mutateAsync: createTask } = useMutation({
     mutationFn: addTaskMutation.fnc,
@@ -88,18 +82,10 @@ export const useTasks = (
   const handleSelectTask = (value: Task | null) => setSelectedTask(value);
 
   const handleHideCompletedTasks = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    const currParams = paramsRef.current;
-    const key = getParamKey('status');
-
-    if (!params.get(key)) {
-      params.set(key, TaskStatus.TODO);
-      paramsRef.current = { ...currParams, status: TaskStatus.TODO };
-    } else {
-      params.delete(key);
-      paramsRef.current = { ...currParams, status: [] };
-    }
-    replace(`${pathname}?${params.toString()}`);
+    setParams((params) => ({
+      ...params,
+      status: hiddenCompletedTasks ? undefined : TaskStatus.TODO,
+    }));
   };
 
   const handleCreate = async ({
@@ -137,6 +123,7 @@ export const useTasks = (
   return [
     {
       results,
+      baseResults,
       isLoading,
       selectedTask,
       hiddenCompletedTasks,
