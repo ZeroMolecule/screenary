@@ -53,10 +53,6 @@
       "title": "Project Settings",
       "nameLabel": "Project Name",
       "namePlaceholder": "Name",
-      "emailLabel": "Email URL",
-      "emailPlaceholder": "https://",
-      "calendarLabel": "Calendar URL",
-      "calendarPlaceholder": "https://",
       "cancelAction": "Cancel",
       "saveAction": "Save"
     },
@@ -188,8 +184,5 @@
         "tomorrow": "Tomorrow"
       }
     }
-  },
-  "calendar": {
-    "title": "Calendar"
   }
 }

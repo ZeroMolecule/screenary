@@ -3,8 +3,8 @@ import { urlSchema } from '../../shared/zod';
 
 export const createProjectSchema = z.object({
   name: z.string().min(1).max(255),
-  emailUrl: urlSchema,
-  calendarUrl: urlSchema,
+  emailUrl: urlSchema.optional(),
+  calendarUrl: urlSchema.optional(),
 });
 
 export type CreateProjectDto = z.infer<typeof createProjectSchema>;
