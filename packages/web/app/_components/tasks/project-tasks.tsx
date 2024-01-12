@@ -3,7 +3,7 @@ import { useTasks } from '@/hooks/use-tasks';
 import { Title } from '../base/title';
 import { TasksHeader } from './tasks-header';
 import { TasksWrapper } from './tasks-wrapper';
-import { Task } from '@prisma/client';
+import { Task, TaskStatus } from '@prisma/client';
 import { Stack } from '@mantine/core';
 
 type Props = {
@@ -17,11 +17,15 @@ export const ProjectTasks: FC<Props> = (props) => {
   const {
     projectId,
     projectName,
-    todos,
-    done,
+    results,
+    isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
+    hiddenCompletedTasks,
     isPopoverOpen,
     onPopoverChange,
+    onHideCompletedTasks,
     onSubmit,
     onEdit,
     onDelete,
@@ -48,8 +52,12 @@ export const ProjectTasks: FC<Props> = (props) => {
         popoverAfterClose={handlePopoverAfterClose}
       />
       <TasksWrapper
-        todos={todos}
-        done={done}
+        results={results}
+        isLoading={isLoading}
+        todosExist={todosExist}
+        doneExist={doneExist}
+        hiddenCompletedTasks={hiddenCompletedTasks}
+        onHideCompletedTasks={onHideCompletedTasks}
         onSelect={handleTaskSelect}
         onEdit={onEdit}
         onDelete={onDelete}
@@ -66,14 +74,23 @@ function useProjectTasks({
   onPopoverChange,
 }: Props) {
   const [
-    { todos, done, selectedTask },
-    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+    { results, baseResults, isLoading, selectedTask, hiddenCompletedTasks },
+    {
+      onSelectTask,
+      onHideCompletedTasks,
+      onEdit,
+      onDelete,
+      onReorder,
+      onSubmit,
+    },
   ] = useTasks(projectId!, {
     onSubmitSuccess: () => {
       onSelectTask(null);
       onPopoverChange({});
     },
   });
+  const todosExist = baseResults.some((el) => el.status === TaskStatus.TODO);
+  const doneExist = baseResults.some((el) => el.status === TaskStatus.DONE);
 
   const handleTaskSelect = (task: Task) => {
     onSelectTask(task);
@@ -85,11 +102,15 @@ function useProjectTasks({
   return {
     projectId,
     projectName,
-    todos,
-    done,
+    results,
+    isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
+    hiddenCompletedTasks,
     isPopoverOpen,
     onPopoverChange,
+    onHideCompletedTasks,
     onSubmit,
     onEdit,
     onDelete,

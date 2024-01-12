@@ -1,13 +1,15 @@
 import { FC, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, Group } from '@mantine/core';
+import { Card, Group, Stack } from '@mantine/core';
 import { TasksHeader } from '../../tasks/tasks-header';
 import { IconCircleCheckFilled } from '@tabler/icons-react';
 import { Text } from '../../base/text';
 import { useTasks as useTasksHook } from '@/hooks/use-tasks';
 import { TasksList } from '../../tasks/tasks-list';
 import { TasksEmptyPlaceholder } from '../../tasks/tasks-empty-placeholder';
-import { Task } from '@prisma/client';
+import { Task, TaskStatus } from '@prisma/client';
+import { HideCompletedTasksButton } from '../../tasks/hide-completed-tasks-button';
+import { Loader } from '../../loader';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
@@ -20,7 +22,12 @@ export const Tasks: FC<Props> = (props) => {
     projectId,
     popoverOpen,
     results,
+    isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
     onEdit,
     onDelete,
     onReorder,
@@ -52,17 +59,29 @@ export const Tasks: FC<Props> = (props) => {
         task={selectedTask ?? undefined}
         popoverAfterClose={handlePopoverAfterClose}
       />
-      {results.length ? (
-        <TasksList
-          tasks={results}
-          onSelect={handleTaskSelect}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onReorder={onReorder}
-        />
-      ) : (
-        <TasksEmptyPlaceholder />
-      )}
+      <Stack gap="xs">
+        {isLoading ? (
+          <Loader />
+        ) : todosExist || doneExist ? (
+          <>
+            {doneExist && (
+              <HideCompletedTasksButton
+                isHidden={hiddenCompletedTasks}
+                onClick={onHideCompletedTasks}
+              />
+            )}
+            <TasksList
+              tasks={results}
+              onSelect={handleTaskSelect}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onReorder={onReorder}
+            />
+          </>
+        ) : (
+          <TasksEmptyPlaceholder />
+        )}
+      </Stack>
     </Card>
   );
 };
@@ -73,14 +92,23 @@ function useTasks({ projectId }: Props) {
     {}
   );
   const [
-    { results, selectedTask },
-    { onSelectTask, onEdit, onDelete, onReorder, onSubmit },
+    { results, baseResults, isLoading, selectedTask, hiddenCompletedTasks },
+    {
+      onSelectTask,
+      onHideCompletedTasks,
+      onEdit,
+      onDelete,
+      onReorder,
+      onSubmit,
+    },
   ] = useTasksHook(projectId, {
     onSubmitSuccess: () => {
       onSelectTask(null);
       setPopoverOpen({});
     },
   });
+  const todosExist = baseResults.some((el) => el.status === TaskStatus.TODO);
+  const doneExist = baseResults.some((el) => el.status === TaskStatus.DONE);
 
   const handleTaskSelect = (task: Task) => {
     onSelectTask(task);
@@ -94,7 +122,12 @@ function useTasks({ projectId }: Props) {
     projectId,
     popoverOpen,
     results,
+    isLoading,
     selectedTask,
+    todosExist,
+    doneExist,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
     onEdit,
     onDelete,
     onReorder,

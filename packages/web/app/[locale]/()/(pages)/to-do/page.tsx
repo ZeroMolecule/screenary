@@ -7,7 +7,7 @@ import { getQueryClient } from '@/domain/queries/server-query-client';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { TasksPage as ClientTasksPage } from '@/app/_components/tasks/tasks-page';
 import { Data } from '@/domain/remote/response/data';
-import { Project, TaskStatus } from '@prisma/client';
+import { Project } from '@prisma/client';
 import { tasksQuery } from '@/domain/queries/tasks-query';
 import { PageContainer } from '@/app/_components/page-container';
 import { authOptions } from '@/domain/auth';
@@ -42,6 +42,8 @@ async function TasksPage(props: Props) {
 }
 
 async function useTasksPage({ searchParams }: Props) {
+  const { tab: tabParamId } = searchParams;
+
   const queryClient = getQueryClient();
   const [session, { data: projects }] = await Promise.all([
     getServerSession(authOptions),
@@ -49,31 +51,19 @@ async function useTasksPage({ searchParams }: Props) {
       queryKey: projectsQuery.key,
     }),
   ]);
-  if (!searchParams.tab || searchParams.tab === PROJECT_TAB_ALL_VALUE) {
+  if (!tabParamId || tabParamId === PROJECT_TAB_ALL_VALUE) {
     const queryPromises = projects.map(({ id }) =>
       Promise.all([
         queryClient.prefetchQuery({
-          queryKey: tasksQuery.key(id, { status: TaskStatus.TODO }),
-        }),
-        queryClient.prefetchQuery({
-          queryKey: tasksQuery.key(id, { status: TaskStatus.DONE }),
+          queryKey: tasksQuery.key(id, {}),
         }),
       ])
     );
     await Promise.all(queryPromises);
   } else {
-    await Promise.all([
-      queryClient.prefetchQuery({
-        queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-          status: TaskStatus.TODO,
-        }),
-      }),
-      queryClient.prefetchQuery({
-        queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-          status: TaskStatus.DONE,
-        }),
-      }),
-    ]);
+    await queryClient.prefetchQuery({
+      queryKey: tasksQuery.key(tabParamId ?? projects[0].id, {}),
+    });
   }
   const dehydratedState = dehydrate(queryClient);
 

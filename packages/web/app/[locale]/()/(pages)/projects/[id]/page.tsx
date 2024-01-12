@@ -1,5 +1,4 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { TaskStatus } from '@prisma/client';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { getQueryClient } from '@/domain/queries/server-query-client';
 import { notesQuery } from '@/domain/queries/notes-query';
@@ -33,7 +32,8 @@ async function ProjectPage(props: Props) {
 }
 
 async function useProjectPage({ params: { id }, searchParams }: Props) {
-  const folderParamsId = searchParams.folder ?? 'null';
+  const { folder: folderParamsId = 'null' } = searchParams;
+
   const queryClient = getQueryClient();
   await Promise.all([
     queryClient.prefetchQuery({ queryKey: projectQuery.key(id) }),
@@ -42,14 +42,7 @@ async function useProjectPage({ params: { id }, searchParams }: Props) {
     }),
     queryClient.prefetchQuery({ queryKey: notesQuery.key(id) }),
     queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(id, {
-        status: TaskStatus.TODO,
-      }),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(id, {
-        status: TaskStatus.DONE,
-      }),
+      queryKey: tasksQuery.key(id, {}),
     }),
     queryClient.prefetchQuery({
       queryKey: quickLinksQuery.key(id, { directoryId: folderParamsId }),
