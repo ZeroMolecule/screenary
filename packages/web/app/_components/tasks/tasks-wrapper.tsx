@@ -20,6 +20,8 @@ type Props = {
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
+  hideTodoTitle?: boolean;
+  hideDoneTitle?: boolean;
 };
 
 export const TasksWrapper: FC<Props> = (props) => {
@@ -36,49 +38,56 @@ export const TasksWrapper: FC<Props> = (props) => {
     onEdit,
     onDelete,
     onReorder,
+    hideTodoTitle,
+    hideDoneTitle,
   } = useTasksWrapper(props);
 
-  return (
-    <Box h="100%">
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <Stack gap={46} pb="md">
-          {todosExist && (
-            <TasksList
-              title={t('todo')}
-              tasks={todos}
-              onSelect={onSelect}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onReorder={onReorder}
-            />
-          )}
-          {doneExist && (
-            <Stack>
-              <HideCompletedTasksButton
-                isHidden={hiddenCompletedTasks}
-                onClick={onHideCompletedTasks}
-              />
-              {!!done.length && (
-                <TasksList
-                  title={t('done')}
-                  tasks={done}
-                  onSelect={onSelect}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                  onReorder={onReorder}
-                />
-              )}
-            </Stack>
-          )}
-        </Stack>
-      )}
-      {!isLoading && !todosExist && !doneExist && (
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (!isLoading && !todosExist && !doneExist) {
+    return (
+      <Box h="100%">
         <Flex mih="100%" align="center">
           <TasksEmptyPlaceholder />
         </Flex>
-      )}
+      </Box>
+    );
+  }
+
+  return (
+    <Box h="100%">
+      <Stack gap={30} pb="md">
+        {todosExist && !!todos.length && (
+          <TasksList
+            title={!hideTodoTitle ? t('todo') : undefined}
+            tasks={todos}
+            onSelect={onSelect}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReorder={onReorder}
+          />
+        )}
+        {doneExist && (
+          <Stack mt="md">
+            <HideCompletedTasksButton
+              isHidden={hiddenCompletedTasks}
+              onClick={onHideCompletedTasks}
+            />
+            {!!done.length && (
+              <TasksList
+                title={!hideDoneTitle ? t('done') : undefined}
+                tasks={done}
+                onSelect={onSelect}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onReorder={onReorder}
+              />
+            )}
+          </Stack>
+        )}
+      </Stack>
     </Box>
   );
 };
@@ -94,6 +103,8 @@ function useTasksWrapper({
   onEdit,
   onDelete,
   onReorder,
+  hideTodoTitle,
+  hideDoneTitle,
 }: Props) {
   const t = useTranslations('tasks');
 
@@ -113,5 +124,7 @@ function useTasksWrapper({
     onEdit,
     onDelete,
     onReorder,
+    hideTodoTitle,
+    hideDoneTitle,
   };
 }

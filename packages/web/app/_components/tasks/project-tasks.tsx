@@ -1,28 +1,33 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
+import { Stack, StackProps } from '@mantine/core';
+import { Task, TaskStatus } from '@prisma/client';
 import { useTasks } from '@/hooks/use-tasks';
-import { Title } from '../base/title';
 import { TasksHeader } from './tasks-header';
 import { TasksWrapper } from './tasks-wrapper';
-import { Task, TaskStatus } from '@prisma/client';
-import { Stack } from '@mantine/core';
 
 type Props = {
   projectId: string;
-  projectName: string;
+  title: ReactNode;
   isPopoverOpen: boolean;
   onPopoverChange: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
+  hideTodoTitle?: boolean;
+  hideDoneTitle?: boolean;
+  wrapperProps?: StackProps;
 };
 
 export const ProjectTasks: FC<Props> = (props) => {
   const {
     projectId,
-    projectName,
+    title,
     results,
     isLoading,
     selectedTask,
     todosExist,
     doneExist,
     hiddenCompletedTasks,
+    hideTodoTitle,
+    hideDoneTitle,
+    wrapperProps,
     isPopoverOpen,
     onPopoverChange,
     onHideCompletedTasks,
@@ -34,17 +39,11 @@ export const ProjectTasks: FC<Props> = (props) => {
     handlePopoverAfterClose,
   } = useProjectTasks(props);
 
-  const headerTitle = (
-    <Title order={3} fw={600}>
-      {projectName}
-    </Title>
-  );
-
   return (
-    <Stack h="100%" pos="relative" p="md">
+    <Stack h="100%" pos="relative" p="md" {...wrapperProps}>
       <TasksHeader
         projectId={projectId}
-        title={headerTitle}
+        title={title}
         onSubmit={onSubmit}
         isPopoverOpen={isPopoverOpen}
         onPopoverChange={onPopoverChange}
@@ -62,6 +61,8 @@ export const ProjectTasks: FC<Props> = (props) => {
         onEdit={onEdit}
         onDelete={onDelete}
         onReorder={onReorder}
+        hideTodoTitle={hideTodoTitle}
+        hideDoneTitle={hideDoneTitle}
       />
     </Stack>
   );
@@ -69,9 +70,12 @@ export const ProjectTasks: FC<Props> = (props) => {
 
 function useProjectTasks({
   projectId,
-  projectName,
+  title,
   isPopoverOpen,
   onPopoverChange,
+  hideTodoTitle,
+  hideDoneTitle,
+  wrapperProps,
 }: Props) {
   const [
     { results, baseResults, isLoading, selectedTask, hiddenCompletedTasks },
@@ -101,13 +105,16 @@ function useProjectTasks({
 
   return {
     projectId,
-    projectName,
+    title,
     results,
     isLoading,
     selectedTask,
     todosExist,
     doneExist,
     hiddenCompletedTasks,
+    hideTodoTitle,
+    hideDoneTitle,
+    wrapperProps,
     isPopoverOpen,
     onPopoverChange,
     onHideCompletedTasks,
