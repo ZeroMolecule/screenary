@@ -6,6 +6,7 @@ import { useProjectsTabs } from '@/hooks/use-projects-tabs';
 import { Project } from '@prisma/client';
 import { ProjectsTabs } from '../projects-tabs';
 import { ProjectTasks } from './project-tasks';
+import { Title } from '../base/title';
 import styles from '@/styles/components/tasks.module.scss';
 
 export const TasksPage: FC = () => {
@@ -19,6 +20,12 @@ export const TasksPage: FC = () => {
     setPopoverOpen,
   } = useTasksPage();
 
+  const projectNameTitle = (name: string) => (
+    <Title order={3} fw={600}>
+      {name}
+    </Title>
+  );
+
   const renderProject = ({ id, name }: Project) => (
     <Stack
       key={id}
@@ -29,7 +36,7 @@ export const TasksPage: FC = () => {
     >
       <ProjectTasks
         projectId={id}
-        projectName={name}
+        title={projectNameTitle(name)}
         isPopoverOpen={popoverOpen[id] || false}
         onPopoverChange={setPopoverOpen}
       />
@@ -59,7 +66,7 @@ export const TasksPage: FC = () => {
         ) : (
           <ProjectTasks
             projectId={projectId}
-            projectName={projectName!}
+            title={projectNameTitle(projectName!)}
             isPopoverOpen={popoverOpen[projectId] || false}
             onPopoverChange={setPopoverOpen}
           />
