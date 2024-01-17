@@ -14,14 +14,15 @@ type Props = {
   onSubmit: () => Promise<void>;
   title?: string;
   description?: string;
+  afterClose?: () => void;
 };
 
 export const ConfirmDeleteModal: FC<Props> = (props) => {
-  const { t, opened, onClose, onSubmit, title, description } =
+  const { t, opened, onClose, onSubmit, title, description, afterClose } =
     useConfirmDeleteModal(props);
 
   return (
-    <Modal opened={opened} onClose={onClose}>
+    <Modal opened={opened} onClose={onClose} afterClose={afterClose}>
       <Stack align="center" gap="lg">
         <Image
           src={trashIcon}
@@ -54,6 +55,7 @@ function useConfirmDeleteModal({
   onSubmit,
   title,
   description,
+  afterClose,
 }: Props) {
   const t = useTranslations('modal.delete');
 
@@ -64,5 +66,6 @@ function useConfirmDeleteModal({
     onSubmit,
     title: title ?? t('title'),
     description: description ?? t('description'),
+    afterClose,
   };
 }

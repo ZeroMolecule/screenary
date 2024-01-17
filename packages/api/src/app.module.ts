@@ -14,12 +14,15 @@ import { ProjectsModule } from './projects/projects.module';
 import { TasksModule } from './tasks/tasks.module';
 import { QuickLinksModule } from './quick-links/quick-links.module';
 import { DirectoriesModule } from './directories/directories.module';
+import { EmbeddedPagesModule } from './embedded-pages/embedded-pages.module';
+import { WebpageInfoModule } from './webpage-info/webpage-info.module';
 
 const projectModules = [
   NotesModule,
   TasksModule,
   QuickLinksModule,
   DirectoriesModule,
+  EmbeddedPagesModule,
 ];
 
 @Module({
@@ -41,6 +44,7 @@ const projectModules = [
     NotesModule,
     QuickLinksModule,
     DirectoriesModule,
+    EmbeddedPagesModule,
     RouterModule.register([
       {
         path: '',
@@ -51,6 +55,7 @@ const projectModules = [
         })),
       },
     ]),
+    WebpageInfoModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useValue: new RavenInterceptor() },

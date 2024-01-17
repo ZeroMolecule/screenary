@@ -2,10 +2,11 @@
 
 import { ReactNode, forwardRef } from 'react';
 import { LinkProps as NextLinkProps } from 'next/link';
-import { Anchor, AnchorProps } from '@mantine/core';
+import { Anchor, AnchorProps, ElementProps } from '@mantine/core';
 import { Link as NextIntlLink } from '@/navigation/index';
 
-type Props = AnchorProps &
+type ExtendedAnchorProps = AnchorProps & ElementProps<'a', keyof AnchorProps>;
+type Props = ExtendedAnchorProps &
   NextLinkProps & {
     children: ReactNode;
     locale?: string;

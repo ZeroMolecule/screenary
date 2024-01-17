@@ -6,12 +6,6 @@
     "description": "All your screens and apps in one place."
   },
   "notification": {
-    "success": {
-      "added": "Added!",
-      "created": "Created!",
-      "saved": "Saved!",
-      "deleted": "Deleted!"
-    },
     "error": {
       "somethingWentWrong": "Something went wrong."
     }
@@ -21,6 +15,13 @@
     "component": {
       "dateTime": {
         "datePlaceholder": "MM/DD/YYYY"
+      },
+      "formPopover": {
+        "cancelAction": "Cancel",
+        "applyAction": "Apply"
+      },
+      "projectTabs": {
+        "all": "All"
       }
     },
     "welcomeMessage": {
@@ -52,10 +53,6 @@
       "title": "Project Settings",
       "nameLabel": "Project Name",
       "namePlaceholder": "Name",
-      "emailLabel": "Email URL",
-      "emailPlaceholder": "https://",
-      "calendarLabel": "Calendar URL",
-      "calendarPlaceholder": "https://",
       "cancelAction": "Cancel",
       "saveAction": "Save"
     },
@@ -76,7 +73,6 @@
     "navigation": {
       "home": "Home",
       "todo": "To Do",
-      "inbox": "Inbox",
       "calendar": "Calendar"
     },
     "userMenu": {
@@ -101,12 +97,61 @@
   "project": {
     "deleteTitle": "Delete Project",
     "deleteDescription": "Are you sure you want to delete {projectName} project?",
+    "embeddedPages": {
+      "deleteTitle": "Delete Shortcut",
+      "form": {
+        "createTitle": "New Shortcut",
+        "editTitle": "Edit Shortcut",
+        "urlLabel": "Shortcut URL",
+        "urlPlaceholder": "https://"
+      }
+    },
+    "tasks": {
+      "title": "To-Do"
+    },
     "notes": {
       "title": "Notes",
       "addAction": "Add Note",
       "deleteTitle": "Delete Note",
-      "emptyShortText": "Empty.",
+      "emptyShortText": "No Notes yet.",
       "emptyLongText": "There is no notes. Try adding some."
+    },
+    "quickLinks": {
+      "title": "Quick Links",
+      "addLinkAction": "Add Link",
+      "addFolderAction": "New Folder",
+      "deleteLinkTitle": "Delete Quick Link",
+      "deleteFolderTitle": "Delete Folder",
+      "foldersTitle": "Folders",
+      "empty": {
+        "title": "Nothing Here Yet",
+        "description": " It seems like you haven't added any quick links yet. Click ‘Add Link’ to get started.",
+        "shortText": "No Links yet."
+      },
+      "form": {
+        "link": {
+          "create": {
+            "title": "New Link",
+            "urlLabel": "New Quick Link"
+          },
+          "edit": {
+            "title": "Edit Link",
+            "urlLabel": "Edit Quick Link"
+          },
+          "urlPlaceholder": "https://"
+        },
+        "folder": {
+          "create": {
+            "title": "New Folder",
+            "nameLabel": "New Folder"
+          },
+          "edit": {
+            "title": "Edit Folder",
+            "nameLabel": "Edit Folder"
+          },
+          "namePlaceholder": "New Folder"
+        }
+      }
     }
   },
   "tasks": {
@@ -121,12 +166,16 @@
     "showAction": "Show Completed"
   },
   "task": {
+    "deleteTitle": "Delete Task",
     "form": {
-      "title": "New Task",
+      "create": {
+        "title": "New Task"
+      },
+      "edit": {
+        "title": "Edit Task"
+      },
       "titlePlaceholder": "Title",
-      "dateTimeLabel": "Date & Time",
-      "cancelAction": "Cancel",
-      "applyAction": "Apply"
+      "dateTimeLabel": "Date & Time"
     },
     "dueDate": {
       "message": "{day}, {time}",
@@ -135,8 +184,5 @@
         "tomorrow": "Tomorrow"
       }
     }
-  },
-  "calendar": {
-    "title": "Calendar"
   }
 }

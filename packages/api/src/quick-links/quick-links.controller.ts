@@ -29,6 +29,10 @@ import {
   FindManyQuickLinkDto,
   findManyQuickLinkSchema,
 } from './dtos/find-many-quick-link.dto';
+import {
+  ReorderItemsDto,
+  reorderItemsSchema,
+} from '../shared/dtos/reorder-items.dto';
 
 @Controller('quick-links')
 @UseGuards(ProjectGuard)
@@ -54,6 +58,15 @@ export class QuickLinksController {
     @AuthUser() user: User
   ) {
     return this.quickLinksService.update(id, data, project.id, user.id);
+  }
+
+  @Put()
+  async updateMany(
+    @Body(new ZodValidationPipe(reorderItemsSchema)) data: ReorderItemsDto,
+    @Project() project: Project,
+    @AuthUser() user: User
+  ) {
+    return this.quickLinksService.updateMany(data, project.id, user.id);
   }
 
   @Get(':id')

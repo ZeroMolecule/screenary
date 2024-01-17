@@ -8,19 +8,19 @@ import {
   Put,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { AuthUser } from '../shared/decorators/auth-user.decorator';
+import { List } from '../shared/decorators/list.decorator';
+import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
 import {
   CreateProjectDto,
   createProjectSchema,
 } from './dtos/create-project.dto';
-import { AuthUser } from '../shared/decorators/auth-user.decorator';
-import { ProjectsService } from './projects.service';
 import {
   UpdateProjectDto,
   updateProjectSchema,
 } from './dtos/update-project.dto';
-import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
-import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
-import { List } from '../shared/decorators/list.decorator';
+import { ProjectsService } from './projects.service';
 
 @Controller('projects')
 export class ProjectsController {

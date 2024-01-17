@@ -10,6 +10,8 @@ import {
   Textarea,
   Tabs,
   Checkbox,
+  Popover,
+  Indicator,
 } from '@mantine/core';
 import tabStyles from '@/styles/base/tabs.module.scss';
 import { IconCircleFilled } from '@tabler/icons-react';
@@ -55,9 +57,10 @@ export const components: MantineThemeComponents = {
       input: {
         backgroundColor: 'transparent',
         borderRadius: '100%',
+        borderColor: 'var(--mantine-color-primary-8)',
       },
       icon: {
-        color: 'var(--mantine-color-destructive-5)',
+        color: 'var(--mantine-color-primary-8)',
       },
     },
   }),
@@ -118,6 +121,18 @@ export const components: MantineThemeComponents = {
       list: tabStyles.list,
       tab: tabStyles.tab,
       tabLabel: tabStyles.tabLabel,
+    },
+  }),
+  Popover: Popover.extend({
+    defaultProps: {
+      zIndex: 1,
+    },
+  }),
+  Indicator: Indicator.extend({
+    styles: {
+      indicator: {
+        padding: 0,
+      },
     },
   }),
 };

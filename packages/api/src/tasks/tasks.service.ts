@@ -4,7 +4,8 @@ import { CreateTaskDto } from './dtos/create-task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { TaskStatus } from '@prisma/client';
-import { flattenDeep, isArray, uniq } from 'lodash';
+import { flattenDeep, uniq } from 'lodash';
+import { ReorderItemsDto } from '../shared/dtos/reorder-items.dto';
 
 @Injectable()
 export class TasksService {
@@ -41,6 +42,28 @@ export class TasksService {
         userId,
       },
       data: dto,
+    });
+  }
+
+  async updateMany(dto: ReorderItemsDto, projectId: string, userId: string) {
+    const ids = dto.map((el) => el.id);
+
+    return this.prismaService.$transaction(async (tx) => {
+      const tasks = await tx.task.findMany({
+        where: { id: { in: ids }, projectId, userId },
+      });
+
+      await tx.task.deleteMany({
+        where: { id: { in: ids }, projectId, userId },
+      });
+
+      const reorderedTasks = tasks.map((task) => ({
+        ...task,
+        order: dto.find((el) => el.id === task.id)?.order ?? task.order,
+      }));
+      await tx.task.createMany({ data: reorderedTasks });
+
+      return reorderedTasks;
     });
   }
 

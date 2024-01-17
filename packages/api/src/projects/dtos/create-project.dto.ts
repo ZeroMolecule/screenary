@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { urlSchema } from '../../shared/zod';
 
 export const createProjectSchema = z.object({
   name: z.string().min(1).max(255),
-  emailUrl: z.string().min(1).max(255).url(),
-  calendarUrl: z.string().min(1).max(255).url(),
+  emailUrl: urlSchema.optional(),
+  calendarUrl: urlSchema.optional(),
 });
 
 export type CreateProjectDto = z.infer<typeof createProjectSchema>;

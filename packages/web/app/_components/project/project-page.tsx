@@ -1,28 +1,34 @@
 'use client';
 
 import { FC } from 'react';
-import { Project, projectQuery } from '@/domain/queries/project-query';
-import { Data } from '@/domain/remote/response/data';
+import { useTranslations } from 'next-intl';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
-import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
-import { Group, Portal } from '@mantine/core';
+import { Box, Grid, GridCol, Group, Portal, Stack } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Project } from '@prisma/client';
+import { Notes } from './notes/notes';
+import { Tasks } from './tasks/tasks';
+import { QuickLinks } from './quick-links/quick-links';
+import { EmbeddedPages } from './embedded-pages/embedded-pages';
 import { ProjectMenu } from './project-menu';
 import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
-import { useDisclosure } from '@mantine/hooks';
-import { useNotificationSuccess } from '@/hooks/use-notification-success';
-import { editProjectMutation } from '@/domain/mutations/edit-project-mutation';
-import { EditProjectData } from '@/domain/types/project-data';
-import { deleteProjectMutation } from '@/domain/mutations/delete-project-mutation';
-import { useRouter } from '@/navigation';
-import { paths } from '@/navigation/paths';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
-import { useTranslations } from 'next-intl';
-import { Notes } from './notes';
+import { useRouter } from '@/navigation';
+import { Data } from '@/domain/remote/response/data';
+import { projectQuery } from '@/domain/queries/project-query';
+import { editProjectMutation } from '@/domain/mutations/edit-project-mutation';
+import { deleteProjectMutation } from '@/domain/mutations/delete-project-mutation';
+import { EditProjectData } from '@/domain/types/project-data';
+import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
+import { paths } from '@/navigation/paths';
+import overflowStyles from '@/styles/utils/overflow.module.scss';
+import styles from '@/styles/components/project.module.scss';
 
-// TODO: custom modal hook
+type Props = {
+  id: string;
+};
 
-export const ProjectPage: FC = () => {
+export const ProjectPage: FC<Props> = (props) => {
   const {
     t,
     id,
@@ -35,13 +41,35 @@ export const ProjectPage: FC = () => {
     project,
     handleEdit,
     handleDelete,
-  } = useProjectPage();
+  } = useProjectPage(props);
 
   return (
     <Group h="100%" justify="space-between" align="flex-start">
-      <h1>{project?.name}</h1>
-      <Notes projectId={id} />
-
+      <Grid
+        h="100%"
+        w="100%"
+        gutter="xs"
+        styles={{ inner: { height: '100%' } }}
+      >
+        <GridCol h="100%" className={styles.embedGridCol}>
+          <EmbeddedPages projectId={id} />
+        </GridCol>
+        <GridCol span={9} h="100%" className={styles.tasksGridCol}>
+          <Tasks projectId={id} />
+        </GridCol>
+        <GridCol span={3} h="100%" className={styles.notesLinksGridCol}>
+          <Box h="100%" pos="relative">
+            <Stack
+              h="100%"
+              gap="xs"
+              className={overflowStyles['overflow-auto']}
+            >
+              <Notes projectId={id} />
+              <QuickLinks projectId={id} />
+            </Stack>
+          </Box>
+        </GridCol>
+      </Grid>
       <Portal target={`#${NOTIFICATION_WIDGET_CONTAINER_ID}`}>
         <ProjectMenu openEditModal={openEdit} openDeleteModal={openDelete} />
       </Portal>
@@ -62,16 +90,13 @@ export const ProjectPage: FC = () => {
   );
 };
 
-function useProjectPage() {
+function useProjectPage({ id }: Props) {
   const t = useTranslations('project');
-  const { id } = useParams();
   const { replace } = useRouter();
   const [isEditOpen, { open: openEdit, close: closeEdit }] =
     useDisclosure(false);
   const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
-  const onEdit = useNotificationSuccess('saved');
-  const onDelete = useNotificationSuccess('deleted');
 
   const { data: project, refetch } = useQuery<Data<Project>>({
     queryKey: projectQuery.key(id),
@@ -81,7 +106,6 @@ function useProjectPage() {
     mutationFn: editProjectMutation.fnc,
     onSuccess: async () => {
       await refetch();
-      onEdit();
       closeEdit();
     },
   });
@@ -89,7 +113,6 @@ function useProjectPage() {
   const { mutateAsync: deleteProject } = useMutation({
     mutationFn: deleteProjectMutation.fnc,
     onSuccess: () => {
-      onDelete();
       closeDelete();
       replace(paths.projects());
     },

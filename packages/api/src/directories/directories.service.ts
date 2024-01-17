@@ -60,6 +60,9 @@ export class DirectoriesService {
       this.prismaService.directory.findMany({
         where,
         ...pagination,
+        orderBy: {
+          order: 'asc',
+        },
       }),
       this.prismaService.directory.count({ where }),
     ]);

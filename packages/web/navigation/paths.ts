@@ -5,6 +5,4 @@ export const paths = {
   projects: () => '/projects',
   project: (id: string) => `/projects/${id}`,
   todo: () => '/to-do',
-  inbox: () => '/inbox',
-  calendar: () => '/calendar',
 };

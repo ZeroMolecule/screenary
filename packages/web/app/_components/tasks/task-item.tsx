@@ -1,65 +1,85 @@
-import { FC, KeyboardEvent, useMemo, useRef } from 'react';
+import { FC, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { Checkbox, Group, Stack, TextInput } from '@mantine/core';
+import { Box, Checkbox, Group, Stack } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { Task } from '@/domain/queries/tasks-query';
 import { TaskStatus } from '@prisma/client';
 import dayjs from 'dayjs';
 import { formatDate } from '@/utils/datetime';
 import { Text } from '../base/text';
+import { ProjectMenu } from '../project/project-menu';
+import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
 import classNames from 'classnames';
 import flexStyles from '@/styles/utils/flex.module.scss';
 import styles from '@/styles/components/tasks.module.scss';
 
 type Props = {
   task: Task;
+  onSelect: (task: Task) => void;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 };
 
 export const TaskItem: FC<Props> = (props) => {
   const {
-    inputRef,
-    task,
+    t,
     isDone,
+    task,
+    isDeleteOpen,
+    openDelete,
+    closeDelete,
     date,
-    handleFocus,
+    handleSelect,
     handleStatusChange,
-    handleEnter,
+    handleDelete,
   } = useTaskItem(props);
 
   return (
-    <Group py="md" align="flex-start" gap="xs" className={styles.taskItem}>
-      <Checkbox
-        size="md"
-        defaultChecked={isDone}
-        onClick={handleStatusChange}
+    <>
+      <Group py="md" align="flex-start" gap="xs" className={styles.taskItem}>
+        <Checkbox size="md" checked={isDone} onChange={handleStatusChange} />
+        <Stack gap={4} className={flexStyles['flex-1']}>
+          <Text
+            size="lg"
+            fw={600}
+            lh="unset"
+            className={classNames({ [styles.inputDone]: isDone })}
+          >
+            {task.title}
+          </Text>
+          <Text ff="secondary" size="sm" c="primary.8">
+            {date}
+          </Text>
+        </Stack>
+        <Box pos="relative">
+          <ProjectMenu
+            openEditModal={handleSelect}
+            openDeleteModal={openDelete}
+            withinPortal={false}
+            small
+            dropdownProps={{
+              pos: 'absolute',
+              top: -16,
+              right: 0,
+            }}
+          />
+        </Box>
+      </Group>
+      <ConfirmDeleteModal
+        opened={isDeleteOpen}
+        onClose={closeDelete}
+        onSubmit={handleDelete}
+        title={t('deleteTitle')}
       />
-      <Stack gap={4} className={flexStyles['flex-1']} onClick={handleFocus}>
-        <TextInput
-          ref={inputRef}
-          size="lg"
-          fw={600}
-          defaultValue={task.title}
-          classNames={{
-            input: classNames(styles.input, {
-              [styles.inputDone]: isDone,
-            }),
-            wrapper: styles.inputWrapper,
-          }}
-          onKeyDown={handleEnter}
-        />
-        <Text ff="secondary" size="sm" c="primary.8">
-          {date}
-        </Text>
-      </Stack>
-    </Group>
+    </>
   );
 };
 
-function useTaskItem({ task, onEdit, onDelete }: Props) {
+function useTaskItem({ task, onSelect, onEdit, onDelete }: Props) {
   const t = useTranslations('task');
   const isDone = task.status === TaskStatus.DONE;
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDeleteOpen, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
 
   const formatDateMessage = useMemo(() => {
     if (!task.dueDate) {
@@ -80,8 +100,8 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
     });
   }, [t, task.dueDate]);
 
-  const handleFocus = () => {
-    inputRef.current?.focus();
+  const handleSelect = () => {
+    onSelect(task);
   };
 
   const handleStatusChange = async () => {
@@ -91,25 +111,20 @@ function useTaskItem({ task, onEdit, onDelete }: Props) {
     });
   };
 
-  const handleEnter = async (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      const value = e.currentTarget.value;
-      if (!value) {
-        await onDelete(task.id);
-      } else {
-        await onEdit({ ...task, title: value });
-      }
-      inputRef.current?.blur();
-    }
+  const handleDelete = async () => {
+    await onDelete(task.id);
   };
 
   return {
-    inputRef,
-    task,
+    t,
     isDone,
+    task,
+    isDeleteOpen,
+    openDelete,
+    closeDelete,
     date: formatDateMessage,
-    handleFocus,
+    handleSelect,
     handleStatusChange,
-    handleEnter,
+    handleDelete,
   };
 }

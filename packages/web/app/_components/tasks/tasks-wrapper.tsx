@@ -1,68 +1,130 @@
 import { FC } from 'react';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Box, Flex, Stack } from '@mantine/core';
 import { Task } from '@/domain/queries/tasks-query';
-import { EmptyPlaceholder } from '../empty-placeholder';
 import { TasksList } from './tasks-list';
-import emptyIcon from '@/public/images/check-icon.svg';
-import overflowStyles from '@/styles/utils/overflow.module.scss';
+import { TasksEmptyPlaceholder } from './tasks-empty-placeholder';
+import { ReorderData } from '@/domain/types/reorder-data';
+import { HideCompletedTasksButton } from './hide-completed-tasks-button';
+import { TaskStatus } from '@prisma/client';
+import { Loader } from '../loader';
 
 type Props = {
-  todos: Task[];
-  done: Task[];
+  results: Task[];
+  isLoading: boolean;
+  todosExist: boolean;
+  doneExist: boolean;
+  hiddenCompletedTasks: boolean;
+  onHideCompletedTasks: () => void;
+  onSelect: (task: Task) => void;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
-  hideCompleted: boolean;
+  onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
+  hideTodoTitle?: boolean;
+  hideDoneTitle?: boolean;
 };
 
 export const TasksWrapper: FC<Props> = (props) => {
-  const { t, isEmpty, todos, done, onEdit, onDelete, hideCompleted } =
-    useTasksWrapper(props);
+  const {
+    t,
+    isLoading,
+    todos,
+    done,
+    todosExist,
+    doneExist,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
+    onSelect,
+    onEdit,
+    onDelete,
+    onReorder,
+    hideTodoTitle,
+    hideDoneTitle,
+  } = useTasksWrapper(props);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (!isLoading && !todosExist && !doneExist) {
+    return (
+      <Box h="100%">
+        <Flex mih="100%" align="center">
+          <TasksEmptyPlaceholder />
+        </Flex>
+      </Box>
+    );
+  }
 
   return (
-    <Box h="100%" className={overflowStyles['overflow-auto']}>
-      {isEmpty ? (
-        <Flex mih="100%" align="center">
-          <EmptyPlaceholder
-            title={t('empty.title')}
-            description={t('empty.description')}
-            image={<Image src={emptyIcon} width={140} height={140} alt="" />}
+    <Box h="100%">
+      <Stack gap={30} pb="md">
+        {todosExist && !!todos.length && (
+          <TasksList
+            title={!hideTodoTitle ? t('todo') : undefined}
+            tasks={todos}
+            onSelect={onSelect}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReorder={onReorder}
           />
-        </Flex>
-      ) : (
-        <Stack gap={46}>
-          {!!todos.length && (
-            <TasksList
-              title={t('todo')}
-              tasks={todos}
-              onEdit={onEdit}
-              onDelete={onDelete}
+        )}
+        {doneExist && (
+          <Stack mt="md">
+            <HideCompletedTasksButton
+              isHidden={hiddenCompletedTasks}
+              onClick={onHideCompletedTasks}
             />
-          )}
-          {!hideCompleted && !!done.length && (
-            <TasksList
-              title={t('done')}
-              tasks={done}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
-          )}
-        </Stack>
-      )}
+            {!!done.length && (
+              <TasksList
+                title={!hideDoneTitle ? t('done') : undefined}
+                tasks={done}
+                onSelect={onSelect}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onReorder={onReorder}
+              />
+            )}
+          </Stack>
+        )}
+      </Stack>
     </Box>
   );
 };
 
 function useTasksWrapper({
-  todos,
-  done,
+  results,
+  isLoading,
+  todosExist,
+  doneExist,
+  hiddenCompletedTasks,
+  onHideCompletedTasks,
+  onSelect,
   onEdit,
   onDelete,
-  hideCompleted,
+  onReorder,
+  hideTodoTitle,
+  hideDoneTitle,
 }: Props) {
   const t = useTranslations('tasks');
-  const isEmpty = !todos.length && !done.length;
 
-  return { t, isEmpty, todos, done, onEdit, onDelete, hideCompleted };
+  const todos = results.filter((task) => task.status === TaskStatus.TODO);
+  const done = results.filter((task) => task.status === TaskStatus.DONE);
+
+  return {
+    t,
+    isLoading,
+    todosExist,
+    doneExist,
+    todos,
+    done,
+    hiddenCompletedTasks,
+    onHideCompletedTasks,
+    onSelect,
+    onEdit,
+    onDelete,
+    onReorder,
+    hideTodoTitle,
+    hideDoneTitle,
+  };
 }

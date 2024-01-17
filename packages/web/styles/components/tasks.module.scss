@@ -3,6 +3,23 @@
   flex-direction: column;
   gap: var(--mantine-spacing-md);
   border: 1px solid var(--mantine-color-neutral-3);
+  overflow: auto;
+}
+
+.projectsTasksContainer {
+  overflow-x: auto;
+}
+
+.projectsTasksContainerItem {
+  overflow: auto;
+
+  &:not(:first-child) {
+    padding-left: rem(9);
+  }
+  &:not(:last-child) {
+    padding-right: rem(9);
+    border-right: 1px solid var(--mantine-color-neutral-3);
+  }
 }
 
 .taskItem {
@@ -10,11 +27,8 @@
 }
 
 .hideButton {
+  align-self: flex-start;
   border: 1px solid var(--mantine-color-neutral-3);
-}
-
-.inputWrapper {
-  --_input-height: unset;
 }
 
 .input {
@@ -23,6 +37,6 @@
 }
 
 .inputDone {
-  text-decoration: line-through 2px solid var(--mantine-color-destructive-5);
-  color: var(--mantine-color-neutral-4);
+  text-decoration: line-through 2px solid var(--mantine-color-black);
+  color: var(--mantine-color-neutral-4) !important;
 }

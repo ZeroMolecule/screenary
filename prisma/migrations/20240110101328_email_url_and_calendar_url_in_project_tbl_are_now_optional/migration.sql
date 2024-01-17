@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Project" ALTER COLUMN "emailUrl" DROP NOT NULL,
+ALTER COLUMN "calendarUrl" DROP NOT NULL;

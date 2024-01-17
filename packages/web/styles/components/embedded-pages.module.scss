@@ -1,0 +1,64 @@
+.card {
+  border: 1px solid var(--mantine-color-neutral-3);
+}
+
+.item {
+  width: rem(64);
+  height: rem(64);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--mantine-color-neutral-1);
+  box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.1),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+  cursor: pointer;
+
+  @media (min-width: $mantine-breakpoint-2xl) {
+    width: rem(114);
+    height: rem(114);
+  }
+  @media (min-width: $mantine-breakpoint-3xl) {
+    width: rem(152);
+    height: rem(152);
+  }
+  @media (min-width: $mantine-breakpoint-4xl) {
+    width: rem(172);
+    height: rem(172);
+  }
+}
+.itemHover {
+  opacity: 0.3;
+}
+
+.image {
+  max-width: 100%;
+
+  @media (min-width: $mantine-breakpoint-2xl) {
+    min-width: 52%;
+    min-height: 52%;
+  }
+}
+
+.placeholderLinkIcon {
+  width: rem(32);
+  height: rem(32);
+  color: var(--mantine-color-primary-5);
+
+  @media (min-width: $mantine-breakpoint-2xl) {
+    min-width: 52%;
+    min-height: 52%;
+  }
+}
+
+.plusIcon {
+  color: var(--mantine-color-neutral-3);
+
+  @media (min-width: $mantine-breakpoint-2xl) {
+    width: 38%;
+    height: 38%;
+  }
+}
+
+.iframe {
+  border: 0;
+}

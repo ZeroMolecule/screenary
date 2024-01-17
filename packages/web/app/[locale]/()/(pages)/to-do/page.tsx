@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
 import { getTranslator } from 'next-intl/server';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { projectsQuery } from '@/domain/queries/projects-query';
@@ -6,8 +7,12 @@ import { getQueryClient } from '@/domain/queries/server-query-client';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
 import { TasksPage as ClientTasksPage } from '@/app/_components/tasks/tasks-page';
 import { Data } from '@/domain/remote/response/data';
-import { Project, TaskStatus } from '@prisma/client';
+import { Project } from '@prisma/client';
 import { tasksQuery } from '@/domain/queries/tasks-query';
+import { PageContainer } from '@/app/_components/page-container';
+import { authOptions } from '@/domain/auth';
+import { NotificationsWidget } from '@/app/_components/notifications-widget';
+import { PROJECT_TAB_ALL_VALUE } from '@/hooks/use-projects-tabs';
 
 type Props = {
   params: { locale: string };
@@ -24,35 +29,45 @@ export async function generateMetadata({
 }
 
 async function TasksPage(props: Props) {
-  const { dehydratedState } = await useTasksPage(props);
+  const { username, dehydratedState } = await useTasksPage(props);
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ClientTasksPage />
+      <PageContainer>
+        <ClientTasksPage />
+      </PageContainer>
+      <NotificationsWidget username={username} />
     </HydrationBoundary>
   );
 }
 
 async function useTasksPage({ searchParams }: Props) {
+  const { tab: tabParamId } = searchParams;
+
   const queryClient = getQueryClient();
-  const { data: projects } = await queryClient.fetchQuery<Data<Project[]>>({
-    queryKey: projectsQuery.key,
-  });
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-        status: TaskStatus.TODO,
-      }),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: tasksQuery.key(searchParams.tab ?? projects[0].id, {
-        status: TaskStatus.DONE,
-      }),
+  const [session, { data: projects }] = await Promise.all([
+    getServerSession(authOptions),
+    queryClient.fetchQuery<Data<Project[]>>({
+      queryKey: projectsQuery.key,
     }),
   ]);
+  if (!tabParamId || tabParamId === PROJECT_TAB_ALL_VALUE) {
+    const queryPromises = projects.map(({ id }) =>
+      Promise.all([
+        queryClient.prefetchQuery({
+          queryKey: tasksQuery.key(id, {}),
+        }),
+      ])
+    );
+    await Promise.all(queryPromises);
+  } else {
+    await queryClient.prefetchQuery({
+      queryKey: tasksQuery.key(tabParamId ?? projects[0].id, {}),
+    });
+  }
   const dehydratedState = dehydrate(queryClient);
 
-  return { dehydratedState };
+  return { username: session?.user?.name, dehydratedState };
 }
 
 export default withPrivatePage(TasksPage);

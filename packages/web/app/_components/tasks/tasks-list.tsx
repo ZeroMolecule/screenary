@@ -1,27 +1,46 @@
 import { FC } from 'react';
-import { Box, Stack } from '@mantine/core';
+import { Box } from '@mantine/core';
 import { Task } from '@/domain/queries/tasks-query';
 import { Text } from '../base/text';
 import { TaskItem } from './task-item';
+import { ReorderData } from '@/domain/types/reorder-data';
+import { ReorderList } from '../reorder-list';
 
 type Props = {
-  title: string;
   tasks: Task[];
+  onSelect: (task: Task) => void;
   onEdit: (task: Task) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
+  title?: string;
 };
 
-export const TasksList: FC<Props> = ({ title, tasks, onEdit, onDelete }) => {
-  const renderTask = (task: Task) => (
-    <TaskItem key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
-  );
-
+export const TasksList: FC<Props> = ({
+  title,
+  tasks,
+  onSelect,
+  onEdit,
+  onDelete,
+  onReorder,
+}) => {
   return (
     <Box>
       <Text size="lg" fw={600}>
         {title}
       </Text>
-      <Stack gap={0}>{tasks.map(renderTask)}</Stack>
+      <ReorderList<Task>
+        data={tasks}
+        droppableId="tasks"
+        onReorder={onReorder}
+        renderComponentItem={(item) => (
+          <TaskItem
+            task={item}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onSelect={onSelect}
+          />
+        )}
+      />
     </Box>
   );
 };
