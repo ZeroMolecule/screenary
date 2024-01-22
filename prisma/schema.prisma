@@ -65,7 +65,7 @@ model Note {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Task {
@@ -83,7 +83,7 @@ model Task {
   dueDate   DateTime?
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, order])
 }
@@ -105,7 +105,7 @@ model Directory {
   updatedAt DateTime? @updatedAt
 
   project  Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user     User        @relation(fields: [userId], references: [id])
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   parent   Directory?  @relation("DirectoryToDirectory", fields: [parentId], references: [id])
   children Directory[] @relation("DirectoryToDirectory")
   links    QuickLink[]
@@ -125,7 +125,7 @@ model QuickLink {
   updatedAt DateTime? @updatedAt
 
   project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   directory Directory? @relation(fields: [directoryId], references: [id])
 }
 
@@ -142,5 +142,5 @@ model EmbeddedPage {
   updatedAt DateTime? @updatedAt
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
