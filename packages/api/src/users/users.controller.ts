@@ -27,7 +27,7 @@ export class UsersController {
 
   @Delete('me')
   async deleteMe(@AuthUser() user: User) {
-    return await this.prismaService.user.delete({
+    return this.prismaService.user.delete({
       where: { id: user.id },
     });
   }
