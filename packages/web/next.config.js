@@ -1,9 +1,12 @@
+require('dotenv').config();
 const path = require('path');
 const { composePlugins, withNx } = require('@nx/next');
 const withNextIntl = require('next-intl/plugin')();
 const withPWAInit = require('next-pwa');
 const { withSentryConfig } = require('@sentry/nextjs');
 const isDev = process.env.NODE_ENV === 'development';
+
+console.log(process.env);
 
 const withPWA = withPWAInit({
   disable: isDev,
