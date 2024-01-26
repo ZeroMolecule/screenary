@@ -2,7 +2,7 @@
   "name": "Screenary",
   "short_name": "Screenary",
   "description": "All your screens and apps in one place.",
-  "start_url": "https://dev.screenaryai.com/",
+  "start_url": ".",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#FBFAF9",
