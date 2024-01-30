@@ -1,16 +1,16 @@
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { withPrivatePage } from '@/app/_hoc/with-private-page';
-import { getQueryClient } from '@/domain/queries/server-query-client';
-import { notesQuery } from '@/domain/queries/notes-query';
-import { tasksQuery } from '@/domain/queries/tasks-query';
-import { quickLinksQuery } from '@/domain/queries/quick-links-query';
-import { foldersQuery } from '@/domain/queries/folders-query';
-import { folderQuery } from '@/domain/queries/folder-query';
-import { projectQuery } from '@/domain/queries/project-query';
-import { embeddedPagesQuery } from '@/domain/queries/embedded-pages-query';
-import { ProjectPage as ClientProjectPage } from '@/app/_components/project/project-page';
-import { PageContainer } from '@/app/_components/page-container';
 import { NotificationsWidget } from '@/app/_components/notifications-widget';
+import { PageContainer } from '@/app/_components/page-container';
+import { ProjectPage as ClientProjectPage } from '@/app/_components/project/project-page';
+import { withPrivatePage } from '@/app/_hoc/with-private-page';
+import { embeddedPagesQuery } from '@/domain/queries/embedded-pages-query';
+import { folderQuery } from '@/domain/queries/folder-query';
+import { foldersQuery } from '@/domain/queries/folders-query';
+import { notesQuery } from '@/domain/queries/notes-query';
+import { projectQuery } from '@/domain/queries/project-query';
+import { quickLinksQuery } from '@/domain/queries/quick-links-query';
+import { getQueryClient } from '@/domain/queries/server-query-client';
+import { tasksQuery } from '@/domain/queries/tasks-query';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 type Params = { locale: string; id: string };
 type Props = {
@@ -34,7 +34,7 @@ async function ProjectPage(props: Props) {
 async function useProjectPage({ params: { id }, searchParams }: Props) {
   const { folder: folderParamsId = 'null' } = searchParams;
 
-  const queryClient = getQueryClient();
+  const queryClient = await getQueryClient();
   await Promise.all([
     queryClient.prefetchQuery({ queryKey: projectQuery.key(id) }),
     queryClient.prefetchQuery({

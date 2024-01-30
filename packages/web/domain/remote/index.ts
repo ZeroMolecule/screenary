@@ -1,3 +1,5 @@
+import 'client-only';
+
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
@@ -12,16 +14,8 @@ export const remoteApi = axios.create({
 });
 remoteApi.interceptors.request.use(async (config) => {
   if (!token) {
-    if (typeof window === 'undefined') {
-      const { cookies } = await import('next/headers');
-      //TODO: fix later :)
-      token =
-        cookies().get('next-auth.session-token')?.value ??
-        cookies().get('__Secure-next-auth.session-token')?.value;
-    } else {
-      const session = await getSession();
-      token = session?.token;
-    }
+    const session = await getSession();
+    token = session?.token;
   }
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
