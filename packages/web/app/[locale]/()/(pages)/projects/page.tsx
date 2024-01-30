@@ -1,14 +1,14 @@
+import { NotificationsWidget } from '@/app/_components/notifications-widget';
+import { PageContainer } from '@/app/_components/page-container';
+import { ProjectsPage as ClientProjectsPage } from '@/app/_components/projects/projects-page';
+import { withPrivatePage } from '@/app/_hoc/with-private-page';
+import { authOptions } from '@/domain/auth';
+import { projectsQuery } from '@/domain/queries/projects-query';
+import { getQueryClient } from '@/domain/queries/server-query-client';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { getTranslator } from 'next-intl/server';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { withPrivatePage } from '@/app/_hoc/with-private-page';
-import { ProjectsPage as ClientProjectsPage } from '@/app/_components/projects/projects-page';
-import { getQueryClient } from '@/domain/queries/server-query-client';
-import { projectsQuery } from '@/domain/queries/projects-query';
-import { authOptions } from '@/domain/auth';
-import { PageContainer } from '@/app/_components/page-container';
-import { NotificationsWidget } from '@/app/_components/notifications-widget';
 
 type Params = { locale: string };
 
@@ -37,7 +37,7 @@ async function ProjectsPage() {
 }
 
 async function useProjectsPage() {
-  const queryClient = getQueryClient();
+  const queryClient = await getQueryClient();
   const [session] = await Promise.all([
     getServerSession(authOptions),
     queryClient.prefetchQuery({ queryKey: projectsQuery.key }),

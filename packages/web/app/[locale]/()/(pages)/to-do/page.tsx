@@ -1,18 +1,18 @@
+import { NotificationsWidget } from '@/app/_components/notifications-widget';
+import { PageContainer } from '@/app/_components/page-container';
+import { TasksPage as ClientTasksPage } from '@/app/_components/tasks/tasks-page';
+import { withPrivatePage } from '@/app/_hoc/with-private-page';
+import { authOptions } from '@/domain/auth';
+import { projectsQuery } from '@/domain/queries/projects-query';
+import { getQueryClient } from '@/domain/queries/server-query-client';
+import { tasksQuery } from '@/domain/queries/tasks-query';
+import { Data } from '@/domain/remote/response/data';
+import { PROJECT_TAB_ALL_VALUE } from '@/hooks/use-projects-tabs';
+import { Project } from '@prisma/client';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { getTranslator } from 'next-intl/server';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { projectsQuery } from '@/domain/queries/projects-query';
-import { getQueryClient } from '@/domain/queries/server-query-client';
-import { withPrivatePage } from '@/app/_hoc/with-private-page';
-import { TasksPage as ClientTasksPage } from '@/app/_components/tasks/tasks-page';
-import { Data } from '@/domain/remote/response/data';
-import { Project } from '@prisma/client';
-import { tasksQuery } from '@/domain/queries/tasks-query';
-import { PageContainer } from '@/app/_components/page-container';
-import { authOptions } from '@/domain/auth';
-import { NotificationsWidget } from '@/app/_components/notifications-widget';
-import { PROJECT_TAB_ALL_VALUE } from '@/hooks/use-projects-tabs';
 
 type Props = {
   params: { locale: string };
@@ -44,7 +44,7 @@ async function TasksPage(props: Props) {
 async function useTasksPage({ searchParams }: Props) {
   const { tab: tabParamId } = searchParams;
 
-  const queryClient = getQueryClient();
+  const queryClient = await getQueryClient();
   const [session, { data: projects }] = await Promise.all([
     getServerSession(authOptions),
     queryClient.fetchQuery<Data<Project[]>>({
