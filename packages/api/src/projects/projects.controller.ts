@@ -21,6 +21,10 @@ import {
   updateProjectSchema,
 } from './dtos/update-project.dto';
 import { ProjectsService } from './projects.service';
+import {
+  ReorderItemsDto,
+  reorderItemsSchema,
+} from '../shared/dtos/reorder-items.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -65,6 +69,14 @@ export class ProjectsController {
         total,
       },
     };
+  }
+
+  @Put()
+  async updateMany(
+    @Body(new ZodValidationPipe(reorderItemsSchema)) data: ReorderItemsDto,
+    @AuthUser() user: User
+  ) {
+    return this.projectService.updateMany(data, user);
   }
 
   @Delete(':id')
