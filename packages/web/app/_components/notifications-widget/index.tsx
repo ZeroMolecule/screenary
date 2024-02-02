@@ -1,17 +1,17 @@
 'use client';
 
-import { FC } from 'react';
-import { Card, Group } from '@mantine/core';
-import { useTranslations } from 'next-intl';
-import { useQuery } from '@tanstack/react-query';
-import { DateTimeBlock } from '../datetime-block';
-import { generateFirstName } from '@/domain/util/user';
-import { getTimeOfTheDay } from '@/utils/datetime';
-import { Title } from '../base/title';
-import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
 import { Project, projectQuery } from '@/domain/queries/project-query';
 import { Data } from '@/domain/remote/response/data';
+import { generateFirstName } from '@/domain/util/user';
 import stylesFlex from '@/styles/utils/flex.module.scss';
+import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
+import { getTimeOfTheDay } from '@/utils/datetime';
+import { Card, Group } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { FC } from 'react';
+import { Title } from '../base/title';
+import { DateTimeBlock } from '../datetime-block';
 
 type Props = {
   username?: string | null;
@@ -40,7 +40,6 @@ export const NotificationsWidget: FC<Props> = (props) => {
             stackProps={{ gap: 0 }}
             titleProps={{ c: 'neutral.1' }}
             textProps={{ c: 'neutral.3' }}
-            initialDate={new Date()}
           />
         </Group>
       </Group>

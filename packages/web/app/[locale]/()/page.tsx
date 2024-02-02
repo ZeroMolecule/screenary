@@ -1,28 +1,24 @@
-import Image from 'next/image';
-import { getTranslator } from 'next-intl/server';
-import { ActionIcon, Box, Group, Stack } from '@mantine/core';
-import { Screensaver } from '@/app/_components/screensaver';
-import logoImg from '@/public/images/logo-white.png';
-import { UserWidget } from '@/app/_components/user-widget';
-import { IconBellFilled } from '@tabler/icons-react';
 import { Link } from '@/app/_components/base/link';
-import { paths } from '@/navigation/paths';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/domain/auth';
 import { DateTimeBlock } from '@/app/_components/datetime-block';
+import { Screensaver } from '@/app/_components/screensaver';
+import { UserWidget } from '@/app/_components/user-widget';
 import { withPrivatePage } from '@/app/_hoc/with-private-page';
-import { generateFirstName } from '@/domain/util/user';
-import { getTimeOfTheDay } from '@/utils/datetime';
-import { Text } from '@/app/_components/base/text';
+import { paths } from '@/navigation/paths';
+import logoImg from '@/public/images/logo-white.png';
 import styles from '@/styles/pages/home.module.scss';
 import stylesFlex from '@/styles/utils/flex.module.scss';
+import { ActionIcon, Box, Group, Stack } from '@mantine/core';
+import { IconBellFilled } from '@tabler/icons-react';
+import { getTranslator } from 'next-intl/server';
+import Image from 'next/image';
+import { Greeting } from './_component/greeting';
 
 type Props = {
   params: { locale: string };
 };
 
 async function HomePage(props: Props) {
-  const { t, message } = await useHomePage(props);
+  const { t } = await useHomePage(props);
 
   return (
     <Screensaver>
@@ -48,7 +44,6 @@ async function HomePage(props: Props) {
             stackProps={{ align: 'center', gap: 'xl' }}
             titleProps={{ fz: 128, lh: 0.75, c: 'primary.1' }}
             textProps={{ fz: 24, lh: 1.2, c: 'neutral.3' }}
-            initialDate={new Date()}
           />
           <Link href={paths.projects()}>
             <ActionIcon
@@ -61,9 +56,7 @@ async function HomePage(props: Props) {
               <IconBellFilled size={32} />
             </ActionIcon>
           </Link>
-          <Text fz={44} c="primary.1" fw={700}>
-            {message}
-          </Text>
+          <Greeting />
         </Stack>
       </Stack>
     </Screensaver>
@@ -72,17 +65,8 @@ async function HomePage(props: Props) {
 
 async function useHomePage({ params: { locale } }: Props) {
   const t = await getTranslator(locale, 'shared');
-  const session = await getServerSession(authOptions);
-  const username = session?.user?.name;
 
-  const message = username
-    ? t('welcomeMessage.base', {
-        time: t(`welcomeMessage.time.${getTimeOfTheDay(new Date())}`),
-        username: generateFirstName(username),
-      })
-    : t('welcomeMessage.fallback');
-
-  return { t, message };
+  return { t };
 }
 
 export default withPrivatePage(HomePage);
