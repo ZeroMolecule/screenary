@@ -1,10 +1,10 @@
 'use client';
 
-import { FC } from 'react';
-import { Stack, StackProps } from '@mantine/core';
-import { Title, TitleProps } from './base/title';
-import { Text, TextProps } from './base/text';
 import { useLiveClock } from '@/hooks/use-live-clock';
+import { Stack, StackProps } from '@mantine/core';
+import { FC, useEffect, useState } from 'react';
+import { Text, TextProps } from './base/text';
+import { Title, TitleProps } from './base/title';
 
 // TODO: 🧹 Polishing Phase - optimize and add datetime support based on user location
 
@@ -12,34 +12,41 @@ type Props = {
   stackProps?: StackProps;
   titleProps?: TitleProps;
   textProps?: Omit<TextProps, 'children'>;
-  initialDate?: Date | string;
 };
 
 export const DateTimeBlock: FC<Props> = (props) => {
-  const { stackProps, titleProps, textProps, currentTime, currentDate } =
+  const { stackProps, titleProps, textProps, dateTime } =
     useDateTimeBlock(props);
+
+  if (!dateTime) {
+    return <></>;
+  }
 
   return (
     <Stack {...stackProps}>
       <Title ff="secondary" {...titleProps}>
-        {currentTime}
+        {dateTime.time}
       </Title>
       <Text ff="secondary" {...textProps}>
-        {currentDate}
+        {dateTime.date}
       </Text>
     </Stack>
   );
 };
 
-function useDateTimeBlock({
-  stackProps,
-  titleProps,
-  textProps,
-  initialDate,
-}: Props) {
-  const { formatter } = useLiveClock(initialDate);
-  const currentTime = formatter('timeWith12HourClock');
-  const currentDate = formatter('dateWithLongDayMonthWithoutYear');
+function useDateTimeBlock({ stackProps, titleProps, textProps }: Props) {
+  const { formatter } = useLiveClock(new Date());
 
-  return { stackProps, titleProps, textProps, currentTime, currentDate };
+  const [dateTime, setDateTime] = useState<
+    { time: string; date: string } | undefined
+  >();
+
+  useEffect(() => {
+    setDateTime({
+      time: formatter('timeWith12HourClock'),
+      date: formatter('dateWithLongDayMonthWithoutYear'),
+    });
+  }, [formatter]);
+
+  return { stackProps, titleProps, textProps, dateTime };
 }

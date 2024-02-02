@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
 import { DateTimeFormat, formatDate } from '@/utils/datetime';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useLiveClock = (initialDate: Date | string = new Date()) => {
   const [date, setDate] = useState(initialDate);
 
-  const formatter = (format: DateTimeFormat) => formatDate(date, format);
+  const formatter = useCallback(
+    (format: DateTimeFormat) => formatDate(date, format),
+    [date]
+  );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
