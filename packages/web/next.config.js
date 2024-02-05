@@ -3,6 +3,12 @@ const { composePlugins, withNx } = require('@nx/next');
 const withNextIntl = require('next-intl/plugin')();
 const { withSentryConfig } = require('@sentry/nextjs');
 
+if (process.env.APP_ENV === 'production') {
+  process.env.NEXT_PUBLIC_REMOTE_API_BASE_URL =
+    'https://screenary-api-e92c7280adc2.herokuapp.com/api';
+  console.log('1', process.env.NEXT_PUBLIC_REMOTE_API_BASE_URL);
+}
+
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
