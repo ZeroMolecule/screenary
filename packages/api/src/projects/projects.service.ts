@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../shared/services/prisma.service';
 import { TaskStatus, User } from '@prisma/client';
-import { CreateProjectDto } from './dtos/create-project.dto';
-import { UpdateProjectDto } from './dtos/update-project.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { ReorderItemsDto } from '../shared/dtos/reorder-items.dto';
+import { PrismaService } from '../shared/services/prisma.service';
+import { CreateProjectDto } from './dtos/create-project.dto';
+import { UpdateProjectDto } from './dtos/update-project.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -23,7 +23,11 @@ export class ProjectsService {
     });
   }
 
-  async update(id: string, dto: UpdateProjectDto, user: User) {
+  async update(
+    id: string,
+    { projectUser, ...dto }: UpdateProjectDto,
+    user: User
+  ) {
     return this.prismaService.project.update({
       where: {
         id: id,
@@ -33,7 +37,23 @@ export class ProjectsService {
           },
         },
       },
-      data: dto,
+      data: {
+        ...dto,
+        projectUsers: projectUser
+          ? {
+              upsert: {
+                where: {
+                  projectId_userId: {
+                    projectId: id,
+                    userId: user.id,
+                  },
+                },
+                create: { userId: user.id, ...projectUser },
+                update: projectUser,
+              },
+            }
+          : undefined,
+      },
     });
   }
 
@@ -70,6 +90,7 @@ export class ProjectsService {
           },
         },
       },
+      include: { projectUsers: { where: { userId: user.id } } },
     });
   }
 
@@ -90,6 +111,7 @@ export class ProjectsService {
           createdAt: 'desc',
         },
         include: {
+          projectUsers: { where: { userId: user.id } },
           _count: {
             select: {
               tasks: {

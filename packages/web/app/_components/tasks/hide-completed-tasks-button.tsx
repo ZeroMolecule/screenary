@@ -1,8 +1,8 @@
-import { FC } from 'react';
-import { useTranslations } from 'next-intl';
+import styles from '@/styles/components/tasks.module.scss';
 import { Button } from '@mantine/core';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
-import styles from '@/styles/components/tasks.module.scss';
+import { useTranslations } from 'next-intl';
+import { FC } from 'react';
 
 type Props = {
   isHidden: boolean;
