@@ -4,6 +4,7 @@ import { TaskStatus, User } from '@prisma/client';
 import { CreateProjectDto } from './dtos/create-project.dto';
 import { UpdateProjectDto } from './dtos/update-project.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import { ReorderItemsDto } from '../shared/dtos/reorder-items.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -33,6 +34,29 @@ export class ProjectsService {
         },
       },
       data: dto,
+    });
+  }
+
+  async updateMany(data: ReorderItemsDto, user: User) {
+    const ids = data.map((it) => it.id);
+    return this.prismaService.$transaction(async (tx) => {
+      const entries = await tx.userProjectOrder.findMany({
+        where: { projectId: { in: ids }, userId: user.id },
+      });
+
+      await tx.userProjectOrder.deleteMany({
+        where: { projectId: { in: ids }, userId: user.id },
+      });
+
+      const reordered = entries.map((entry) => ({
+        ...entry,
+        order:
+          data.find((it) => it.id === entry.projectId)?.order ?? entry.order,
+      }));
+
+      await tx.userProjectOrder.createMany({ data: reordered });
+
+      return reordered;
     });
   }
 
