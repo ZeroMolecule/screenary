@@ -132,10 +132,12 @@
         "link": {
           "create": {
             "title": "New Link",
+            "titleLabel": "Title",
             "urlLabel": "New Quick Link"
           },
           "edit": {
             "title": "Edit Link",
+            "titleLabel": "Title",
             "urlLabel": "Edit Quick Link"
           },
           "urlPlaceholder": "https://"

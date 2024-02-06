@@ -4,7 +4,7 @@ import { urlSchema } from '../../shared/zod';
 export const createQuickLinkSchema = z.object({
   url: urlSchema,
   directoryId: z.string().nullish(),
-  name: z.string().optional(),
+  title: z.string().optional(),
   icon: z.string().optional(),
 });
 

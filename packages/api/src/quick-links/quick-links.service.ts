@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../shared/services/prisma.service';
-import { CreateQuickLinkDto } from './dtos/create-quick-link.dto';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
-import { UpdateQuickLinkDto } from './dtos/update-quick-link.dto';
-import { FindManyQuickLinkDto } from './dtos/find-many-quick-link.dto';
-import { WebpageInfoService } from '../shared/services/webpage-info.service';
 import { ReorderItemsDto } from '../shared/dtos/reorder-items.dto';
+import { PrismaService } from '../shared/services/prisma.service';
+import { WebpageInfoService } from '../shared/services/webpage-info.service';
+import { CreateQuickLinkDto } from './dtos/create-quick-link.dto';
+import { FindManyQuickLinkDto } from './dtos/find-many-quick-link.dto';
+import { UpdateQuickLinkDto } from './dtos/update-quick-link.dto';
 
 @Injectable()
 export class QuickLinksService {
@@ -16,7 +16,7 @@ export class QuickLinksService {
 
   async create(dto: CreateQuickLinkDto, projectId: string, userId: string) {
     let pageInfo;
-    if (!dto.name || !dto.icon) {
+    if (!dto.title || !dto.icon) {
       pageInfo = await this.webpageInfoService.find(dto.url);
     }
 
@@ -26,6 +26,7 @@ export class QuickLinksService {
         ...dto,
         projectId,
         userId,
+        title: dto.title ?? pageInfo?.title,
       },
     });
   }
@@ -37,7 +38,7 @@ export class QuickLinksService {
     userId: string
   ) {
     let pageInfo;
-    if (!dto.name || !dto.icon) {
+    if (!dto.title || !dto.icon) {
       let url = dto.url;
       if (!url) {
         const quickLink = await this.findOne(id, projectId, userId);
@@ -59,6 +60,7 @@ export class QuickLinksService {
       data: {
         ...pageInfo,
         ...dto,
+        title: dto.title ?? pageInfo?.title,
       },
     });
   }
