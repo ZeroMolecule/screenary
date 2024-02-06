@@ -1,20 +1,20 @@
-import { FC, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
+import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
+import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
+import { notesQuery } from '@/domain/queries/notes-query';
+import { Data } from '@/domain/remote/response/data';
+import styles from '@/styles/components/notes.module.scss';
 import { ActionIcon, Box, Card, Group, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconInbox, IconPlus } from '@tabler/icons-react';
-import { Note } from './note';
-import { Text } from '../../base/text';
-import { notesQuery } from '@/domain/queries/notes-query';
-import { deleteNoteMutation } from '@/domain/mutations/delete-note-mutation';
-import { ConfirmDeleteModal } from '../../modals/confirm-delete-modal';
-import { addNoteMutation } from '@/domain/mutations/add-note-mutation';
-import { editNoteMutation } from '@/domain/mutations/edit-note-mutation';
 import { Note as NoteModel } from '@prisma/client';
-import { Data } from '@/domain/remote/response/data';
+import { IconInbox, IconPlus } from '@tabler/icons-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { FC, useState } from 'react';
+import { Text } from '../../base/text';
+import { ConfirmDeleteModal } from '../../modals/confirm-delete-modal';
+import { Note } from './note';
 import { NotesFooter } from './notes-footer';
-import styles from '@/styles/components/notes.module.scss';
 
 type Props = {
   projectId: string;

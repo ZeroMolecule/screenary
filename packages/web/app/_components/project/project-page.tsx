@@ -1,28 +1,28 @@
 'use client';
 
-import { FC } from 'react';
-import { useTranslations } from 'next-intl';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { deleteProjectMutation } from '@/domain/mutations/delete-project-mutation';
+import { editProjectMutation } from '@/domain/mutations/edit-project-mutation';
+import { projectQuery } from '@/domain/queries/project-query';
+import { Data } from '@/domain/remote/response/data';
+import { EditProjectData } from '@/domain/types/project-data';
+import { useRouter } from '@/navigation';
+import { paths } from '@/navigation/paths';
+import styles from '@/styles/components/project.module.scss';
+import overflowStyles from '@/styles/utils/overflow.module.scss';
+import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
 import { Box, Grid, GridCol, Group, Portal, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Project } from '@prisma/client';
-import { Notes } from './notes/notes';
-import { Tasks } from './tasks/tasks';
-import { QuickLinks } from './quick-links/quick-links';
-import { EmbeddedPages } from './embedded-pages/embedded-pages';
-import { ProjectMenu } from './project-menu';
-import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { FC } from 'react';
 import { ConfirmDeleteModal } from '../modals/confirm-delete-modal';
-import { useRouter } from '@/navigation';
-import { Data } from '@/domain/remote/response/data';
-import { projectQuery } from '@/domain/queries/project-query';
-import { editProjectMutation } from '@/domain/mutations/edit-project-mutation';
-import { deleteProjectMutation } from '@/domain/mutations/delete-project-mutation';
-import { EditProjectData } from '@/domain/types/project-data';
-import { NOTIFICATION_WIDGET_CONTAINER_ID } from '@/utils/constants';
-import { paths } from '@/navigation/paths';
-import overflowStyles from '@/styles/utils/overflow.module.scss';
-import styles from '@/styles/components/project.module.scss';
+import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
+import { EmbeddedPages } from './embedded-pages/embedded-pages';
+import { Notes } from './notes/notes';
+import { ProjectMenu } from './project-menu';
+import { QuickLinks } from './quick-links/quick-links';
+import { Tasks } from './tasks/tasks';
 
 type Props = {
   id: string;
@@ -54,10 +54,10 @@ export const ProjectPage: FC<Props> = (props) => {
         <GridCol h="100%" className={styles.embedGridCol}>
           <EmbeddedPages projectId={id} />
         </GridCol>
-        <GridCol span={9} h="100%" className={styles.tasksGridCol}>
+        <GridCol span={8} h="100%" className={styles.tasksGridCol}>
           <Tasks projectId={id} />
         </GridCol>
-        <GridCol span={3} h="100%" className={styles.notesLinksGridCol}>
+        <GridCol span={4} h="100%" className={styles.notesLinksGridCol}>
           <Box h="100%" pos="relative">
             <Stack
               h="100%"
