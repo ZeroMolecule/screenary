@@ -27,20 +27,19 @@ model Account {
 }
 
 model User {
-  id               String             @id @default(cuid())
-  name             String?
-  email            String?            @unique
-  emailVerified    DateTime?
-  image            String?
-  accounts         Account[]
-  projects         Project[]
-  notes            Note[]
-  tasks            Task[]
-  linkDirectories  Directory[]
-  links            QuickLink[]
-  embeddedPages    EmbeddedPage[]
-  userProjectOrder UserProjectOrder[]
-  userProjects     ProjectUser[]
+  id              String         @id @default(cuid())
+  name            String?
+  email           String?        @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  projects        Project[]
+  notes           Note[]
+  tasks           Task[]
+  linkDirectories Directory[]
+  links           QuickLink[]
+  embeddedPages   EmbeddedPage[]
+  userProjects    ProjectUser[]
 }
 
 model Project {
@@ -51,14 +50,13 @@ model Project {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
 
-  users            User[]
-  notes            Note[]
-  tasks            Task[]
-  linkDirectories  Directory[]
-  links            QuickLink[]
-  embeddedPages    EmbeddedPage[]
-  userProjectOrder UserProjectOrder[]
-  projectUsers     ProjectUser[]
+  users           User[]
+  notes           Note[]
+  tasks           Task[]
+  linkDirectories Directory[]
+  links           QuickLink[]
+  embeddedPages   EmbeddedPage[]
+  projectUsers    ProjectUser[]
 }
 
 model ProjectUser {
@@ -66,6 +64,7 @@ model ProjectUser {
   projectId String
   userId    String
 
+  order      Int         @default(autoincrement())
   taskStatus TaskStatus?
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -161,16 +160,4 @@ model EmbeddedPage {
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model UserProjectOrder {
-  id        String @id @default(cuid())
-  userId    String
-  projectId String
-  order     Int    @default(autoincrement())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, order])
 }

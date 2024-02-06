@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TaskStatus, User } from '@prisma/client';
+import { orderBy } from 'lodash';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
 import { ReorderItemsDto } from '../shared/dtos/reorder-items.dto';
 import { PrismaService } from '../shared/services/prisma.service';
@@ -17,6 +18,11 @@ export class ProjectsService {
         users: {
           connect: {
             id: user.id,
+          },
+        },
+        projectUsers: {
+          create: {
+            userId: user.id,
           },
         },
       },
@@ -60,12 +66,13 @@ export class ProjectsService {
 
   async updateMany(data: ReorderItemsDto, user: User) {
     const ids = data.map((it) => it.id);
-    return this.prismaService.$transaction(async (tx) => {
-      const entries = await tx.userProjectOrder.findMany({
-        where: { projectId: { in: ids }, userId: user.id },
-      });
 
-      await tx.userProjectOrder.deleteMany({
+    const entries = await this.prismaService.projectUser.findMany({
+      where: { projectId: { in: ids }, userId: user.id },
+    });
+
+    return this.prismaService.$transaction(async (tx) => {
+      await tx.projectUser.deleteMany({
         where: { projectId: { in: ids }, userId: user.id },
       });
 
@@ -75,7 +82,7 @@ export class ProjectsService {
           data.find((it) => it.id === entry.projectId)?.order ?? entry.order,
       }));
 
-      await tx.userProjectOrder.createMany({ data: reordered });
+      await tx.projectUser.createMany({ data: reordered });
 
       return reordered;
     });
@@ -128,8 +135,9 @@ export class ProjectsService {
       }),
       this.prismaService.project.count({ where }),
     ]);
+
     return {
-      list,
+      list: orderBy(list, ['projectUsers[0].order'], ['asc']),
       total,
     };
   }

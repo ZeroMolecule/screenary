@@ -1,15 +1,15 @@
-import type { ReactNode } from 'react';
-import type { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
-import { notFound } from 'next/navigation';
-import { getTranslator } from 'next-intl/server';
-import { LOCALES } from '@/utils/constants';
-import { Providers } from '../_components/providers';
-import { ColorSchemeScript } from '@mantine/core';
 import { authOptions } from '@/domain/auth';
-import { MsClarity } from '../_components/ms-clarity';
 import { ENV } from '@/env.server';
 import styles from '@/styles/global.module.scss';
+import { LOCALES } from '@/utils/constants';
+import { ColorSchemeScript } from '@mantine/core';
+import type { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
+import { getTranslator } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import type { ReactNode } from 'react';
+import { MsClarity } from '../_components/ms-clarity';
+import { Providers } from '../_components/providers';
 
 type Params = { locale: string };
 type Props = { children: ReactNode; params: Params };

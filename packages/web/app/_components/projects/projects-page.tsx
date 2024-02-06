@@ -1,29 +1,40 @@
 'use client';
 
-import { FC } from 'react';
-import Image from 'next/image';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button, Group, Portal } from '@mantine/core';
-import { Project, projectsQuery } from '@/domain/queries/projects-query';
-import { ProjectItem } from './project-item';
-import { HEADER_CONTAINER_ID } from '@/utils/constants';
-import { IconCirclePlus } from '@tabler/icons-react';
-import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
-import { useDisclosure } from '@mantine/hooks';
 import { addProjectMutation } from '@/domain/mutations/add-project-mutation';
+import { reorderProjectsMutation } from '@/domain/mutations/reorder-projects-mutation';
+import { Project, projectsQuery } from '@/domain/queries/projects-query';
 import { Data } from '@/domain/remote/response/data';
-import { useTranslations } from 'next-intl';
-import { EmptyPlaceholder } from '../empty-placeholder';
+import { useDragging } from '@/hooks/use-dragging';
 import emptyIcon from '@/public/images/folder-icon.svg';
 import styles from '@/styles/components/projects.module.scss';
+import { HEADER_CONTAINER_ID } from '@/utils/constants';
+import { Button, Group, Portal } from '@mantine/core';
+import { useDisclosure, useResizeObserver } from '@mantine/hooks';
+import { IconCirclePlus } from '@tabler/icons-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { orderBy } from 'lodash';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { FC } from 'react';
+import { GridContextProvider, GridDropZone, GridItem } from 'react-grid-dnd';
+import { EmptyPlaceholder } from '../empty-placeholder';
+import { ProjectFormValues, ProjectModal } from '../modals/project-modal';
+import { ProjectItem } from './project-item';
 
 export const ProjectsPage: FC = () => {
-  const { t, isOpen, open, close, projects, handleSubmit } =
-    useProjectsWrapper();
+  const {
+    t,
+    isOpen,
+    open,
+    close,
+    projects,
+    handleSubmit,
+    handleReorder,
+    projectsRef,
+    projectsRec,
+  } = useProjectsWrapper();
 
-  const renderProjectItem = (project: Project) => (
-    <ProjectItem key={project.id} project={project} />
-  );
+  const dragging = useDragging(projectsRef.current);
 
   return (
     <Group h="100%">
@@ -49,20 +60,43 @@ export const ProjectsPage: FC = () => {
           image={<Image src={emptyIcon} width={138} height={108} alt="" />}
         />
       ) : (
-        <div className={styles['projects-grid']}>
-          {projects.map(renderProjectItem)}
-        </div>
+        <GridContextProvider onChange={handleReorder}>
+          <div className={styles['projects-grid']} ref={projectsRef}>
+            <GridDropZone
+              style={{ height: projectsRec.height }}
+              id="projects"
+              boxesPerRow={3}
+              rowHeight={projectsRec.height / 2}
+            >
+              {projects.map((item) => (
+                <GridItem
+                  key={item.id}
+                  className={styles['projects-grid__item']}
+                >
+                  <ProjectItem project={item} disabled={dragging} />
+                </GridItem>
+              ))}
+            </GridDropZone>
+          </div>
+        </GridContextProvider>
       )}
     </Group>
   );
 };
 
 function useProjectsWrapper() {
+  const qc = useQueryClient();
   const t = useTranslations('projects');
   const [isOpen, { open, close }] = useDisclosure(false);
+  const [projectsRef, projectsRec] = useResizeObserver();
 
-  const { data: projects, refetch } = useQuery<Data<Project[]>>({
+  const { data: projects = [], refetch } = useQuery<
+    Data<Project[]>,
+    unknown,
+    Project[]
+  >({
     queryKey: projectsQuery.key,
+    select: (res) => res.data,
   });
 
   const { mutateAsync: addProject } = useMutation({
@@ -73,8 +107,70 @@ function useProjectsWrapper() {
     },
   });
 
+  const { mutate: reorderProjects } = useMutation({
+    mutationFn: reorderProjectsMutation.fnc,
+    onSuccess: () => refetch(),
+  });
+
   const handleSubmit = async (values: ProjectFormValues) => {
     await addProject(values).catch(() => null);
+  };
+
+  const handleReorder = (
+    _: string,
+    sourceIndex: number,
+    targetIndex: number
+  ) => {
+    const sourceProject = projects.at(sourceIndex);
+    const sourceOrder = sourceProject?.projectUsers.at(0)?.order;
+    const targetProject = projects.at(targetIndex);
+    const targetOrder = targetProject?.projectUsers.at(0)?.order;
+
+    if (sourceProject && sourceOrder && targetProject && targetOrder) {
+      qc.setQueryData<Data<Project[]>>(projectsQuery.key, (prev) => {
+        if (!prev) {
+          return prev;
+        }
+        const data = orderBy(
+          prev.data.map((item) => {
+            if (item.id === sourceProject.id) {
+              const userProject = sourceProject.projectUsers.at(0);
+              return {
+                ...item,
+                projectUsers: userProject
+                  ? [{ ...userProject, order: targetOrder }]
+                  : [],
+              };
+            }
+            if (item.id === targetProject.id) {
+              const userProject = targetProject.projectUsers.at(0);
+              return {
+                ...item,
+                projectUsers: userProject
+                  ? [{ ...userProject, order: sourceOrder }]
+                  : [],
+              };
+            }
+            return item;
+          }),
+          ['projectUsers[0].order'],
+          'asc'
+        );
+
+        return { ...prev, data };
+      });
+
+      reorderProjects([
+        {
+          id: sourceProject.id,
+          order: targetOrder,
+        },
+        {
+          id: targetProject.id,
+          order: sourceOrder,
+        },
+      ]);
+    }
   };
 
   return {
@@ -82,7 +178,10 @@ function useProjectsWrapper() {
     isOpen,
     open,
     close,
-    projects: projects?.data,
+    projects,
     handleSubmit,
+    projectsRef,
+    projectsRec,
+    handleReorder,
   };
 }

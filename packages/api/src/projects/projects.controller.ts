@@ -11,6 +11,10 @@ import { User } from '@prisma/client';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import {
+  ReorderItemsDto,
+  reorderItemsSchema,
+} from '../shared/dtos/reorder-items.dto';
 import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
 import {
   CreateProjectDto,
@@ -21,10 +25,6 @@ import {
   updateProjectSchema,
 } from './dtos/update-project.dto';
 import { ProjectsService } from './projects.service';
-import {
-  ReorderItemsDto,
-  reorderItemsSchema,
-} from '../shared/dtos/reorder-items.dto';
 
 @Controller('projects')
 export class ProjectsController {
