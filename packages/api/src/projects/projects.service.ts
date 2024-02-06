@@ -54,6 +54,7 @@ export class ProjectsService {
             }
           : undefined,
       },
+      include: { projectUsers: true },
     });
   }
 

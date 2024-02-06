@@ -36,7 +36,27 @@ export function useProject(id: string) {
       return { data: project, meta: {} };
     },
   });
-  const { mutateAsync } = useMutation({ mutationFn: editProjectMutation.fnc });
+  const { mutateAsync } = useMutation({
+    mutationFn: editProjectMutation.fnc,
+    onSuccess({ data }) {
+      qc.setQueryData(projectQuery.key(id), () => {
+        return data;
+      });
+      qc.setQueryData<
+        Data<Prisma.ProjectGetPayload<{ include: { projectUsers: true } }>[]>
+      >(projectsQuery.key, (prev) => {
+        if (!prev) {
+          return;
+        }
+        return {
+          ...prev,
+          data: prev.data.map((item) =>
+            item.id === data.data.id ? { ...item, ...data.data } : item
+          ),
+        };
+      });
+    },
+  });
 
   const update = (data: UpdateDto) =>
     mutateAsync({ id, ...data }).catch(() => null);
