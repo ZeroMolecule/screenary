@@ -1,20 +1,33 @@
-import { FC } from 'react';
+import { Project } from '@/domain/queries/projects-query';
+import { paths } from '@/navigation/paths';
+import styles from '@/styles/components/projects.module.scss';
 import { ActionIcon, Group, Stack } from '@mantine/core';
 import { IconArrowUpRight, IconCircleCheckFilled } from '@tabler/icons-react';
-import { Title } from '../base/title';
+import { useRouter } from 'next/navigation';
+import { FC } from 'react';
 import { Text } from '../base/text';
-import { Link } from '../base/link';
-import { paths } from '@/navigation/paths';
-import { Project } from '@/domain/queries/projects-query';
-import styles from '@/styles/components/projects.module.scss';
+import { Title } from '../base/title';
 
 type Props = {
+  disabled: boolean;
   project: Project;
 };
 
-export const ProjectItem: FC<Props> = ({ project: { id, name, _count } }) => {
+export const ProjectItem: FC<Props> = ({
+  disabled,
+  project: { id, name, _count },
+}) => {
+  const router = useRouter();
+
   return (
-    <Link href={paths.project(id)} className={styles['project-item-wrapper']}>
+    <button
+      className={styles['project-item-wrapper']}
+      onClick={() => {
+        if (!disabled) {
+          router.push(paths.project(id));
+        }
+      }}
+    >
       <Stack
         h="100%"
         p="lg"
@@ -32,6 +45,7 @@ export const ProjectItem: FC<Props> = ({ project: { id, name, _count } }) => {
             </Text>
           </Group>
           <ActionIcon
+            component="div"
             size="xl"
             radius="100%"
             bg="neutral.2"
@@ -45,6 +59,6 @@ export const ProjectItem: FC<Props> = ({ project: { id, name, _count } }) => {
           {name}
         </Title>
       </Stack>
-    </Link>
+    </button>
   );
 };

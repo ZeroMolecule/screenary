@@ -1,14 +1,14 @@
 'use client';
 
-import { FC, ReactNode, useState } from 'react';
-import {
-  QueryClient,
-  QueryClientProvider as QCProvider,
-} from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { useNotificationError } from '@/hooks/use-notification-error';
 import { remoteApi } from '@/domain/remote';
 import { getAxiosData } from '@/domain/remote/response/data';
+import { useNotificationError } from '@/hooks/use-notification-error';
+import {
+  QueryClientProvider as QCProvider,
+  QueryClient,
+} from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { FC, ReactNode, useState } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -38,6 +38,7 @@ function useQueryClientProvider() {
               return getAxiosData(await remoteApi.get(path, { params }));
             },
             retry: false,
+            refetchOnWindowFocus: false,
           },
           mutations: {
             onError,

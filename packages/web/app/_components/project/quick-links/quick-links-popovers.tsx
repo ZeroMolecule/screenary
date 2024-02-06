@@ -1,5 +1,3 @@
-import { Dispatch, FC, SetStateAction } from 'react';
-import { useTranslations } from 'next-intl';
 import {
   ActionIcon,
   Box,
@@ -8,19 +6,21 @@ import {
   PopoverDropdown,
   PopoverTarget,
 } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
-import { Text } from '../../base/text';
-import {
-  QuickLinkFormValues,
-  QuickLinkPopoverMenu,
-} from './quick-link-popover-menu';
 import { Directory, QuickLink } from '@prisma/client';
+import { IconPlus } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
+import { Dispatch, FC, SetStateAction } from 'react';
+import { Popover } from '../../base/popover';
+import { Text } from '../../base/text';
 import {
   FolderFormValues,
   QuickLinkFolderPopoverMenu,
 } from './quick-link-folder-popover-menu';
+import {
+  QuickLinkFormValues,
+  QuickLinkPopoverMenu,
+} from './quick-link-popover-menu';
 import { QuickLinkPopover } from './quick-links';
-import { Popover } from '../../base/popover';
 
 type Props = {
   popoverOpen: QuickLinkPopover;
@@ -96,7 +96,12 @@ export const QuickLinksPopovers: FC<Props> = (props) => {
                 ? t('form.link.edit.title')
                 : t('form.link.create.title')
             }
-            label={
+            titleLabel={
+              quickLink
+                ? t('form.link.edit.titleLabel')
+                : t('form.link.create.titleLabel')
+            }
+            linkLabel={
               quickLink
                 ? t('form.link.edit.urlLabel')
                 : t('form.link.create.urlLabel')

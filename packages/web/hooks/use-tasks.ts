@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TaskStatus } from '@prisma/client';
 import { addTaskMutation } from '@/domain/mutations/add-task-mutation';
-import { Task, TaskParams, tasksQuery } from '@/domain/queries/tasks-query';
-import { Data } from '@/domain/remote/response/data';
-import { AddTaskData } from '@/domain/types/task-data';
+import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
 import { editTaskMutation } from '@/domain/mutations/edit-task-mutation';
 import { reorderTasksMutation } from '@/domain/mutations/reorder-tasks-mutation';
-import { deleteTaskMutation } from '@/domain/mutations/delete-task-mutation';
+import { Task, TaskParams, tasksQuery } from '@/domain/queries/tasks-query';
+import { Data } from '@/domain/remote/response/data';
 import { ReorderData } from '@/domain/types/reorder-data';
+import { AddTaskData } from '@/domain/types/task-data';
+import { TaskStatus } from '@prisma/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useProject } from './use-project';
 
 type Config = {
   onSubmitSuccess?: () => void;
@@ -36,9 +37,11 @@ export const useTasks = (
   }
 ] => {
   const queryClient = useQueryClient();
-
+  const { data: project, update: updateProject } = useProject(projectId);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [params, setParams] = useState<TaskParams>({});
+  const [params, setParams] = useState<TaskParams>({
+    status: project?.projectUser?.taskStatus ?? undefined,
+  });
   const hiddenCompletedTasks =
     (typeof params.status === 'string'
       ? params.status === TaskStatus.TODO
@@ -47,6 +50,7 @@ export const useTasks = (
   const { data, isLoading, refetch } = useQuery<Data<Task[]>>({
     queryKey: tasksQuery.key(projectId, params),
   });
+
   const results = data?.data ?? [];
   const baseResults =
     queryClient.getQueryData<Data<Task[]>>(tasksQuery.key(projectId, {}))
@@ -82,10 +86,16 @@ export const useTasks = (
   const handleSelectTask = (value: Task | null) => setSelectedTask(value);
 
   const handleHideCompletedTasks = () => {
+    const status = hiddenCompletedTasks ? undefined : TaskStatus.TODO;
     setParams((params) => ({
       ...params,
-      status: hiddenCompletedTasks ? undefined : TaskStatus.TODO,
+      status,
     }));
+    updateProject({
+      projectUser: {
+        taskStatus: status ?? null,
+      },
+    });
   };
 
   const handleCreate = async ({

@@ -1,7 +1,7 @@
-import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
+import { useTasks } from '@/hooks/use-tasks';
 import { Stack, StackProps } from '@mantine/core';
 import { Task, TaskStatus } from '@prisma/client';
-import { useTasks } from '@/hooks/use-tasks';
+import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import { TasksHeader } from './tasks-header';
 import { TasksWrapper } from './tasks-wrapper';
 
@@ -93,6 +93,7 @@ function useProjectTasks({
       onPopoverChange({});
     },
   });
+
   const todosExist = baseResults.some((el) => el.status === TaskStatus.TODO);
   const doneExist = baseResults.some((el) => el.status === TaskStatus.DONE);
 

@@ -1,25 +1,34 @@
-import { FC } from 'react';
-import { useTranslations } from 'next-intl';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { PopoverMenuForm } from '../../popover-menu-form';
-import { FormTextInput } from '../../base/form/text-input';
-import { QuickLink } from '@prisma/client';
-import { zodUrlField } from '@/utils/zod';
 import styles from '@/styles/components/input.module.scss';
+import { zodUrlField } from '@/utils/zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { QuickLink } from '@prisma/client';
+import { useTranslations } from 'next-intl';
+import { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { FormTextInput } from '../../base/form/text-input';
+import { PopoverMenuForm } from '../../popover-menu-form';
 
 type Props = {
   title: string;
-  label: string;
+  titleLabel: string;
+  linkLabel: string;
   onClose: () => void;
   onSubmit: (values: QuickLinkFormValues) => Promise<void>;
   item?: QuickLink;
 };
 
 export const QuickLinkPopoverMenu: FC<Props> = (props) => {
-  const { t, title, label, quickLinkForm, isSubmitting, onClose, onSubmit } =
-    useQuickLinkPopoverMenu(props);
+  const {
+    t,
+    title,
+    titleLabel,
+    linkLabel,
+    quickLinkForm,
+    isSubmitting,
+    onClose,
+    onSubmit,
+  } = useQuickLinkPopoverMenu(props);
 
   return (
     <PopoverMenuForm
@@ -31,8 +40,14 @@ export const QuickLinkPopoverMenu: FC<Props> = (props) => {
       stackProps={{ w: '100%', h: '100%' }}
     >
       <FormTextInput
+        name="title"
+        label={titleLabel}
+        c="white"
+        classNames={{ input: styles.inputDark }}
+      />
+      <FormTextInput
         name="url"
-        label={label}
+        label={linkLabel}
         placeholder={t('urlPlaceholder')}
         c="white"
         classNames={{ input: styles.inputDark }}
@@ -43,7 +58,8 @@ export const QuickLinkPopoverMenu: FC<Props> = (props) => {
 
 function useQuickLinkPopoverMenu({
   title,
-  label,
+  titleLabel,
+  linkLabel,
   onClose,
   onSubmit,
   item,
@@ -54,6 +70,7 @@ function useQuickLinkPopoverMenu({
     resolver: zodResolver(quickLinkSchema),
     defaultValues: {
       url: item?.url ?? '',
+      title: item?.title ?? '',
     },
   });
   const {
@@ -64,7 +81,8 @@ function useQuickLinkPopoverMenu({
   return {
     t,
     title,
-    label,
+    linkLabel,
+    titleLabel,
     quickLinkForm,
     isSubmitting,
     onClose,
@@ -74,5 +92,9 @@ function useQuickLinkPopoverMenu({
 
 export type QuickLinkFormValues = z.infer<typeof quickLinkSchema>;
 const quickLinkSchema = z.object({
+  title: z
+    .string()
+    .transform((value) => (value !== '' ? value : undefined))
+    .optional(),
   url: zodUrlField,
 });

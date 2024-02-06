@@ -1,9 +1,5 @@
 .embedGridCol {
   flex-basis: rem(96);
-
-  @media (min-width: $mantine-breakpoint-2xl) {
-    flex-basis: 8.5%;
-  }
 }
 
 .tasksGridCol {

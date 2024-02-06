@@ -11,6 +11,10 @@ import { User } from '@prisma/client';
 import { AuthUser } from '../shared/decorators/auth-user.decorator';
 import { List } from '../shared/decorators/list.decorator';
 import { PaginationQuery } from '../shared/decorators/pagination-query.decorator';
+import {
+  ReorderItemsDto,
+  reorderItemsSchema,
+} from '../shared/dtos/reorder-items.dto';
 import { ZodValidationPipe } from '../shared/pipes/zod-validation.pipe';
 import {
   CreateProjectDto,
@@ -65,6 +69,14 @@ export class ProjectsController {
         total,
       },
     };
+  }
+
+  @Put()
+  async updateMany(
+    @Body(new ZodValidationPipe(reorderItemsSchema)) data: ReorderItemsDto,
+    @AuthUser() user: User
+  ) {
+    return this.projectService.updateMany(data, user);
   }
 
   @Delete(':id')

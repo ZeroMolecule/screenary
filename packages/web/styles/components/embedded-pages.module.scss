@@ -12,19 +12,6 @@
   box-shadow: 0px 1px 2px -1px rgba(16, 24, 40, 0.1),
     0px 1px 3px 0px rgba(16, 24, 40, 0.1);
   cursor: pointer;
-
-  @media (min-width: $mantine-breakpoint-2xl) {
-    width: rem(114);
-    height: rem(114);
-  }
-  @media (min-width: $mantine-breakpoint-3xl) {
-    width: rem(152);
-    height: rem(152);
-  }
-  @media (min-width: $mantine-breakpoint-4xl) {
-    width: rem(172);
-    height: rem(172);
-  }
 }
 .itemHover {
   opacity: 0.3;
