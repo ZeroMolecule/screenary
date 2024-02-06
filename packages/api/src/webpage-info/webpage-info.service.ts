@@ -17,28 +17,29 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
         const baseUrl = new URL(url).origin;
 
         const title = this.findTitle($);
-        let favicon = await this.findManifestIcon($, baseUrl);
-        if (!favicon) {
-          favicon = await this.findMetaIcon($, baseUrl);
-        }
-        if (!favicon) {
-          favicon = await this.findAlternativeIcon(baseUrl);
-        }
+        const icon = await this.findIcon($, baseUrl);
 
-        return { title, icon: favicon };
+        return { title, icon };
       })
       .catch(() => ({}));
   }
 
+  private async findIcon($: CheerioAPI, baseUrl: string) {
+    let favicon = await this.findManifestIcon($, baseUrl);
+    if (!favicon) {
+      favicon = await this.findMetaIcon($, baseUrl);
+    }
+    if (!favicon) {
+      favicon = await this.findAlternativeIcon(baseUrl);
+    }
+    return favicon;
+  }
+
   private async findAlternativeIcon(baseUrl: string) {
-    let iconUrl = `${baseUrl}/favicon.ico`;
-    if (await this.validateUrl(iconUrl)) {
-      return iconUrl;
-    }
-    iconUrl = `${baseUrl}/images/favicon.ico`;
-    if (await this.validateUrl(iconUrl)) {
-      return iconUrl;
-    }
+    return (
+      (await this.validateUrl(`${baseUrl}/favicon.ico`)) ||
+      (await this.validateUrl(`${baseUrl}/images/favicon.ico`))
+    );
   }
 
   private async findManifestIcon($: CheerioAPI, baseUrl: string) {
@@ -95,12 +96,12 @@ export class WebpageInfoServiceImpl extends WebpageInfoService {
     return $('title').text();
   }
 
-  private async validateUrl(url: string): Promise<boolean> {
+  private async validateUrl(url: string) {
     try {
-      await axios.head(url);
-      return true;
+      const response = await axios.get(url);
+      return response.request?.res?.responseUrl ?? url;
     } catch (e) {
-      return false;
+      return undefined;
     }
   }
 }
