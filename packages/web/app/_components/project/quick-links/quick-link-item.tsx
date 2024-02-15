@@ -1,18 +1,18 @@
-import { FC } from 'react';
-import Image from 'next/image';
+import styles from '@/styles/components/quick-links.module.scss';
 import { Button } from '@mantine/core';
-import { IconLink } from '@tabler/icons-react';
 import { QuickLink } from '@prisma/client';
+import { IconLink } from '@tabler/icons-react';
+import classNames from 'classnames';
+import Image from 'next/image';
+import { FC } from 'react';
 import { ProjectMenu } from '../project-menu';
 import { QuickLinkType } from './quick-links';
-import classNames from 'classnames';
-import styles from '@/styles/components/quick-links.module.scss';
 
 type Props = {
   item: QuickLink;
   onEditOpen: (link: QuickLink, type: QuickLinkType) => void;
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
-  onRefresh: (id: string) => void;
+  onRefresh: (link: QuickLink) => void;
   inExpandedView?: boolean;
 };
 
@@ -85,7 +85,7 @@ function useQuickLinkItem({
   const handleEditOpen = () => onEditOpen(item, 'link');
   const handleDeleteOpen = () => onDeleteOpen(id, 'link');
 
-  const handleRefresh = () => onRefresh(id);
+  const handleRefresh = () => onRefresh(item);
 
   return {
     url,

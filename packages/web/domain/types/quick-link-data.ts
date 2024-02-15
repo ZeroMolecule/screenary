@@ -10,6 +10,9 @@ export type EditQuickLinkData = Pick<
   'id' | 'projectId' | 'directoryId' | 'url'
 >;
 
-export type RefreshQuickLinkData = Pick<QuickLink, 'id' | 'projectId'>;
+export type RefreshQuickLinkData = Pick<
+  QuickLink,
+  'id' | 'projectId' | 'title'
+>;
 
 export type DeleteQuickLinkData = Pick<QuickLink, 'id' | 'projectId'>;

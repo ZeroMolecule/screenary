@@ -1,9 +1,8 @@
-import { Dispatch, FC, SetStateAction } from 'react';
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
-import { Directory, QuickLink } from '@prisma/client';
-import { ExpandedPopover } from '../expanded-popover';
-import { QuickLinkItem } from './quick-link-item';
+import { ReorderData } from '@/domain/types/reorder-data';
+import emptyIcon from '@/public/images/link-icon.svg';
+import styles from '@/styles/components/quick-links.module.scss';
+import stylesOverflow from '@/styles/utils/overflow.module.scss';
+import { PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID } from '@/utils/constants';
 import {
   Box,
   Button,
@@ -13,19 +12,20 @@ import {
   Group,
   Stack,
 } from '@mantine/core';
+import { Directory, QuickLink } from '@prisma/client';
 import { IconBookmark, IconPlus } from '@tabler/icons-react';
-import { PROJECT_EXPANDED_QUICK_LINKS_CONTAINER_ID } from '@/utils/constants';
-import { QuickLinkFolderItem } from './quick-link-folder-item';
-import { QuickLinkPopover, QuickLinkType } from './quick-links';
+import classNames from 'classnames';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { Text } from '../../base/text';
 import { EmptyPlaceholder } from '../../empty-placeholder';
 import { FolderIcon } from '../../icons/folder-icon';
 import { ReorderList } from '../../reorder-list';
-import { ReorderData } from '@/domain/types/reorder-data';
-import classNames from 'classnames';
-import emptyIcon from '@/public/images/link-icon.svg';
-import stylesOverflow from '@/styles/utils/overflow.module.scss';
-import styles from '@/styles/components/quick-links.module.scss';
+import { ExpandedPopover } from '../expanded-popover';
+import { QuickLinkFolderItem } from './quick-link-folder-item';
+import { QuickLinkItem } from './quick-link-item';
+import { QuickLinkPopover, QuickLinkType } from './quick-links';
 
 type Props = {
   quickLinks: QuickLink[];
@@ -35,7 +35,7 @@ type Props = {
   onDeleteOpen: (id: string, type: QuickLinkType) => void;
   onEditOpen: (item: QuickLink | Directory, type: QuickLinkType) => void;
   setPopoverOpen: Dispatch<SetStateAction<QuickLinkPopover>>;
-  onLinkRefresh: (id: string) => void;
+  onLinkRefresh: (link: QuickLink) => void;
   onLinkReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
   onClearFolderParams?: () => void;
   selectedFolder?: Directory | null;

@@ -1,35 +1,19 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { QuickLink } from '@prisma/client';
-import { Data } from '@/domain/remote/response/data';
-import { quickLinksQuery } from '@/domain/queries/quick-links-query';
-import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation';
-import { editQuickLinkMutation } from '@/domain/mutations/edit-quick-link-mutation';
-import { deleteQuickLinkMutation } from '@/domain/mutations/delete-quick-link-mutation';
 import { QuickLinkFormValues } from '@/app/_components/project/quick-links/quick-link-popover-menu';
-import { useFolders } from './use-folders';
+import { addQuickLinkMutation } from '@/domain/mutations/add-quick-link-mutation';
+import { deleteQuickLinkMutation } from '@/domain/mutations/delete-quick-link-mutation';
+import { editQuickLinkMutation } from '@/domain/mutations/edit-quick-link-mutation';
 import { refreshQuickLinkMutation } from '@/domain/mutations/refresh-quick-link-mutation';
 import { reorderQuickLinksMutation } from '@/domain/mutations/reorder-quick-links-mutation';
+import { quickLinksQuery } from '@/domain/queries/quick-links-query';
+import { Data } from '@/domain/remote/response/data';
+import { RefreshQuickLinkData } from '@/domain/types/quick-link-data';
 import { ReorderData } from '@/domain/types/reorder-data';
+import { QuickLink } from '@prisma/client';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useFolders } from './use-folders';
 
-export const useQuickLinks = (
-  projectId: string,
-  onSuccess: () => void
-): [
-  {
-    quickLinks: QuickLink[];
-    editItem: QuickLink | null;
-    deleteId: string | null;
-  },
-  {
-    onSubmit: (values: QuickLinkFormValues) => Promise<void>;
-    onDelete: () => Promise<void>;
-    onRefresh: (id: string) => void;
-    onReorder: (data: Pick<ReorderData, 'data'>) => Promise<void>;
-    setEditItem: Dispatch<SetStateAction<QuickLink | null>>;
-    setDeleteId: Dispatch<SetStateAction<string | null>>;
-  }
-] => {
+export const useQuickLinks = (projectId: string, onSuccess: () => void) => {
   const [editItem, setEditItem] = useState<QuickLink | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [{ selectedFolderId }] = useFolders(projectId);
@@ -86,8 +70,8 @@ export const useQuickLinks = (
       );
     }
   };
-  const handleRefresh = (id: string) => {
-    refreshQuickLink({ id, projectId });
+  const handleRefresh = (data: Omit<RefreshQuickLinkData, 'projectId'>) => {
+    refreshQuickLink({ ...data, projectId });
   };
   const handleReorder = async ({ data }: Pick<ReorderData, 'data'>) => {
     await reorderQuickLinks({ projectId, data }).catch(() => null);
@@ -108,5 +92,5 @@ export const useQuickLinks = (
       setEditItem,
       setDeleteId,
     },
-  ];
+  ] as const;
 };
