@@ -4,8 +4,8 @@ import { getRemoteData } from '../remote/response/data';
 import { RefreshQuickLinkData } from '../types/quick-link-data';
 
 export const refreshQuickLinkMutation = {
-  fnc: ({ id, projectId }: RefreshQuickLinkData) =>
+  fnc: ({ id, projectId, title }: RefreshQuickLinkData) =>
     remoteApi
-      .put(`projects/${projectId}/quick-links/${id}`, { data: {} })
+      .put(`projects/${projectId}/quick-links/${id}`, { data: { title } })
       .then(getRemoteData<QuickLink>),
 };
