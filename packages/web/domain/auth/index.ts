@@ -16,14 +16,17 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: ENV.GOOGLE_CLIENT_ID,
       clientSecret: ENV.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     FacebookProvider({
       clientId: ENV.FACEBOOK_CLIENT_ID,
       clientSecret: ENV.FACEBOOK_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     AppleProvider({
       clientId: ENV.APPLE_CLIENT_ID,
       clientSecret: ENV.APPLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   session: {
