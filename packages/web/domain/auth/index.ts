@@ -8,6 +8,17 @@ import { cookies } from 'next/headers';
 import { prisma } from '../db/prisma-client';
 
 export const authOptions: AuthOptions = {
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'none',
+        path: '/',
+        secure: true,
+      },
+    },
+  },
   adapter: PrismaAdapter(prisma),
   pages: {
     signIn: '/login',
