@@ -10,7 +10,7 @@ import { prisma } from '../db/prisma-client';
 export const authOptions: AuthOptions = {
   cookies: {
     pkceCodeVerifier: {
-      name: 'next-auth.pkce.code_verifier',
+      name: '__Secure-next-auth.pkce.code_verifier',
       options: {
         httpOnly: true,
         sameSite: 'none',
