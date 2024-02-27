@@ -16,7 +16,10 @@ const nextConfig = {
     svgr: false,
   },
   images: {
-    remotePatterns: [{ hostname: 'lh3.googleusercontent.com' }],
+    remotePatterns: [
+      { hostname: 'lh3.googleusercontent.com' },
+      { hostname: 'platform-lookaside.fbsbx.com' },
+    ],
   },
   sassOptions: {
     prependData: '@import "./_mantine.scss";',
